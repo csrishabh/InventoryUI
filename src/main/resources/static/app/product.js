@@ -1,5 +1,5 @@
 
-app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','$cookies','$rootScope','userService','$log','SpinnerService',function($http , $scope , $filter , $window , $cookies ,$rootScope, userService,$log,SpinnerService){
+app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','$cookies','$rootScope','userService','$log','SpinnerService' ,'$location', '$anchorScroll',function($http , $scope , $filter , $window , $cookies ,$rootScope, userService,$log,SpinnerService,$location,$anchorScroll){
 	
 	$scope.transction = {};
 	$scope.transctions = [];
@@ -235,6 +235,15 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
     	return !value;
     };
     
+    $scope.gotoBottom = function() {
+        // set the location.hash to the id of
+        // the element you wish to scroll to.
+        $location.hash('bottom');
+
+        // call $anchorScroll()
+        $anchorScroll();
+      };
+      
     $scope.deleteTransction = function(index) {
         
     	var transction  = $scope.transctions[index];
