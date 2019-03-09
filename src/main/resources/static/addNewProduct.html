@@ -1,0 +1,68 @@
+
+<!-- Modal -->
+<div id="addNewProductModal" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closePopUp()" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title model-header">Add Product</h4>
+       </div>
+	  
+	  <div class="row">
+			<div class="col-md-6">
+				<div class="col-md-3">
+					<label>Name</label>
+				</div>
+				
+				<div class="col-md-8">
+	    			<input next-on-enter type="text" class="form-control" id="remarks" ng-model="product.name">
+	    		</div>
+			</div>			
+		</div>	
+		
+		 <!--  Second Row -->
+		<div class="row">
+			<div class="col-md-6">
+			
+			<div class="col-md-3">
+					<label for="unit">Unit</label>
+			</div>
+			
+			<div class="form-group col-md-8">
+  					<select class="form-control" id="unit" ng-model="product.unit">
+    					<option value = "KILOGRAM">Kg</option>
+    					<option value = "LITER">Lt</option>
+    					<option value = "PIECES">Pc</option>
+  					</select>
+			</div>
+			
+			</div>
+		</div> 
+		
+		<!-- Third Row -->
+		<div class="row">
+			<div class="col-md-6">
+			<div class="col-md-3">
+				<label>Notify me</label>
+			</div>
+			<div class="col-md-8">
+				<input next-on-enter type="number" class="form-control" id=alert
+					ng-model="product.alert"
+					ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
+					ng-init="product.alert=0">
+			</div>
+			</div>
+		</div>
+		
+		
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="saveProduct(product)">Submit</button>
+	   	</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+

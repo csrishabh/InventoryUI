@@ -1,0 +1,49 @@
+<div class= "container-fluid" ng-controller="loginController as vm">
+		<div class="row">
+		<div class="col-md-6">
+		<div class="row">
+		<h2>Login</h2>
+		<form name="form" ng-submit="login(user)" role="form">
+			<div class="row">
+			<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input type="text" class="form-control" name="username" id="username" ng-model="user.username"  placeholder="Username" required /> 
+			</div>
+			</div>
+			<div class="col-md-6">
+				<span ng-show="form.username.$dirty && form.username.$error.required" class="text"><h5>Username is required</h4></span>
+			</div>
+			</div>
+			<div class="row">
+			<div class="col-md-6">
+			<div class="input-group">
+			<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+				<input type="password" class="form-control" name="password" id="password" ng-model="user.password" placeholder="Password"required /> 
+			</div>
+			</div>
+			<div class="col-md-6">
+				<span ng-show="form.password.$dirty && form.password.$error.required" class="text"><h5>Password is required</h4></span>
+			</div>
+			</div>
+			<div class="row">
+			<div class="col-md-6">
+			<div class="input-group">
+				<div class="form-actions">
+					<button type="submit"  class="btn btn-primary" ng-disabled="form.$invalid || vm.dataLoading">Login</button>
+				</div>
+			</div>
+			</div>
+			</div>
+		</form>
+		</div>
+		</div>
+		</div>
+
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>
+
+
+
+

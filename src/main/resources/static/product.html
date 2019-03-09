@@ -1,0 +1,126 @@
+<div class="container-fluid" ng-controller="productController as pcontroller">
+		<div ng-include="'paymentInfo.html'"></div>
+		<div ng-include="'addNewProduct.html'"></div>
+		
+		<div class="row">
+		<!-- Left Panel-->
+		<div class="col-md-3">
+		<!-- First Row-->
+				<!-- <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span> -->
+				<md-autocomplete
+          			ng-disabled="disabled"
+          			md-no-cache="true"
+          			md-search-text="searchText"
+          			md-selected-item-change="showPopUp(product)"
+          			md-items="product in getProduct(searchText)"
+          			md-item-text="product.name"
+          			md-min-length="1"
+          			placeholder="Search Product...">
+        		<md-item-template>
+          			<span d-highlight-text="searchText" md-highlight-flags="^i">{{product.name}}</span>
+        		</md-item-template>
+        	<md-not-found>
+          		<a ng-click="addNewProduct(searchText)">Create a new one!</a>
+        	</md-not-found>
+      		</md-autocomplete>
+		</div>
+		<!-- Right Panel-->
+		<div class="col-md-9">
+		<div ng-show = "showTransction" class="row">
+			<div class="table-wrapper-scroll-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Date</th>
+							<th scope="col">Product</th>
+							<th scope="col">Type</th>
+							<th scope="col">Quantity</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="t in transctions">
+							<th scope="row">{{$index+1}}</th>
+							<td>{{t.date| date:'MM/dd/yyyy'}}</td>
+							<td>{{t.productName}}</td>
+							<td>{{t.type}}</td>
+							<td ng-show = "!checked" ><input next-on-enter type="number" class="form-control col-xs-2"
+								id=quantity ng-model="t.quantity"
+								ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
+								ng-init=t[2] ng-readonly="true"></td>
+							<td ng-show = "checked" ><input next-on-enter type="number" class="form-control col-xs-2"
+								id=quantity ng-model="t.quantity"
+								ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
+								ng-init=t[2]></td>	
+							<td> 
+								<!-- <a href="#"   ng-show= "{{t.type==='ADD'}}"ng-model="checked" ng-init= "checked=false" ng-click = "checked = setEdit(checked)"> <span class="glyphicon glyphicon-edit"></span></a> -->
+								<a href="#"   ng-click = "deleteTransction($index)"> <span class="glyphicon glyphicon-trash"></span></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div ng-show = "!showTransction" class="row">
+			<div class="table-wrapper-scroll-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Product</th>
+							<th scope="col">Total Quantity</th>
+							<th scope="col">Date</th>
+							<th scope="col">Quantity</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="product in products">
+							<th scope="row">{{$index+1}}</th>
+							<td>{{product.name}}</td>
+							<td>{{product.qtyAbl}}</td>
+							<td>
+								<input type="date" class="form-control" id=date ng-model="product.date" ng-init="product.date=(date)">
+							</td>
+							<td><input next-on-enter type="number" class="form-control col-xs-2"
+								id=quantity ng-model="product.quantity"
+								ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
+								ng-init = "product.quantity = 0" ></td>	
+							<td> 
+								<div>
+								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product)">Add</button>
+        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(product.date,product.quantity,product)">Dispatch</button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+		
+		<div  ng-show = "showTransction" class="col-md-12">
+			<button  class="btn btn-primary" value="Back"
+				ng-click="back()" tabindex="10">Back</button>
+				
+			<button  class="btn btn-primary pull-right" value="Save Transctions"
+				ng-click="saveTransctions(transctions)" tabindex="10">Submit</button>
+		</div>
+		
+	
+		<div  ng-show = "!showTransction" class="col-md-12">
+			<button  class="btn btn-primary pull-right" value="Next"
+				ng-click="next()" tabindex="10">Next</button>
+		</div>
+		
+		</div>
+		</div>
+		</div>
+
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+	   </div>
+
+
+
+
+

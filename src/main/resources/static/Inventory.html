@@ -1,0 +1,52 @@
+<div class= "container-fluid" ng-controller="inventoryController as icontroller"
+		class="container-fluid">
+
+		<div class="row">
+			<div class="col-md-10">
+				<div class="row">
+					<div class="col-md-12">
+						<label><h4> Current Inventory Status</h4></label>
+					</div>
+				</div>
+			</div>
+			
+			<!-- <div class="col-md-2">
+				<div class="row">
+					<div class="col-md-6">
+						<button class="btn btn-primary" value="Search"
+						ng-click="getAdtTransctions()" tabindex="3">Search</button>
+					</div>
+				</div>
+			</div> -->
+		</div>
+
+		<div class="row ">
+		<div class="col-md-12">
+			<div class="table-wrapper-scroll-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Product</th>
+							<th scope="col">Quantity</th>
+							<th ng-show= "hasPermission('ADMIN')" scope="col">Last Price</th>
+							<th scope="col">Min Quantity</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="p in products" ng-class="{'tr-highlited': (p.qtyAbl < p.alert || p.qtyAbl == '0')}">
+							<th scope="row">{{$index+1}}</th>
+							<td>{{p.name}}</td>
+							<td>{{p.qtyAbl | number:2}} {{p.unit}}</td>
+							<td ng-show= "hasPermission('ADMIN')">{{p.lastPrice+"/"+p.unit}}</td>
+							<td>{{p.alert+" "+p.unit}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			</div>
+		</div>
+
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>

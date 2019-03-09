@@ -1,0 +1,31 @@
+<div ng-controller = "headerController as ctrl">
+  <nav class="navbar navbar-inverse">
+  	<div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" >
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="isCollapsed">
+      <ul class="nav navbar-nav mr-auto">
+      	<li class="nav-item" ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.showProduct()"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
+      	<li  class="nav-item" ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.showInventory()">Inventory</a></li>
+      	<li   class="nav-item" ng-show= "ctrl.hasPermission('ADMIN')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.auditDetails()" tabindex="-1">Audit</a></li>
+      	<!-- <li ng-show = "name" class="align-right"><a href="#"  ng-click = "ctrl.logout()" tabindex="-1">Logout</a></li> -->
+ 		<!-- <li>
+ 		<md-badge md-content="1">
+        <md-button class="md-icon-button">
+          <md-icon>notifications</md-icon>
+        </md-button>
+      </md-badge>
+      </li> -->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li  class="nav-item" ng-show = "name"><a href="#" data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+      </ul>
+    </div>
+    </div>
+    </nav>
+</div>
