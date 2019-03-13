@@ -1,4 +1,4 @@
-app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$interval','userService' ,'SpinnerService', function($http , $scope ,$filter,$q,$interval,userService,SpinnerService){
+app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$interval','userService' ,'SpinnerService','FileSaver', function($http , $scope ,$filter,$q,$interval,userService,SpinnerService,FileSaver){
 	
 	$scope.products = {};
 	
@@ -21,6 +21,14 @@ app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$inter
 		}
 		return false;
 	}
+    
+    $scope.downloadReport = function(){
+    	
+    	var url = weburl+"/inventory";
+		$http.get(url, { responseType: "arraybuffer" }).success(function(data){
+			FileSaver.saveAs(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "Inventory.xlsx");
+		});
+    }
     
     $scope.getCurrentInventory();
     
