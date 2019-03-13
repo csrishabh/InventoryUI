@@ -144,6 +144,7 @@ h2,h4,h5{
 display: block;
 overflow-y: auto;
 -ms-overflow-style: -ms-autohiding-scrollbar;
+max-height: 500px;
 }
 
 

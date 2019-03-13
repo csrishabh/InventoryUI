@@ -55,7 +55,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		return false;
 	}
 
-	$scope.saveProduct = function(product){
+	$scope.saveProduct = function(product , isupdate){
 		
 		if( product.name == undefined || product.name == ""){
 			$scope.addAlert('warning', 'Please enter name first');
@@ -67,6 +67,9 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 			$http.post(weburl+"/addProduct",product,config).success(function(data){
 				$scope.addAlert('success', 'Done');	
 				$scope.product = {};
+				if(isupdate){
+					$('#addNewProductModal').modal('hide');
+				}
 			},function myError(response) {
 		    
 		    });	
@@ -76,7 +79,13 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.addNewProduct = function(name){
 		$scope.product.name = name;
 		$('#addNewProductModal').modal('show');
-	}	
+	}
+	
+	$scope.editProduct = function(product){
+		$('#paymentDedtailsModal').modal('hide');
+		$scope.product = product;
+		$('#addNewProductModal').modal('show');
+	}
 	
 	$scope.showPopUp = function(product){
 			$scope.transction.date= new Date();
@@ -223,6 +232,8 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		$scope.transctions = [];	
 		SpinnerService.endSpinner(modal);
 		$scope.addAlert('success', 'Done');
+		$scope.getAllProduct();
+		$scope.showTransction = false;
     	}).error(function(data, status) {
     	SpinnerService.endSpinner(modal);	
 		$scope.addAlert('warning', 'Please Try Again !!!');

@@ -84,7 +84,7 @@
 							<td><input next-on-enter type="number" class="form-control col-xs-2"
 								id=quantity ng-model="product.quantity"
 								ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
-								ng-init = "product.quantity = 0" ng-click="gotoBottom()"></td>	
+								ng-init = "product.quantity = 0"></td>	
 							<td> 
 								<div>
 								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product)">Add</button>
