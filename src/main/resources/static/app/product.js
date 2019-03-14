@@ -228,17 +228,29 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
         	return;
         }
         var modal = SpinnerService.startSpinner();
-    	$http.post(weburl+"/addTransctions",transctions,config).success(function(data,status){	
-		$scope.transctions = [];	
-		SpinnerService.endSpinner(modal);
-		$scope.addAlert('success', 'Done');
-		$scope.getAllProduct();
-		$scope.showTransction = false;
+    	$http.post(weburl+"/addTransctions",transctions,config).success(function(data,status){
+				$scope.transctions = [];	
+				SpinnerService.endSpinner(modal);
+				$scope.addAlert('success', 'Done');
+				$scope.getAllProduct();
+				$scope.showTransction = false;
     	}).error(function(data, status) {
-    	SpinnerService.endSpinner(modal);	
-		$scope.addAlert('warning', 'Please Try Again !!!');
-			
-    });
+    		if(status == 406){
+    			for(i=0;i<data.length;i++) {
+    			var product = $scope.products.find(function(element) { 
+    		    		  return element.id == data[i].productId; 
+    		  		});
+    			data[i].productName = product.name;
+    			}
+    			$scope.getAllProduct();
+				$scope.addAlert('warning', 'Some items are not available');
+				SpinnerService.endSpinner(modal);
+				$scope.transctions = data;
+    		}else{
+    			SpinnerService.endSpinner(modal);	
+    			$scope.addAlert('warning', 'Please Try Again !!!');
+    		}
+       });
     };
     
 	$scope.setEdit = function(value) {
