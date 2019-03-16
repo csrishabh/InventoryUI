@@ -63,6 +63,9 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		else if(product.unit == undefined || product.unit == ""){
 			$scope.addAlert('warning', 'Please select unit first');
 		}
+		else if(product.alert == undefined || product.alert <= 0){
+			$scope.addAlert('warning', 'Please Enter alert Quantity');
+		}
 		else{
 			$http.post(weburl+"/addProduct",product,config).success(function(data){
 				$scope.addAlert('success', 'Done');	
@@ -190,7 +193,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 			        if(t.date.toDateString() != transction.date.toDateString()){
 			        	continue;
 			        }
-			    	t.quantity = t.quantity + transction.quantity;
+			    	t.quantity =  $scope.round((t.quantity + transction.quantity),3);
 			    	$scope.updateProduct(transction, false);
 			    	return true;
 			    }
@@ -206,18 +209,18 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
       	
       	if(transction.type == 'ADD'){
       		if(isDeleteTransction){
-      		product.qtyAbl = product.qtyAbl - transction.quantity;
+      		product.qtyAbl = $scope.round((product.qtyAbl - transction.quantity),3);
       		}
       		else{
-      		product.qtyAbl = product.qtyAbl + transction.quantity;
+      		product.qtyAbl = $scope.round((product.qtyAbl + transction.quantity),3);
       		}
       	}
       	else if(transction.type == 'DISPATCH'){
       		if(isDeleteTransction){
-          		product.qtyAbl = product.qtyAbl + transction.quantity;
+          		product.qtyAbl = $scope.round((product.qtyAbl + transction.quantity),3);
           		}
           		else{
-          		product.qtyAbl = product.qtyAbl - transction.quantity;
+          		product.qtyAbl = $scope.round((product.qtyAbl - transction.quantity),3);
           		}
         }	
     }
@@ -273,6 +276,10 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
     	$scope.updateProduct(transction, true);
     	$scope.transctions.splice(index, 1);
     };
+    
+    $scope.round = function(value, decimals) {
+    	  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    }
 	
 	$scope.alerts = [
 	               ];

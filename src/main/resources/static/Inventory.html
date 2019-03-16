@@ -22,7 +22,7 @@
 						<tr ng-repeat="p in products" ng-class="{'tr-highlited': (p.qtyAbl < p.alert || p.qtyAbl == '0')}">
 							<th scope="row">{{$index+1}}</th>
 							<td>{{p.name}}</td>
-							<td>{{p.qtyAbl | number:2}} {{p.unit}}</td>
+							<td>{{p.qtyAbl | number:3}} {{p.unit}}</td>
 							<td ng-show= "hasPermission('ADMIN')">{{p.lastPrice+"/"+p.unit}}</td>
 							<td>{{p.alert+" "+p.unit}}</td>
 						</tr>

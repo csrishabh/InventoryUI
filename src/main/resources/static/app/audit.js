@@ -32,7 +32,7 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
     	if(data[3] <=0){
     		$scope.addAlert('warning', 'Please Enter Amount');
     	}
-    	else if(data[2]<=0){
+    	else if(data[2]== undefined || data[2]<=0){
     		$scope.addAlert('warning', 'Please Enter Quantity');
     	}
     	else{
