@@ -1,5 +1,6 @@
 
-app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','$cookies','$rootScope','userService','$log','SpinnerService' ,'$location', '$anchorScroll',function($http , $scope , $filter , $window , $cookies ,$rootScope, userService,$log,SpinnerService,$location,$anchorScroll){
+app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','$cookies','$rootScope','userService','$log','SpinnerService' ,'$location', '$anchorScroll', 'pagerService','$q'
+	,function($http , $scope , $filter , $window , $cookies ,$rootScope, userService,$log,SpinnerService,$location,$anchorScroll,PagerService ,$q){
 	
 	$scope.transction = {};
 	$scope.transctions = [];
@@ -7,6 +8,8 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.product = {};
 	$scope.date = new Date();
 	$scope.showTransction = false;
+	$scope.pager = {};
+	$scope.searchResult = [];
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'
@@ -27,25 +30,62 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	    });
 	};
 	
-	$scope.getAllProduct = function() {
-	    var url = weburl+"/products";
+	
+	$scope.getProductById = function(id) {
+		var modal = SpinnerService.startSpinner();
+	    var url = weburl+"/product/"+(id);
+	    var deferred = $q.defer();
+	    $http({
+	        url: url,
+	        method: 'GET'
+	    }).then(function (data) {
+	    	SpinnerService.endSpinner(modal);
+	    	deferred.resolve(data);
+	    	return deferred.promise;
+	    });
+	};
+	
+	$scope.getAllProduct = function(pageNo) {
+		var modal = SpinnerService.startSpinner();
+	    var url = weburl+"/searchProducts/"+(pageNo-1);
 	    return $http({
 	        url: url,
 	        method: 'GET'
 	    }).then(function (data) {
-	    	$scope.products = data.data;
+	    	$scope.searchResult = data.data;
+	    	$scope.products = $scope.searchResult.content;
+	    	$scope.setPage(pageNo);
+	    	SpinnerService.endSpinner(modal);
 	    });
 	};
 	
 	$scope.next = function() {
 		$scope.showTransction = true; 
+		var modal = SpinnerService.startSpinner();
+	    var url = weburl+"/getCart";
+	    return $http({
+	        url: url,
+	        method: 'GET'
+	    }).then(function (data) {
+	    	$scope.transctions = data.data;
+	    	SpinnerService.endSpinner(modal);
+	    });
 	};
 	
 	$scope.back = function() {
 		$scope.showTransction = false; 
 	};
 	
-	$scope.getAllProduct();
+	$scope.getAllProduct(1);
+	
+	$scope.setPage = function(page) {
+	
+	if (page < 1 || page > $scope.pager.totalPages) {
+		return;
+	}
+	$scope.pager = PagerService.GetPager($scope.searchResult.totalElements, page);
+	}
+
 	
 	this.hasPermission = function(permission){
 		var roles = userService.get().roles;
@@ -117,66 +157,57 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		transction.productName = product.name
 		transction.date = date
 		transction.quantity = quantity
-		if(!$scope.isDuplicateTransction(transction, product)){
-			$scope.transctions[$scope.transctions.length] = transction;
-			$scope.updateProduct(transction,false);
-		}
-		$scope.closePopUp();
-		if(product.quantity){
-			product.quantity = 0
-		}
-		$('#paymentDedtailsModal').modal('hide');
-		}
 		
-	}
+		var modal = SpinnerService.startSpinner();
+		$http.post(weburl+"/carted",transction,config).success(function(data,status){	
+			SpinnerService.endSpinner(modal);
+			$scope.addAlert('success', 'Done');
+			$scope.closePopUp();
+			if(product.quantity){
+				product.quantity = 0
+			}
+			$('#paymentDedtailsModal').modal('hide');
+			}).error(function(data, status) {
+			$scope.addAlert('warning', 'Please Try Again !!!');
+			SpinnerService.endSpinner(modal);
+		});
+	}	
+};
 	
 	$scope.DispatchProduct = function(date, quantity, product){
+		
 		if(date > new Date()){
 			$scope.addAlert('warning', 'Future date is not acceptable');
 		}
 		else if(quantity == undefined || quantity <= 0){
 			$scope.addAlert('warning', 'Please enter quantity first');
 		}
-		else if(quantity > product.qtyAbl){
-			$scope.addAlert('warning', 'Required quantity not available');
-		}
 		else{
-		var transction = {};	
-		transction.type = "DISPATCH"
-		transction.productId = product.id
-		transction.amount = 0
-		transction.productName = product.name
-		transction.date = date
-		transction.quantity = quantity
-		if(!$scope.isDuplicateTransction(transction, product)){
-			$scope.transctions[$scope.transctions.length] = transction;
-			$scope.updateProduct(transction,false);
-		}		
-		$scope.closePopUp();
-		if(product.quantity){
-			product.quantity = 0
-		}
-		$('#paymentDedtailsModal').modal('hide');
-		}
-		
+			var transction = {};	
+			transction.type = "DISPATCH"
+			transction.productId = product.id
+			transction.amount = 0
+			transction.date = date
+			transction.quantity = quantity
+			var modal = SpinnerService.startSpinner();
+			$http.post(weburl+"/carted",transction,config).success(function(data,status){	
+				SpinnerService.endSpinner(modal);
+				$scope.addAlert('success', 'Done');
+				$scope.closePopUp();
+				if(product.quantity){
+					product.quantity = 0
+				}
+				$('#paymentDedtailsModal').modal('hide');
+				}).error(function(data, status) {
+			if(status == 406){
+				$scope.addAlert('warning', 'Required quantity not available');
+				SpinnerService.endSpinner(modal);
+			}
+			});
+		}	
 	}
+
 	
-	
-	/*$scope.isDuplicateTransction = function(transction, product) {
-		for(i=0;i<$scope.transctions.length;i++) {
-			var t = $scope.transctions[i];
-			  if (t != undefined && t != null && t.productId == product.id && t.type == transction.type && t.date == transction.date) {
-			        if(transction.type == 'DISPATCH' && (t.quantity + transction.quantity) > product.qtyAbl){
-			        	$scope.addAlert('warning', 'Required quantity not available');
-			        	return true;
-			        }
-			    	t.quantity = t.quantity + transction.quantity;
-			    	return true;
-			    }
-		}
-		return false;
-    };*/
-    
     $scope.isDuplicateTransction = function(transction, product) {
 		for(i=0;i<$scope.transctions.length;i++) {
 			var t = $scope.transctions[i];
@@ -194,7 +225,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 			        	continue;
 			        }
 			    	t.quantity =  $scope.round((t.quantity + transction.quantity),3);
-			    	$scope.updateProduct(transction, false);
+			    	//$scope.updateProduct(transction, false);
 			    	return true;
 			    }
 		}
@@ -231,50 +262,51 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
         	return;
         }
         var modal = SpinnerService.startSpinner();
-    	$http.post(weburl+"/addTransctions",transctions,config).success(function(data,status){
+    	$http.post(weburl+"/dispatch/Cart",config).success(function(data,status){
 				$scope.transctions = [];	
 				SpinnerService.endSpinner(modal);
 				$scope.addAlert('success', 'Done');
-				$scope.getAllProduct();
 				$scope.showTransction = false;
-    	}).error(function(data, status) {
-    		if(status == 406){
-    			for(i=0;i<data.length;i++) {
-    			var product = $scope.products.find(function(element) { 
-    		    		  return element.id == data[i].productId; 
-    		  		});
-    			data[i].productName = product.name;
+    	}).error(function(data,status) {
+    			if(status == 406){
+    			$scope.addAlert('warning', 'Nothing to submit yet !!!');
     			}
-    			$scope.getAllProduct();
-				$scope.addAlert('warning', 'Some items are not available');
-				SpinnerService.endSpinner(modal);
-				$scope.transctions = data;
-    		}else{
-    			SpinnerService.endSpinner(modal);	
+    			else{
     			$scope.addAlert('warning', 'Please Try Again !!!');
-    		}
+    			}
+    			SpinnerService.endSpinner(modal);
        });
     };
+    
     
 	$scope.setEdit = function(value) {
         
     	return !value;
     };
-    
-    $scope.gotoBottom = function() {
-        // set the location.hash to the id of
-        // the element you wish to scroll to.
-        $location.hash('bottom');
-
-        // call $anchorScroll()
-        $anchorScroll();
-      };
-      
-    $scope.deleteTransction = function(index) {
+       
+    $scope.deleteTransction = function(index , isDeleted) {
         
     	var transction  = $scope.transctions[index];
-    	$scope.updateProduct(transction, true);
-    	$scope.transctions.splice(index, 1);
+    	if(isDeleted){
+    		transction.quantity	= 0;
+    	}
+    	var modal = SpinnerService.startSpinner();
+    	 
+     	$http.post(weburl+"/update/carted",transction,config).success(function(data,status){	
+ 				SpinnerService.endSpinner(modal);
+ 				$scope.addAlert('success', 'Done');
+ 				if(isDeleted){
+ 					$scope.transctions.splice(index, 1);
+ 		    	}		
+     	}).error(function(data, status) {
+     		if(status == 406){
+ 				$scope.addAlert('warning', 'Quantity not available');
+ 				SpinnerService.endSpinner(modal);
+     		}else{
+     			SpinnerService.endSpinner(modal);	
+     			$scope.addAlert('warning', 'Please Try Again !!!');
+     		}
+        });
     };
     
     $scope.round = function(value, decimals) {

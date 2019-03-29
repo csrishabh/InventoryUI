@@ -150,36 +150,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	}
 });
 
-
-/*$scope.generatePaymentReport = function(){
-	var personId = $scope.person.selected.id;
-		var type = 'ALL';
-		if($scope.search.type != undefined){
-		type = $scope.search.type;
-		}
-		var currDate = $filter('date')(new Date(), 'dd-MM-yyyy');
-	
-		var date1 = currDate;
-		var date2 = currDate;
-	
-		if($scope.search.date1 != undefined){
-		date1  = $filter('date')($scope.search.date1, 'dd-MM-yyyy');
-		}
-		if($scope.search.date2 != undefined){
-			date2  = $filter('date')($scope.search.date2, 'dd-MM-yyyy');
-		}
-		
-		if(date1 > date2){
-		$scope.addAlert('warning', 'FROM date can not be less greater then TO date');
-		}
-		else{
-			var url = weburl+"/rest/payment/report?"+"id="+ personId+ "&type=" + type +"&date1=" + date1 + "&date2=" + date2;
-			$http.get(url, { responseType: "arraybuffer" }).success(function(data){
-				saveAs(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "PaymentSheet.xlsx");
-			})
-		}
-}*/
-
+app.run(function($rootScope){
+	  $rootScope._ = _;
+});
 
 app.factory('userService', function() {
 	 var savedData = {}
