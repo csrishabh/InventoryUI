@@ -62,14 +62,13 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.next = function() {
 		$scope.showTransction = true; 
 		var modal = SpinnerService.startSpinner();
-	    var url = weburl+"/getCart";
-	    return $http({
-	        url: url,
-	        method: 'GET'
-	    }).then(function (data) {
-	    	$scope.transctions = data.data;
-	    	SpinnerService.endSpinner(modal);
-	    });
+		$http.get(weburl+"/getCart",config).success(function(data,status){	
+			SpinnerService.endSpinner(modal);
+			$scope.transctions = data;
+			}).error(function(data, status) {
+			$scope.transctions = [];
+			SpinnerService.endSpinner(modal);
+		});
 	};
 	
 	$scope.back = function() {
