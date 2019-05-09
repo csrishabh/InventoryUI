@@ -67,8 +67,22 @@
 					<thead>
 						<tr>
 							<th scope="col">#</th>
-							<th scope="col">Product</th>
-							<th scope="col">Total Quantity</th>
+							<th>
+							<a href="#" ng-click="changeSort('name')">Product
+								<span ng-show="orderByField == 'name'">
+          						<span class="glyphicon glyphicon-arrow-down" ng-show="!reverseSort"></span>
+          						<span class="glyphicon glyphicon-arrow-up" ng-show="reverseSort"></span>
+          						</span>
+          					</a>
+          					</th>
+          					<th>
+							<a href="#" ng-click="changeSort('qtyAblBack')">Total Quantity
+							<span ng-show="orderByField == 'qtyAblBack'">
+							<span class="glyphicon glyphicon-arrow-down" ng-show="!reverseSort"></span>
+          					<span class="glyphicon glyphicon-arrow-up" ng-show="reverseSort"></span>
+							</span>
+          					</a>
+          					</th>
 							<th scope="col">Date</th>
 							<th scope="col">Quantity</th>
 						</tr>

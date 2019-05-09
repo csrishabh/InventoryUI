@@ -167,3 +167,9 @@ td,th{
   opacity: 0.5;
   text-decoration: none; 
 }
+a{
+	color: white;
+}
+a:hover{
+	color: white;
+}

@@ -10,6 +10,8 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.showTransction = false;
 	$scope.pager = {};
 	$scope.searchResult = [];
+	$scope.orderByField = "name";
+	$scope.reverseSort = false;
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'
@@ -47,7 +49,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	
 	$scope.getAllProduct = function(pageNo) {
 		var modal = SpinnerService.startSpinner();
-	    var url = weburl+"/searchProducts/"+(pageNo-1);
+		var url = weburl+"/searchProducts/"+(pageNo-1)+"?reverseSort="+$scope.reverseSort+"&orderBy="+$scope.orderByField;
 	    return $http({
 	        url: url,
 	        method: 'GET'
@@ -73,6 +75,12 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	
 	$scope.back = function() {
 		$scope.showTransction = false; 
+	};
+	
+	$scope.changeSort = function(fieldName) {
+		$scope.orderByField = fieldName;
+		$scope.reverseSort = !$scope.reverseSort;
+		$scope.getAllProduct(1);
 	};
 	
 	$scope.getAllProduct(1);
