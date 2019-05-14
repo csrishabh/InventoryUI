@@ -12,6 +12,8 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.searchResult = [];
 	$scope.orderByField = "name";
 	$scope.reverseSort = false;
+	$scope.unit="";
+	$scope.productName = "";
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'
@@ -49,7 +51,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	
 	$scope.getAllProduct = function(pageNo) {
 		var modal = SpinnerService.startSpinner();
-		var url = weburl+"/searchProducts/"+(pageNo-1)+"?reverseSort="+$scope.reverseSort+"&orderBy="+$scope.orderByField;
+		var url = weburl+"/searchProducts/"+(pageNo-1)+"?reverseSort="+$scope.reverseSort+"&orderBy="+$scope.orderByField+"&name="+$scope.productName;
 	    return $http({
 	        url: url,
 	        method: 'GET'
@@ -148,14 +150,18 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.closePopUp = function(){
 		$scope.transction = {};	
 		$scope.product = {};
+		$scope.unit= undefined;
 	}
 	
-	$scope.addProduct = function(date, quantity, product){
+	$scope.addProduct = function(date, quantity, product,unit){
 		if(date > new Date()){
 			$scope.addAlert('warning', 'Future date is not acceptable');
 		}
 		else if(quantity == undefined || quantity <= 0){
 			$scope.addAlert('warning', 'Please enter quantity first');
+		}
+		else if(unit == undefined){
+			$scope.addAlert('warning', 'Please select unit first');
 		}
 		else{
 		var transction = {};	
@@ -163,8 +169,12 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		transction.productId = product.id
 		transction.productName = product.name
 		transction.date = date
-		transction.quantity = quantity
-		
+		if(unit == 'GRAM' || unit == 'MILILITER')
+		{
+			transction.quantity = quantity/1000;
+		}else{
+			transction.quantity = quantity;
+		}
 		var modal = SpinnerService.startSpinner();
 		$http.post(weburl+"/carted",transction,config).success(function(data,status){	
 			SpinnerService.endSpinner(modal);
@@ -181,7 +191,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	}	
 };
 	
-	$scope.DispatchProduct = function(date, quantity, product){
+	$scope.DispatchProduct = function(date, quantity, product,unit){
 		
 		if(date > new Date()){
 			$scope.addAlert('warning', 'Future date is not acceptable');
@@ -189,13 +199,21 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		else if(quantity == undefined || quantity <= 0){
 			$scope.addAlert('warning', 'Please enter quantity first');
 		}
+		else if(unit == undefined){
+			$scope.addAlert('warning', 'Please select unit first');
+		}
 		else{
 			var transction = {};	
 			transction.type = "DISPATCH"
 			transction.productId = product.id
 			transction.amount = 0
 			transction.date = date
-			transction.quantity = quantity
+			if(unit == 'GRAM' || unit == 'MILILITER')
+			{
+				transction.quantity = quantity/1000;
+			}else{
+				transction.quantity = quantity;
+			}
 			var modal = SpinnerService.startSpinner();
 			$http.post(weburl+"/carted",transction,config).success(function(data,status){	
 				SpinnerService.endSpinner(modal);
@@ -239,29 +257,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		return false;
     };
     
-    $scope.updateProduct = function(transction , isDeleteTransction) {
-    	
-    	var product = $scope.products.find(function(element) { 
-    		  return element.id == transction.productId; 
-  		});
-      	
-      	if(transction.type == 'ADD'){
-      		if(isDeleteTransction){
-      		product.qtyAbl = $scope.round((product.qtyAbl - transction.quantity),3);
-      		}
-      		else{
-      		product.qtyAbl = $scope.round((product.qtyAbl + transction.quantity),3);
-      		}
-      	}
-      	else if(transction.type == 'DISPATCH'){
-      		if(isDeleteTransction){
-          		product.qtyAbl = $scope.round((product.qtyAbl + transction.quantity),3);
-          		}
-          		else{
-          		product.qtyAbl = $scope.round((product.qtyAbl - transction.quantity),3);
-          		}
-        }	
-    }
+    
     
     $scope.saveTransctions = function(transctions) {
         if(transctions.length <= 0){
@@ -291,12 +287,16 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
     	return !value;
     };
        
-    $scope.deleteTransction = function(index , isDeleted) {
+    $scope.updateTransction = function(index , isDeleted, checked) {
         
     	var transction  = $scope.transctions[index];
     	if(isDeleted){
     		transction.quantity	= 0;
     	}
+    	else if(transction.quantity == undefined || transction.quantity <= 0){
+			$scope.addAlert('warning', 'Please enter quantity first');
+			return;
+		}
     	var modal = SpinnerService.startSpinner();
     	 
      	$http.post(weburl+"/update/carted",transction,config).success(function(data,status){	
@@ -304,7 +304,10 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
  				$scope.addAlert('success', 'Done');
  				if(isDeleted){
  					$scope.transctions.splice(index, 1);
- 		    	}		
+ 		    	}
+ 				else{
+ 					$scope.transctions[index] = data
+ 				}
      	}).error(function(data, status) {
      		if(status == 406){
  				$scope.addAlert('warning', 'Quantity not available');
@@ -314,6 +317,8 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
      			$scope.addAlert('warning', 'Please Try Again !!!');
      		}
         });
+     	
+     	return !checked
     };
     
     $scope.round = function(value, decimals) {

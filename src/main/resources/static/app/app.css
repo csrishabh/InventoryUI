@@ -173,3 +173,6 @@ a{
 a:hover ,a:focus{
 	color: white;
 }
+.addNew{
+	color: black;
+}
