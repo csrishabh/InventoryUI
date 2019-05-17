@@ -1,4 +1,4 @@
-var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver']);
+var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages']);
   // set a custom templ
 var weburl = "https://spotliback.herokuapp.com";
 //var weburl = "http://localhost:8080";
@@ -25,6 +25,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider) {
 	.state('inventory',{
 		url: '/inventory',
 		templateUrl: UIUrl+'/Inventory.html'
+	})
+	
+	.state('transction',{
+		url: '/transction',
+		templateUrl: UIUrl+'/transction.html'
 	})
 	
 	$httpProvider.defaults.useXDomain = true;
@@ -111,6 +116,10 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	this.auditDetails = function(consignments){
 		$scope.isCollapsed = true;
 		$location.path('/audit')
+	}
+	this.transctionDetails = function(){
+		$scope.isCollapsed = true;
+		$location.path('/transction')
 	}
 	this.addCityVia = function(consignments){
 		$location.path('/addCityVia')
