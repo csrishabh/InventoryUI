@@ -2,22 +2,7 @@
 		class="container-fluid">
 
 		<div class="row">
-			<div class="col-md-10">
-				<div class="row">
-					<div class="col-md-12">
-						<label><h4> Current Inventory Status</h4></label>
-					</div>
-				</div>
-			</div>
-			
-			<!-- <div class="col-md-2">
-				<div class="row">
-					<div class="col-md-6">
-						<button class="btn btn-primary" value="Search"
-						ng-click="getAdtTransctions()" tabindex="3">Search</button>
-					</div>
-				</div>
-			</div> -->
+		<label><h4> Current Inventory Status</h4></label> <a ng-click="downloadReport()" align="left"><span class="glyphicon glyphicon-cloud-download"></span></a> 
 		</div>
 
 		<div class="row ">
@@ -37,7 +22,7 @@
 						<tr ng-repeat="p in products" ng-class="{'tr-highlited': (p.qtyAbl < p.alert || p.qtyAbl == '0')}">
 							<th scope="row">{{$index+1}}</th>
 							<td>{{p.name}}</td>
-							<td>{{p.qtyAbl | number:2}} {{p.unit}}</td>
+							<td>{{p.qtyAbl | number:3}} {{p.unit}}</td>
 							<td ng-show= "hasPermission('ADMIN')">{{p.lastPrice+"/"+p.unit}}</td>
 							<td>{{p.alert+" "+p.unit}}</td>
 						</tr>

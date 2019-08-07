@@ -32,7 +32,7 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
     	if(data[3] <=0){
     		$scope.addAlert('warning', 'Please Enter Amount');
     	}
-    	else if(data[2]<=0){
+    	else if(data[2]== undefined || data[2]<=0){
     		$scope.addAlert('warning', 'Please Enter Quantity');
     	}
     	else{
@@ -47,9 +47,14 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
     		$scope.transctions.splice(index, 1);
 			SpinnerService.endSpinner(modal);
 			$scope.addAlert('success', 'Done');
-		},function myError(response) {
+		}).error(function(response,status){
 			SpinnerService.endSpinner(modal);
+			if(status == 406){
+				$scope.addAlert('warning', 'Transction has been alredy audited');
+			}
+			else{
 			$scope.addAlert('warning', 'Please Try Again');
+			}
 	    });
     }
    }
@@ -73,9 +78,14 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
     		$scope.addAlert('success', 'Done');
 			var index = $scope.transctions.indexOf(data)
     		$scope.transctions.splice(index, 1);  
-		},function myError(response) {
+		}).error(function(response,status){
 			SpinnerService.endSpinner(modal);
+			if(status == 406){
+				$scope.addAlert('warning', 'Transction has been alredy audited');
+			}
+			else{
 			$scope.addAlert('warning', 'Please Try Again');
+			}
 	    });
     }
     };
