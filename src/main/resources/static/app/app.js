@@ -1,7 +1,7 @@
 var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages','ngMaterialDatePicker','ngRoute','ngPatternRestrict']);
   // set a custom templ
-//var weburl = "https://spotliback.herokuapp.com";
-var weburl = "http://localhost:8080";
+var weburl = "https://spotliback.herokuapp.com";
+//var weburl = "http://localhost:8080";
 var UIUrl = "";
 
 app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationProvider,$routeProvider) {
