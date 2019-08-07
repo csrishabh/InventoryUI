@@ -8,7 +8,7 @@
       <div class="modal-header">
         <button type="button" class="close" ng-click="closePopUp()" data-dismiss="modal">&times;</button>
         <h4 class="modal-title model-header">Product Details</h4>
-        <a ng-show= "pcontroller.hasPermission('ADMIN')" ng-click="editProduct(product)" align="left"><span class="glyphicon glyphicon-edit"></span></a> <span class="label label-primary"> Name : {{product.name}}</span> 
+        <a class="blueIcon" ng-show= "pcontroller.hasPermission('ADMIN')" ng-click="editProduct(product)" align="left"><span class="glyphicon glyphicon-edit"></span></a> <span class="label label-primary"> Name : {{product.name}}</span> 
         <!-- <h4 align="left"><span class="label label-primary"> Name : {{product.name}}</span></h4> -->
         <h4 align="right" ng-show= "pcontroller.hasPermission('ADMIN')"><span class="label label-default" data-toggle="collapse" href="#collapse1">Last Price : {{product.lastPrice+"/"+product.unit}}</span></h4>
 	  </div>

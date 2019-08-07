@@ -60,6 +60,9 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	    	$scope.products = $scope.searchResult.content;
 	    	$scope.setPage(pageNo);
 	    	SpinnerService.endSpinner(modal);
+	    },function(data){
+	    	$location.path('/login');
+	    	SpinnerService.endSpinner(modal);
 	    });
 	};
 	

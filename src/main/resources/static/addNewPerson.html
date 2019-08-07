@@ -1,0 +1,55 @@
+
+<!-- Modal -->
+<div id="addPersonModel" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false"tabindex="-1" 
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+	
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <form name="form" ng-submit="savePerson(person)" role="form">
+      
+      <div class="modal-header">
+        <button type="button" ng-click="closePopUp()" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">ADD {{person.type}}</h4>
+       </div>
+	  
+	 <div class="row">	
+	 	<div class="col-md-6">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Name</label>
+  		<input type="text" ng-model="person.name" required md-maxlength="20" class = "md-popup-input" name ="name">
+  		<div ng-messages="form.name.$error" ng-show="form.name.$dirty && form.name.$error.required">
+      			<div ng-message="required">Name is required</div>
+    	</div>
+		</md-input-container>
+		</div>
+		<div class="col-md-6">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Mobile No.</label>
+  		<input type="text" ng-model="person.mobile" required md-maxlength="10" minlength="10" class = "md-popup-input" name="mobile">
+  		<div ng-messages="form.mobile.$error" ng-show="form.mobile.$dirty && form.mobile.$error.required">
+      			<div ng-message="required">Mobile Number is required</div>
+    	</div>
+		</md-input-container>
+		</div>
+	</div>	
+	
+	<div class="row">	
+		<div class="col-md-6">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Email Id</label>
+  		<input type="text" ng-model="person.emailId" md-maxlength="20" class = "md-popup-input">
+		</md-input-container>
+		</div>
+	</div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
+	</div>
+	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

@@ -1,5 +1,6 @@
 
-app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$location','$cookies','$rootScope','userService','SpinnerService',function($http , $scope , $filter , $window ,$location, $cookies,$rootScope,userService,SpinnerService){
+app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$location','$cookies','$rootScope','userService','SpinnerService' ,'AppService',
+	function($http , $scope , $filter , $window ,$location, $cookies,$rootScope,userService,SpinnerService,AppService){
 	
 	var config = {
             headers : {
@@ -15,13 +16,20 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 			$http.defaults.headers.common.Authorization = headers(['authorization']);
 			$cookies.put("access_token", headers(['authorization']));
 			$scope.getUser();
-			$location.path('/product');	
+			$location.path('/product');
+			AppService.getLateCaseCount().success(function(data){
+				$rootScope.lateCaseCount = data.data.count;
+			});
 			SpinnerService.endSpinner(modal);
+			
 		}).error(function(data, status) {
 			if(status == 401){
 				$scope.addAlert('warning', 'Wrong Username & Password');
-				SpinnerService.endSpinner(modal);
 			}
+			else{
+				$scope.addAlert('warning', 'Please try again');
+			}
+			SpinnerService.endSpinner(modal);
 		});
 		
 	}

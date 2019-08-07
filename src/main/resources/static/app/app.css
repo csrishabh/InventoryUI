@@ -1,3 +1,9 @@
+:root {
+    blue-color: #428bca;
+    yellow-color:#d59307;
+}
+
+
  body {
         	background: url("background.jpg");
         	background-repeat:no-repeat;
@@ -51,7 +57,21 @@ footer {
 
 .md-autocomplete-suggestions-container li:hover{
 	color:white;
-	background:#428bca;
+	background:#428bca !important;
+}
+
+.md-autocomplete-suggestions-container li#selected_option{
+	color:white;
+	background:#428bca !important;
+}
+
+::ng-deep .mat-autocomplete-panel{
+  border-radius: 10px;    
+}
+
+.md-autocomplete-suggestions-container li{
+	color:#428bca;
+	background-color:transparent;
 }
 
 .navbar {
@@ -65,17 +85,48 @@ footer {
 .navbar-inverse .navbar-nav > li > a{
     border-color: white;
     color: white;
+    font-weight: bold;
 } 
 .navbar-inverse .navbar-nav > li > a:hover{
     background-color:#d59307;
     border-color: white;
     color: white;
+    font-weight: bold;
 }  
-  
 
-.navbar-text-color {
-   color:green;
+.navbar-inverse .navbar-nav > .active > a{
+	background-color:#d59307 !important;
+    border-color: white !important;
+    color: white !important;
+    font-weight: bold;
+    text-decoration: underline;
 }
+
+.navbar-inverse .navbar-nav > .open > a{
+	background-color:#d59307 !important;
+    border-color: white !important;
+    color: white !important;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.navbar-inverse .navbar-nav > li > .dropdown-menu{
+	background-color: #428bca;
+	border: 1px solid;
+	border-color: white;
+}
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > a{
+	color: white !important;
+    font-weight: bold;
+    background-color: #428bca !important;
+}
+
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > a:hover{
+	border-color: white;
+	color: white !important;
+    font-weight: bold;
+    background-color:#d59307 !important;
+    border: 1px solid;
+  }
 
 .btn-primary:hover{
 	background-color: #428bca;
@@ -89,7 +140,6 @@ footer {
 	border-color:white;
     border-radius:1px;
     color: #ffffff;
-    opacity: 100
 }
 
 .form-control[readonly]{
@@ -143,13 +193,19 @@ h2,h4,h5{
 .table-wrapper-scroll-y {
 display: block;
 overflow-y: auto;
+overflow-x:visible !important;
 -ms-overflow-style: -ms-autohiding-scrollbar;
 max-height: 450px;
+max-width: 100%;
 }
 
 
 td,th{
 	color: white;
+}
+
+td.selectList{
+	min-width: 150px;
 }
 
 .tr-highlited{ 
@@ -174,5 +230,163 @@ a:hover ,a:focus{
 	color: white;
 }
 .addNew{
-	color: black;
+	color: #428bca;
 }
+a.blueIcon{
+	color: #428bca;
+}
+a.blueIcon:focus{
+	color: #428bca !important;
+}
+
+/* Form input box */
+md-input-container label.md-form-input {
+	color: white !important;
+}
+md-input-container .md-input.md-form-input{
+	color: white;
+	border-color: white;
+}
+/*Border Color on valid input on foucs or not*/
+md-input-container:not(.md-input-invalid).md-input-focused .md-input.md-form-input{
+	border-color:  white !important
+}
+/*Border Color on not valid input on foucs*/
+md-input-container.md-input-invalid .md-input.md-form-input{
+	border-color:  #d59307 !important;
+}
+/*Error msg color*/
+md-input-container.md-form-input.md-input-invalid .md-input-message-animation{
+	color: #d59307
+}
+/*Error msg color*/
+md-input-container.md-form-input .md-input-message-animation{
+	color: #d59307
+}
+/*char counter color on invalid input*/
+md-input-container.md-form-input.md-input-invalid .md-char-counter{
+	color: #d59307 !important ;
+}
+/*char counter color on valid input*/
+md-input-container.md-form-input .md-char-counter{
+	color: white !important ;
+}
+/* * sign color*/
+md-input-container.md-form-input label:not(.md-no-float):not(.md-container-ignore):after{
+	color: #d59307 !important;
+}
+
+
+
+
+/* PopUp input box */
+
+md-input-container label.md-popup-input {
+	color: #428bca !important;
+}
+md-input-container .md-input.md-popup-input{
+	color: black;
+	border-color: #428bca;
+}
+/*Border Color on valid input on foucs or not*/
+md-input-container:not(.md-input-invalid).md-input-focused .md-input.md-popup-input{
+	border-color:  #428bca; !important
+}
+/*Border Color on not valid input on foucs*/
+md-input-container.md-input-invalid .md-input.md-popup-input{
+	border-color:  red !important;
+}
+/*Error msg color*/
+md-input-container.md-popup-input.md-input-invalid .md-input-message-animation{
+	color: red;
+}
+/*Error msg color*/
+md-input-container.md-popup-input .md-input-message-animation{
+	color: red;
+}
+/*char counter color on invalid input*/
+md-input-container.md-popup-input.md-input-invalid .md-char-counter{
+	color: red !important ;
+}
+/*char counter color on valid input*/
+md-input-container.md-popup-input .md-char-counter{
+	color: #428bca !important ;
+}
+/* * sign color*/
+md-input-container.md-popup-input label:not(.md-no-float):not(.md-container-ignore):after{
+	color: red !important;
+}
+ 
+ 
+/* For Md-AutoComplete */
+md-input-container label:not(.md-no-float):not(.md-container-ignore){
+	color: white;
+}
+md-input-container label:not(.md-no-float):not(.md-container-ignore):after{
+	color: #d59307 !important;
+}
+
+md-input-container input[type="search"]{
+	color: white;
+	border-color: white;
+}
+md-input-container.md-input-focused input[type="search"]{
+	color: white;
+	border-color: #d59307;
+}
+md-input-container:not(.md-input-has-value) input[type="search"]:not(:focus){
+	border-color: white;
+}
+md-input-container .md-input[type="search"].ng-invalid.ng-dirty{
+	border-color:  #d59307;
+}
+md-input-container:not(.md-input-invalid).md-input-focused .md-input[type="search"]{
+	border-color: white;
+}
+/*Error msg color*/
+md-input-container.md-input-invalid .md-input-message-animation{
+	color: #d59307
+}
+/*Error msg color*/
+md-input-container .md-input-message-animation{
+	color: #d59307
+}
+
+/* For Md-AutoComplete filter Search */
+
+md-autocomplete.filter-search md-autocomplete-wrap input{
+	color: black !important;
+	border-color: #428bca !important;
+}
+md-autocomplete.filter-search md-autocomplete-wrap input:focus{
+	color: black !important;
+	border-color: #428bca !important;
+}
+
+/* Filters */
+
+md-toolbar{
+	background-color: #428bca !important ;
+}
+md-sidenav{
+	background-color: white !important ;
+}
+
+/* check Box*/
+md-checkbox {
+	margin-bottom: 0 !important;
+}
+md-checkbox .md-icon {
+    border-color: white !important;    
+}
+md-checkbox.md-checked .md-icon {
+    background-color: #d59307;
+}
+
+/* noificationCount */
+
+.noificationCount{
+	background-color: red;
+	float: right;
+}
+
