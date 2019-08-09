@@ -143,7 +143,7 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 }]);	
 
 
-app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope){
+app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService){
 	
 	this.showConsignment = function(consignments){
 		$location.path('/showBooking')
@@ -177,9 +177,11 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		$location.path('/login')
 	}
 	this.bookCase = function(){
+		AppService.clearCaseData();
 		$location.path('/case')
 	}
 	this.ViewCaseHistory = function(){
+		AppService.clearCaseFilter();
 		$location.path('/caseHistory')
 	}
 	this.ViewLateCase = function(){
@@ -237,14 +239,42 @@ app.factory('userService', function() {
 
 
 app.factory('AppService', ['$rootScope', '$http', '$q', 'SpinnerService', function($rootScope, $http, $q, SpinnerService) {
+	var caseData = undefined;
+	var caseFilter = undefined;
+	
+	function setCaseData(data) {
+		caseData = data;
+	}
+	function getCaseData() {
+		  return caseData;
+	}
+	function clearCaseData() {
+		caseData = undefined;
+    }
+	
+	function setCaseFilter(data) {
+		caseFilter = data;
+	}
+	function getCaseFilter() {
+		  return caseFilter;
+	}
+	function clearCaseFilter() {
+		caseFilter = undefined;
+    }
 	
 	return{
-		
 		getLateCaseCount : function(){
 			return $http.get(weburl + "/get/count/lateCase").success(function(data) {
 				return data.data.count;
 			});
-		}
+		},
+		
+		setCaseData: setCaseData,
+		getCaseData: getCaseData,
+		clearCaseData:clearCaseData,
+		setCaseFilter:setCaseFilter,
+		getCaseFilter:getCaseFilter,
+		clearCaseFilter:clearCaseFilter
 	};
 	
 }]);

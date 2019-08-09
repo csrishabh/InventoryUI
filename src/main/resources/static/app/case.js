@@ -9,13 +9,18 @@ app.controller('caseController', [
 		'userService',
 		'SpinnerService',
 		'$mdDialog',
+		'AppService',
 		function($http, $scope, $filter, $window, $location, $cookies,
-				$rootScope, userService, SpinnerService,$mdDialog) {
-
+				$rootScope, userService, SpinnerService,$mdDialog,AppService) {
+			
+			$scope.isCaseEdit = false;
 			$scope.Case = {};
 			$scope.Case.crown={};
 			$scope.Case.crown.details= {};
 			$scope.person = {};
+			$scope.Case = AppService.getCaseData();
+			$scope.actions = ['BOOKED','INPROCESS','TRIAL','DELIVERD','COMPLETED'];
+			
 			$scope.getUser = function() {
 
 				$http.get(weburl + "/username").success(function(data) {
@@ -85,6 +90,25 @@ app.controller('caseController', [
 					SpinnerService.endSpinner(modal);
 				});
 			};
+			
+			$scope.updateCase = function(Case){
+				var modal = SpinnerService.startSpinner();
+				$http.post(weburl + "/update/case", Case).success(
+						function(data, status) {
+							if(data.success){
+							$scope.isCaseEdit = false;
+							$location.path('/caseHistory');
+							$scope.addAlert('success', data.msg[0]);
+							}
+							else{
+								$scope.addAlert('warning', data.msg[0]);
+							}
+							SpinnerService.endSpinner(modal);
+						}).error(function(data, status) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+					SpinnerService.endSpinner(modal);
+				});	
+			}
 
 			$scope.savePerson = function(person) {
 				var modal = SpinnerService.startSpinner();
@@ -133,7 +157,13 @@ app.controller('caseController', [
 				return result;
 			};
 			
-			$scope.initilizeNewCase();
+			if($scope.Case != undefined){
+				$scope.isCaseEdit = true;
+			}
+			else{
+				$scope.initilizeNewCase()
+			}
+			
 			$scope.alerts = [];
 
 			$scope.addAlert = function(type, messege) {

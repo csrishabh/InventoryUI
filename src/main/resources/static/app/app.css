@@ -277,6 +277,17 @@ md-input-container.md-form-input label:not(.md-no-float):not(.md-container-ignor
 }
 
 
+/* From Md-select */
+
+md-select.md-form-input .md-select-value{
+	color: white !important;
+	border-bottom-color: white !important;
+}
+md-select.md-form-input .md-select-icon{
+	color: white;
+}
+
+
 
 
 /* PopUp input box */
@@ -329,6 +340,11 @@ md-input-container label:not(.md-no-float):not(.md-container-ignore):after{
 md-input-container input[type="search"]{
 	color: white;
 	border-color: white;
+}
+md-input-container .md-input[disabled]{
+	color: white !important;
+	border-bottom-color: white !important;
+	opacity: 0.65;
 }
 md-input-container.md-input-focused input[type="search"]{
 	color: white;

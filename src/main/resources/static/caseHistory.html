@@ -79,9 +79,9 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>
+							<!-- <th>
 							<md-checkbox  ng-checked="isChecked()" ng-click="toggleAll()"></md-checkbox>
-							</th>
+							</th> -->
 							<th scope="col">#</th>
 							<th scope="col">OPD NO.
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
@@ -115,9 +115,9 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="result in searchResults">
-							<td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
+							<!-- <td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td> -->
 							<th scope="row">{{$index+1}}</th>
-							<td>{{result.id}}</td>
+							<td><a href="#"  ng-click = "editCase(result.id)">{{result.id}}</a></td>
 							<td>{{result.patientName}}</td>
 							<td>{{result.crownDetails}}</td>
 							<td>{{result.appointmentDate}}</td>
@@ -127,16 +127,16 @@
 							<td>{{result.createdBy}}</td>
 							<td>{{result.deliverdDate}}</td>
 							<td>{{result.status}}</td>
-							<td class = "selectList">
+							<!-- <td class = "selectList">
   			<select class="form-control" id="action" ng-model="result.action" name="action" 
   			ng-init=" result.action = result.actions[0]" ng-disabled="{{result.actions.length === 1}}">
     			<option ng-value="opt" ng-repeat="opt in result.actions">{{opt}}</option>
   			</select>
-			</td>
+			</td> -->
 							
-							<td ng-show = "{{result.editable}}"> 
-							<a href="#"   ng-click = ""> <span class="glyphicon glyphicon-edit"></span></a>	
-							</td>
+							<!-- <td ng-show = "{{result.editable}}"> 
+							<a href="#"  ng-click = "editCase(result.id)"> <span class="glyphicon glyphicon-edit"></span></a>	
+							</td> -->
 						</tr>
 					</tbody>
 				</table>

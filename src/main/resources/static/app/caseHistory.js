@@ -9,12 +9,16 @@ app.controller('caseHistoryController', [
 		'userService',
 		'SpinnerService',
 		'$mdSidenav',
-function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userService, SpinnerService,$mdSidenav) {
+		'AppService',
+function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userService, SpinnerService,$mdSidenav,AppService) {
 		$scope.searchResults = [];
-		$scope.filter = {};
-		$scope.filter['bookingDate1'] = $filter('date')(new Date(), 'dd-MM-yyyy');
+		$scope.filter = AppService.getCaseFilter();
+		if($scope.filter === undefined){
+		$scope.filter = {};	
+		$scope.filter['bookingDate1'] = $filter('date')(new Date(new Date().setDate(1)), 'dd-MM-yyyy');
 		$scope.filter['bookingDate2'] = $filter('date')(new Date(), 'dd-MM-yyyy');
-		$scope.bookingDate1 = new Date();
+		}
+		$scope.bookingDate1 = new Date(new Date().setDate(1));
 		$scope.bookingDate2 = new Date();
 		$scope.today = new Date();
 		$scope.minDate = new Date(2019, 01, 01);
@@ -48,6 +52,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 	  
 		$scope.getCaseHistory = function(){
 		var modal = SpinnerService.startSpinner();	
+		
 		var url = weburl + "/get/cases"+$scope.getFilterString();
 			return $http({
 				url : url,
@@ -109,6 +114,25 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.getCaseHistory();
 		};
 		
+		$scope.editCase = function(opdNo) {
+			var modal = SpinnerService.startSpinner();	
+			$http.get(weburl + "/case/"+opdNo).success(
+					function(data, status) {
+						if(data.success){
+							AppService.setCaseData(data.data);
+							AppService.setCaseFilter($scope.filter);
+							$location.path('/case');
+						}
+						else{
+							$scope.addAlert('warning', data.msg[0]);
+						}
+						SpinnerService.endSpinner(modal);
+					}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+				SpinnerService.endSpinner(modal);
+			});
+		};
+		
 		$scope.changestatus = function() {
 			 var cases = {};
 			 $scope.selected.forEach(function (item, index) {
@@ -120,8 +144,18 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 						function(data, status) {
 							if(data.success){
 							$scope.addAlert('success', data.msg[0]);
+							angular.forEach($scope.selected,function(value){
+								var idx = $scope.searchResults.indexOf(value);
+								$scope.searchResults.splice(idx, 1);
+							});
 							}
 							else{
+								angular.forEach($scope.selected,function(value){
+									if(data.data[value.id] === undefined){
+									    var idx = $scope.searchResults.indexOf(value);
+									    $scope.searchResults.splice(idx, 1);
+									}
+								});
 								$scope.addAlert('warning', data.msg[0]);
 							}
 							SpinnerService.endSpinner(modal);
