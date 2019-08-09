@@ -143,9 +143,9 @@
 			</div>
 			
 		</div>
-		<div class="row">
+		<!-- <div class="row">
 		<button type="button"  ng-click="changestatus()" class="btn btn-primary pull-right" ng-disabled="selected.length === 0" >Proceed</button>
-		</div>
+		</div> -->
 		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
 			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
 </div>
