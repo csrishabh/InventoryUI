@@ -1,7 +1,7 @@
 var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages','ngMaterialDatePicker','ngRoute','ngPatternRestrict']);
   // set a custom templ
-var weburl = "https://spotliback.herokuapp.com";
-//var weburl = "http://localhost:8080";
+//var weburl = "https://spotliback.herokuapp.com";
+var weburl = "http://localhost:8080";
 var UIUrl = "";
 
 app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationProvider,$routeProvider) {
@@ -124,17 +124,34 @@ app.directive('input', ['$interval', function($interval) {
 ]);
 
 
-app.controller('myctrl',['$location','$cookies','$rootScope','userService','$http' ,'AppService', function($location, $cookies, $rootScope,userService,$http,AppService){
+app.controller('myctrl',['$location','$cookies','$rootScope','userService','$http' ,'AppService','$scope', function($location, $cookies, $rootScope,userService,$http,AppService,$scope){
+	
+	$scope.hasPermission = function(permission){
+		var roles = userService.get().roles;
+		if(permission != "" && roles != undefined){
+			return roles.indexOf(permission) != -1;
+		}
+		return false;
+	}
 	
 	if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
 		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
 		var user = JSON.parse($cookies.get("user"));
 		$rootScope.name = user.fullname;
 		userService.set(user);
-		AppService.getLateCaseCount().success(function(data){
-			$rootScope.lateCaseCount = data.data.count;
-		});
-		$location.path('/product');
+		if($scope.hasPermission('VENDOR')){
+			$location.path('/caseHistory');
+		}
+		else if($scope.hasPermission('USER_CASE')){
+			
+			AppService.getLateCaseCount().success(function(data){
+				$rootScope.lateCaseCount = data.data.count;
+			});
+		$location.path('/caseHistory');
+		}
+		else{
+			$location.path('/product');
+		}
 	}
 	else{
 		$location.path('/login');

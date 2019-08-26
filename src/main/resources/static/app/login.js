@@ -16,10 +16,6 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 			$http.defaults.headers.common.Authorization = headers(['authorization']);
 			$cookies.put("access_token", headers(['authorization']));
 			$scope.getUser();
-			$location.path('/product');
-			AppService.getLateCaseCount().success(function(data){
-				$rootScope.lateCaseCount = data.data.count;
-			});
 			SpinnerService.endSpinner(modal);
 			
 		}).error(function(data, status) {
@@ -40,7 +36,28 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 			$rootScope.name = data.fullname;
 			userService.set(data);
 			$cookies.put("user", JSON.stringify(data));
+			if($scope.hasPermission('VENDOR')){
+				$location.path('/caseHistory');
+			}
+			else if($scope.hasPermission('USER_CASE')){
+				
+				AppService.getLateCaseCount().success(function(data){
+					$rootScope.lateCaseCount = data.data.count;
+				});
+			$location.path('/caseHistory');
+			}
+			else{
+				$location.path('/product');
+			}
 		});
+	}
+	
+	$scope.hasPermission = function(permission){
+		var roles = userService.get().roles;
+		if(permission != "" && roles != undefined){
+			return roles.indexOf(permission) != -1;
+		}
+		return false;
 	}
 	
 	$scope.alerts = [

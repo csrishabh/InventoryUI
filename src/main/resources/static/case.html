@@ -26,35 +26,18 @@
                format="YYYY-MM-DD"
                ng-change="onBookingDateChange(Case.bookingDate)"
                ng-model="Case.bookingDate" class="md-form-input" tabindex="-1" 
-               ng-model-options="{timezone: 'ist'}" required>
+               required>
     		</md-input-container>
 			</div>
 			
 			<div class="col-md-3">
-			<md-autocomplete
-					tabindex="2"
-					name = "patient"
-					md-input-name="patient"
-          			ng-disabled="isCaseEdit"
-          			md-selected-item="Case.patient"
-          			md-no-cache="true"
-          			md-search-text="patientName"
-          			md-selected-item-change=""
-          			md-items="person in getPerson(patientName,'PATIENT')"
-          			md-item-text="person.name"
-          			md-min-length="1"
-          			md-floating-label="Patient..."
-          			md-require-match = "true" required>
-        		<md-item-template>
-          			<span d-highlight-text="patientName" md-highlight-flags="^i">{{person.name}}</span>
-        		</md-item-template>
-        	<md-not-found>
-          		<a class="addNew" ng-click="addNewPerson(patientName,'PATIENT')">Create a new one!</a>
-        	</md-not-found>
-        	<div ng-messages="form.patient.$error" ng-show="form.patient.$dirty && form.patient.$error.required">
-      		<div class="md-input-message-animation" ng-message="required">Patient is required</div>
-      		</div>
-      		</md-autocomplete>
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Patient Name</label>
+  			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.patient" required md-maxlength="20" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
+  			 <div ng-messages="form.patient.$error" ng-show="form.patient.$dirty && form.patient.$error.required">
+      			<div ng-message="required">Patient is required</div>
+    		 </div>
+			</md-input-container>
 			</div>
 			
 			<div class="col-md-3" ng-show="isCaseEdit">
@@ -107,16 +90,16 @@
           			md-search-text="doctorName"
           			md-selected-item-change=""
           			md-items="person in getPerson(doctorName,'DOCTOR')"
-          			md-item-text="person.name"
+          			md-item-text="person.fullname"
           			md-min-length="1"
           			md-floating-label="Doctor..."
           			md-require-match = "true" required>
         		<md-item-template>
-          			<span d-highlight-text="doctorName" md-highlight-flags="^i">{{person.name}}</span>
+          			<span d-highlight-text="doctorName" md-highlight-flags="^i">{{person.fullname}}</span>
         		</md-item-template>
-        	<md-not-found>
+        	<!-- <md-not-found>
           		<a class="addNew" ng-click="addNewPerson(doctorName,'DOCTOR')">Create a new one!</a>
-        	</md-not-found>
+        	</md-not-found> -->
         	<div ng-messages="form.doctor.$error" ng-show="form.doctor.$dirty && form.doctor.$error.required">
       		<div class="md-input-message-animation" ng-message="required">Doctor is required</div>
       		</div>
@@ -134,16 +117,16 @@
           			md-search-text="venderName"
           			md-selected-item-change=""
           			md-items="person in getPerson(venderName,'VENDER')"
-          			md-item-text="person.name"
+          			md-item-text="person.fullname"
           			md-min-length="1"
           			md-floating-label="Vender..."
           			md-require-match = "true" required>
         		<md-item-template>
-          			<span d-highlight-text="venderName" md-highlight-flags="^i">{{person.name}}</span>
+          			<span d-highlight-text="venderName" md-highlight-flags="^i">{{person.fullname}}</span>
         		</md-item-template>
-        	<md-not-found>
+        	<!-- <md-not-found>
           		<a class="addNew" ng-click="addNewPerson(venderName,'VENDER')">Create a new one!</a>
-        	</md-not-found>
+        	</md-not-found> -->
         	<div ng-messages="form.vender.$error" ng-show="form.vender.$dirty && form.vender.$error.required">
       		<div class="md-input-message-animation" ng-message="required">Vender is required</div>
       		</div>
@@ -185,13 +168,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="(key, value) in Case.crown.details">
+						<tr ng-repeat="c in Case.crown.details">
 							<th scope="row">{{$index+1}}</th>
-							<td>{{key}}</td>
-							<td>{{value}}</td>
-							<td>{{Case.crown.shade}}</td>
+							<td>{{c.type}}</td>
+							<td>{{c.crownNo}}</td>
+							<td>{{c.shade}}</td>
 							<td>
-							<a href="#"   ng-click = "updateCrowns(key)"> <span class="glyphicon glyphicon-trash"></span></a>
+							<a href="#"   ng-click = "updateCrowns(c)"> <span class="glyphicon glyphicon-trash"></span></a>
 							</td>
 						</tr>
 					</tbody>

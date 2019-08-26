@@ -18,7 +18,7 @@
 	 </div>	
 	 	<div class="form-group col-md-2">
 	 	<md-input-container class = "md-popup-input">
-  			<select class="form-control" id="unit" ng-model="crown.type" required id="crownType" name="crownType">
+  			<select class="form-control" ng-model="crown.type" required id="crownType" name="crownType">
     			<option value = "TYPE1">Type1</option>
     			<option value = "TYPE2">Type2</option>
     			<option value = "TYPE3">Type3</option>
@@ -31,7 +31,7 @@
 		<div class="col-md-4">
 		<md-input-container class = "md-popup-input">
   		<label class = "md-popup-input">Crown No.</label>
-  		<input type="text" ng-model="crown.value" required md-maxlength="100" class = "md-popup-input" id="crownNo" name="crownNo" pattern="^[0-9/,]*$" ng-pattern-restrict>
+  		<input type="text" ng-model="crown.crownNo" required md-maxlength="100" class = "md-popup-input" id="crownNo" name="crownNo" pattern="^[0-9/,]*$" ng-pattern-restrict>
   		<div ng-messages="form.crownNo.$error" ng-show="form.crownNo.$dirty && form.crownNo.$error.required">
       			<div ng-message="required">Crown No. is required</div>
     	</div>
@@ -40,7 +40,7 @@
 		<div class="col-md-4">
 		<md-input-container class = "md-popup-input">
   		<label class = "md-popup-input">Shade</label>
-  		<input type="text" ng-model="Case.crown.shade" required md-maxlength="3" class = "md-popup-input text-uppercase" id="shade" name="shade" pattern="^[A-Za-z0-9]*$" ng-pattern-restrict>
+  		<input type="text" ng-model="crown.shade" required md-maxlength="3" class = "md-popup-input text-uppercase" id="shade" name="shade" pattern="^[A-Za-z0-9]*$" ng-pattern-restrict>
   		<div ng-messages="form.shade.$error" ng-show="form.shade.$dirty && form.shade.$error.required">
       			<div ng-message="required">Crown shade is required</div>
     	</div>

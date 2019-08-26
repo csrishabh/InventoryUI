@@ -16,7 +16,7 @@ app.controller('caseController', [
 			$scope.isCaseEdit = false;
 			$scope.Case = {};
 			$scope.Case.crown={};
-			$scope.Case.crown.details= {};
+			$scope.Case.crown.details= [];
 			$scope.person = {};
 			$scope.Case = AppService.getCaseData();
 			$scope.actions = ['BOOKED','INPROCESS','TRIAL','DELIVERD','COMPLETED'];
@@ -36,7 +36,7 @@ app.controller('caseController', [
 				} else {
 					var searchStrEncoded = escape(searchStr);
 				}
-				var url = weburl + "/person/" + searchStrEncoded + "/" + type;
+				var url = weburl + "/user/" + searchStrEncoded + "/" + type;
 				return $http({
 					url : url,
 					method : 'GET'
@@ -56,12 +56,19 @@ app.controller('caseController', [
 			}
 			
 			$scope.addCrowninCase = function(crown) {
-				$scope.Case.crown.details[crown.type] = crown.value;
+				var c = {};
+				c.type = crown.type;
+				c.crownNo = crown.crownNo;
+				c.shade = crown.shade;
+				$scope.Case.crown.details[$scope.Case.crown.details.length] = c;
 			}
 			
-			$scope.updateCrowns = function(crownType)
+			$scope.updateCrowns = function(crown)
 			{
-				delete $scope.Case.crown.details[crownType];
+				 var idx = $scope.Case.crown.details.indexOf(crown);
+				    if (idx > -1) {
+				    	$scope.Case.crown.details.splice(idx, 1);
+				    }
 			}
 			
 
@@ -127,7 +134,7 @@ app.controller('caseController', [
 			$scope.initilizeNewCase = function() {
 				$scope.Case = {};
 				$scope.Case.crown={};
-				$scope.Case.crown.details= {};
+				$scope.Case.crown.details= [];
 				$scope.Case.bookingDate = new Date();
 				$scope.Case.appointmentDate = $scope.addWeekDays(
 						$scope.Case.bookingDate, 4);

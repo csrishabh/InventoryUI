@@ -21,7 +21,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.bookingDate1 = new Date(new Date().setDate(1));
 		$scope.bookingDate2 = new Date();
 		$scope.today = new Date();
-		$scope.minDate = new Date(2019, 01, 01);
+		$scope.minDate = new Date(2018,00,01);
 		$scope.selected = [];
 		
 		$scope.isChecked = function() {
@@ -114,9 +114,9 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.getCaseHistory();
 		};
 		
-		$scope.editCase = function(opdNo) {
+		$scope.editCase = function(opdNo,date) {
 			var modal = SpinnerService.startSpinner();	
-			$http.get(weburl + "/case/"+opdNo).success(
+			$http.get(weburl + "/case/"+opdNo+"/"+date).success(
 					function(data, status) {
 						if(data.success){
 							AppService.setCaseData(data.data);

@@ -10,13 +10,13 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="isCollapsed">
       <ul class="nav navbar-nav mr-auto">
-      	<li ng-class="{active:ctrl.isActive('/product')}"  ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.showProduct()"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
-      	<li ng-class="{active:ctrl.isActive('/inventory')}" ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.showInventory()">Inventory</a></li>
-      	<li ng-class="{active:ctrl.isActive('/audit')}"  ng-show = "ctrl.hasPermission('ADMIN')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.auditDetails()" tabindex="-1">Audit</a></li>
-      	<li ng-class="{active:ctrl.isActive('/transction')}"  ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.transctionDetails()" tabindex="-1">Transction</a></li>
-      	<li ng-class="{active:ctrl.isActive('/case')}"  ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.bookCase()" tabindex="-1">BookCase</a></li>
+      	<li ng-class="{active:ctrl.isActive('/product')}"  ng-show = "ctrl.hasPermission('USER_INV')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.showProduct()"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li>
+      	<li ng-class="{active:ctrl.isActive('/inventory')}" ng-show = "ctrl.hasPermission('USER_INV')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.showInventory()">Inventory</a></li>
+      	<li ng-class="{active:ctrl.isActive('/audit')}"  ng-show = "ctrl.hasPermission('ADMIN_INV')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.auditDetails()" tabindex="-1">Audit</a></li>
+      	<li ng-class="{active:ctrl.isActive('/transction')}"  ng-show = "ctrl.hasPermission('USER_INV')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.transctionDetails()" tabindex="-1">Transction</a></li>
+      	<li ng-class="{active:ctrl.isActive('/case')}"  ng-show = "ctrl.hasPermission('USER_CASE')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.bookCase()" tabindex="-1">BookCase</a></li>
       	<li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" ng-show = "name">View
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" ng-show = "ctrl.hasPermission('USER_CASE')">View
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a href="#" ng-click = "ctrl.ViewCaseHistory()">Case History</a></li>

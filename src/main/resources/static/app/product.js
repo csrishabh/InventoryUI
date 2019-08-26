@@ -14,6 +14,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.reverseSort = false;
 	$scope.unit="";
 	$scope.productName = "";
+	$scope.units = ['BOOKED','INPROCESS','TRIAL','DELIVERD','COMPLETED'];
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'

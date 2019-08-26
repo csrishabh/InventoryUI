@@ -15,7 +15,7 @@
           			md-items="product in getProduct(searchText)"
           			md-item-text="product.name"
           			md-min-length="1"
-          			placeholder="Search Product...">
+          			md-floating-label="Search Product...">
         		<md-item-template>
           			<span d-highlight-text="searchText" md-highlight-flags="^i">{{product.name}}</span>
         		</md-item-template>
@@ -95,27 +95,52 @@
 							<td>{{product.name}}</td>
 							<td>{{product.qtyAbl}}</td>
 							<td>
-								<input type="date" class="form-control" id=date ng-model="product.date" ng-init="product.date=(date)">
+								<md-input-container class="md-form-input md-table-input">
+  							    <input mdc-datetime-picker date="true" time="false" type="text" id="date"
+               					click-outside-to-close="true"
+               					auto-ok="true"
+               					format="DD-MM-YYYY"
+               					ng-model="product.date" class="md-form-input" tabindex="-1" 
+               					ng-init="product.date=(date)"
+               					required>
+  							    </md-input-container>
 							</td>
-							<td><input next-on-enter type="number" class="form-control col-xs-2"
-								id=quantity ng-model="product.quantity"
+							<td ng-show ="product.unit != 'PIECES'" >
+							<md-input-container class="md-form-input md-table-input">
+							<input next-on-enter type="number" class="md-form-input col-xs-2"
+								id=quantity name = quantity ng-model="product.quantity"
 								ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001"
-								ng-init = "product.quantity = 0"></td>	
+								ng-init = "product.quantity = 0">
+							</md-input-container>	
+							</td>
+								
+							<td ng-show ="product.unit == 'PIECES'" >
+								<md-input-container class="md-form-input md-table-input">
+  								<input id=quantity name = quantity
+  								type="number" ng-model="product.quantity" 
+  								required class="md-form-input col-xs-2" id="quantity" name="quantity">
+								</md-input-container>
+							</td>	
+									
 							<td>
-							<select class="form-control" ng-model="unit" ng-init="unit = product.unit" >
-										<option ng-show="product.unit == 'KILOGRAM'" value = "KILOGRAM">Kg</option>
-										<option ng-show="product.unit == 'KILOGRAM'" value = "GRAM">Gm</option>
-										<option ng-show="product.unit == 'LITER'" value = "LITER">Lt</option>
-										<option ng-show="product.unit == 'LITER'" value = "MILILITER">Ml</option>
-										<option ng-show="product.unit == 'PIECES'"value = "PIECES">Pc</option>
-							</select>
+								<md-input-container class="md-form-input md-table-input">
+          						<md-select class="md-form-input" ng-model="unit" ng-init="unit = product.unit">
+            					<md-option ng-show="product.unit == 'KILOGRAM'" value = "KILOGRAM">Kg</md-option>
+            					<md-option ng-show="product.unit == 'KILOGRAM'" value = "GRAM">Gm</md-option>
+            					<md-option ng-show="product.unit == 'LITER'" value = "LITER">Lt</md-option>
+            					<md-option ng-show="product.unit == 'LITER'" value = "MILILITER">Ml</md-option>
+            					<md-option ng-show="product.unit == 'PIECES'"value = "PIECES">Pc</md-option>
+          					    </md-select>
+          					    </md-input-container>
+        					
 						   </td>	
 							<td> 
 								<div>
-								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product,unit)">Add</button>
-        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(product.date,product.quantity,product,unit)">Dispatch</button>
+								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Add</button>
+        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(product.date,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Dispatch</button>
 								</div>
 							</td>
+						
 						</tr>
 					</tbody>
 				</table>
