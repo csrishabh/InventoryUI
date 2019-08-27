@@ -35,9 +35,10 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
 	}
 	
 	$scope.onFilterChange = function(key,value){
-		
-		$scope.filter[key] = value;	
-		$scope.getAdtTransctions();
+		if(value != undefined){
+			$scope.filter[key] = value;	
+			$scope.getAdtTransctions();
+		}	
 	}
     
     $scope.parseString = function(num) {return parseFloat(num)};

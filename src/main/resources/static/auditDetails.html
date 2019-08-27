@@ -40,8 +40,6 @@
 		       <md-autocomplete class = "filter-search"
 					name = "user"
 					md-input-name="user"
-          			ng-disabled="disabled"
-          			md-selected-item="Case.doctor"
           			md-no-cache="true"
           			md-search-text="userName"
           			md-selected-item-change="onFilterChange('addBy',user.username)"
@@ -79,10 +77,14 @@
 							<th scope="col">Date
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
-							<th scope="col">Product</th>
+							<th scope="col">Product
+							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
 							<th scope="col">Quantity</th>
 							<th scope="col">Amount</th>
-							<th scope="col">Add By</th>
+							<th scope="col">Add By
+							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
 							<th scope="col">Last Price</th>
 						</tr>
 					</thead>
