@@ -68,11 +68,17 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	};
 	
 	$scope.next = function() {
-		$scope.showTransction = true; 
+		
 		var modal = SpinnerService.startSpinner();
 		$http.get(weburl+"/getCart",config).success(function(data,status){	
 			SpinnerService.endSpinner(modal);
 			$scope.transctions = data;
+				if(data.length >0 ){
+					$scope.showTransction = true; 
+				}
+				else{
+					$scope.addAlert('warning', 'Your cart is empty');
+				}
 			}).error(function(data, status) {
 			$scope.transctions = [];
 			SpinnerService.endSpinner(modal);
@@ -145,6 +151,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	
 	$scope.showPopUp = function(product){
 			$scope.transction.date= new Date();
+			$scope.transction.quantity = 0;
 			$scope.product = product;
 			$scope.searchText = null;
 			$('#paymentDedtailsModal').modal('show');
