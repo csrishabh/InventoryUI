@@ -34,6 +34,7 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 		
 		$http.get(weburl+"/username").success(function(data){	
 			$rootScope.name = data.fullname;
+			$rootScope.userId = data.username;
 			userService.set(data);
 			$cookies.put("user", JSON.stringify(data));
 			if($scope.hasPermission('VENDOR')){

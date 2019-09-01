@@ -312,9 +312,14 @@ md-input-container .md-input.md-popup-input{
 	color: black;
 	border-color: #428bca;
 }
+md-input-container .md-input[disabled].md-popup-input{
+	border-bottom-color: gray !important;
+	opacity: 1 !important;
+}
+
 /*Border Color on valid input on foucs or not*/
 md-input-container:not(.md-input-invalid).md-input-focused .md-input.md-popup-input{
-	border-color:  #428bca; !important
+	border-color:  #428bca !important ;
 }
 /*Border Color on not valid input on foucs*/
 md-input-container.md-input-invalid .md-input.md-popup-input{

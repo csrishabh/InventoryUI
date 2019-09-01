@@ -40,6 +40,14 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
 			$scope.getAdtTransctions();
 		}	
 	}
+	
+	$scope.resetDateFilter = function(){
+		$scope.search.date1 = null;
+		$scope.search.date2 = null;
+		delete $scope.filter['startDate'];
+		delete $scope.filter['endDate']
+		$scope.getAdtTransctions();
+	}
     
     $scope.parseString = function(num) {return parseFloat(num)};
     

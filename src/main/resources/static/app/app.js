@@ -1,6 +1,6 @@
 var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages','ngMaterialDatePicker','ngRoute','ngPatternRestrict']);
   // set a custom templ
-var weburl = "https://spotliback.herokuapp.com";
+var weburl = "https://spback.herokuapp.com";
 //var weburl = "http://localhost:8080";
 var UIUrl = "";
 
@@ -53,6 +53,12 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 	$httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 	
+});
+
+
+app.config(function($mdAriaProvider) {
+	   // Globally disables all ARIA warnings.
+	   $mdAriaProvider.disableWarnings();
 });
 
 app.directive('nextOnEnter', function () {
@@ -138,6 +144,7 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
 		var user = JSON.parse($cookies.get("user"));
 		$rootScope.name = user.fullname;
+		$rootScope.userId = user.username;
 		userService.set(user);
 		if($scope.hasPermission('VENDOR')){
 			$location.path('/caseHistory');

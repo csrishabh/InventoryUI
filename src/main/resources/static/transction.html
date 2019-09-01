@@ -9,7 +9,9 @@
      	<md-content>
       	<md-list class="md-dense" flex>
          
-	    <md-subheader class="md-no-sticky">Search By Date</md-subheader>
+	    <md-subheader class="md-no-sticky">Search By Date
+	    <md-button md-no-ink class="md-primary" ng-click="resetDateFilter()">Clear</md-button>
+	    </md-subheader>
 	       	 <md-list-item class="md-1-line" ng-click="null">
 	       	 <label>From</label>
 	       	 <md-input-container class = "md-popup-input">
@@ -18,7 +20,7 @@
                		   auto-ok="true"
                		   min-date = "minDate"
                        format="DD-MM-YYYY"
-                       max-date = "search.date2"
+                       max-date = "search.date2 ? search.date2 : today"
                        ng-model="search.date1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('startDate',search.date1)">
     		</md-input-container>
     		<label>To</label>
@@ -29,6 +31,7 @@
                        format="DD-MM-YYYY"
                        min-date = "search.date1"
                        max-date = "today"
+                       ng-disabled="search.date1 === null"
                        ng-model="search.date2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('endDate',search.date2)">
             </md-input-container>                 
 		    </md-list-item>  
@@ -64,8 +67,9 @@
 		        <md-input-container class = "md-popup-input">
 		  		<input type="text" ng-model="filter['productName']" class = "md-popup-input" id="productName" name="productName" dl-enter-key=applyFilter()>
 				</md-input-container>
-	        </md-list-item>   
-	        
+	        </md-list-item>
+	           
+	         <md-divider ></md-divider> 
 	         <md-subheader class="md-no-sticky">Search By Type</md-subheader>
 	         
 	        <md-list-item class="md-1-line" ng-click="null"> 

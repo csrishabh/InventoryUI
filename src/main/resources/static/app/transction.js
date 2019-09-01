@@ -40,6 +40,14 @@ app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$inte
 		}
 	}
 	
+	$scope.resetDateFilter = function(){
+		$scope.search.date1 = null;
+		$scope.search.date2 = null;
+		delete $scope.filter['startDate'];
+		delete $scope.filter['endDate']
+		$scope.getTransctions();
+	}
+	
 	$scope.getUser = function(searchStr, type) {
 		if (!searchStr) {
 			var searchStrEncoded = "";
