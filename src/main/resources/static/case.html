@@ -9,7 +9,8 @@
 			<div class="col-md-3">
 			<md-input-container class="md-form-input">
   			<label class="md-form-input">OPD No.</label>
-  			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.opdNo" required md-maxlength="10" class="md-form-input text-uppercase" id="opdNo" name="opdNo" pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="1">
+  			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.opdNo" required md-maxlength="10" class="md-form-input text-uppercase" id="opdNo" 
+  			name="opdNo" pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="1" ng-blur = "checkOpdNoExist(Case.opdNo)">
   			 <div ng-messages="form.opdNo.$error" ng-show="form.opdNo.$dirty && form.opdNo.$error.required">
       			<div ng-message="required">OPD No. is required</div>
     		 </div>
@@ -33,7 +34,7 @@
 			<div class="col-md-3">
 			<md-input-container class="md-form-input">
   			<label class="md-form-input">Patient Name</label>
-  			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.patient" required md-maxlength="20" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
+  			<input type="text" ng-disabled="isCaseEdit || isOpdFound " ng-model="Case.patient" required md-maxlength="20" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
   			 <div ng-messages="form.patient.$error" ng-show="form.patient.$dirty && form.patient.$error.required">
       			<div ng-message="required">Patient is required</div>
     		 </div>
@@ -116,7 +117,7 @@
           			md-no-cache="true"
           			md-search-text="venderName"
           			md-selected-item-change=""
-          			md-items="person in getPerson(venderName,'VENDER')"
+          			md-items="person in getPerson(venderName,'VENDOR')"
           			md-item-text="person.fullname"
           			md-min-length="1"
           			md-floating-label="Vender..."
@@ -182,6 +183,71 @@
 			</div>
 			<button type="button"  ng-click="addCrown()" class="btn btn-primary pull-right" tabindex="5" >Add Crown</button>
 		</div>
+		</div>
+		
+		<div class="row">
+		<md-button md-no-ink class="md-primary md-form-input pull-right" ng-click="getCaseHistory()" ng-show="hasPermission('ADMIN_CASE') && isCaseEdit && !isShowHistory"> <span class="glyphicon glyphicon-time"></span> Show Case History</md-button>
+		<div></div>
+		<div class="table-wrapper-scroll-y text-nowrap">
+				<table class="table" ng-show="hasPermission('ADMIN_CASE') && isShowHistory">
+					<thead>
+					<tr>
+							<th scope="col">#</th>
+							
+							<th scope="col">OPD NO.</th>
+							
+							<th scope="col">Patient Name</th>
+							
+							<th scope="col">Vendor Name</th>
+							
+							<th  scope="col" >Doctor Name</th>
+						
+							<th scope="col">Appointment Date</th>
+							
+							<th scope="col">Booking Date</th>
+							
+							<th scope="col">Delivery Date</th>
+							
+							<th scope="col">Update By</th>
+							
+							<th scope="col">Update date</th>
+							
+							<th scope="col">Status</th>
+							
+							<th scope="col">Crown Details</th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="result in searchResults">
+							<th scope="row">{{$index+1}}</th>
+							
+							<td>{{result.id}}</td>
+												
+							<td>{{result.patientName}}</td>
+							
+							<td>{{result.vendorName}}</td>
+							
+							<td>{{result.doctorName}}</td>
+							
+							<td>{{result.appointmentDate}}</td> 
+					
+							<td>{{result.bookingDate}}</td>
+							
+							<td>{{result.deliverdDate}}</td>
+							
+							<td>{{result.updateBy}}</td>
+							
+							<td>{{result.updateDate}}</td>
+							
+							<td>{{result.status}}</td>
+							
+							<td>{{result.crownDetails}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
 		</div>
 		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
 			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>

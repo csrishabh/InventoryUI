@@ -276,6 +276,10 @@ md-input-container.md-form-input label:not(.md-no-float):not(.md-container-ignor
 	color: #d59307 !important;
 }
 
+.md-button.md-primary.md-form-input{
+	color: white !important;
+}
+
 /* Form table input box */
 md-input-container.md-table-input .md-errors-spacer{
 	display: none;

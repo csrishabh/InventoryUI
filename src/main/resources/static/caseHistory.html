@@ -15,121 +15,206 @@
         
         <md-divider ></md-divider>
         
-        <md-subheader class="md-no-sticky">Search By Patient</md-subheader>
-	        <md-list-item class="md-1-line">
-		        <md-autocomplete class = "filter-search"
-							name = "patient"
-							md-input-name="patient"
-		          			ng-disabled="disabled"
-		          			md-selected-item="Case.patient"
-		          			md-no-cache="true"
-		          			md-search-text="patientName"
-		          			md-selected-item-change=""
-		          			md-items="person in getPerson(patientName,'PATIENT')"
-		          			md-item-text="person.name"
-		          			md-min-length="1"
-		          			md-floating-label="Patient..."
-		          			md-require-match = "true">
-		        		<md-item-template>
-		          			<span d-highlight-text="patientName" md-highlight-flags="^i">{{person.name}}</span>
-		        		</md-item-template>
-		      	</md-autocomplete>
-	        </md-list-item>
-	        
-	    <md-divider ></md-divider>
-	     
-	    <md-subheader class="md-no-sticky">Search By Booking Date</md-subheader>
+        <md-subheader class="md-no-sticky"> Booking Date
+	    <md-button md-no-ink class="md-primary" ng-click="resetBookingDateFilter()">Clear</md-button>
+	    </md-subheader>
 	       	 <md-list-item class="md-1-line" ng-click="null">
 	       	 <label>From</label>
 	       	 <md-input-container class = "md-popup-input">
-       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromBookingDate" show-todays-date
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromBookingDate" name="fromBookingDate"
                		   click-outside-to-close="true"
                		   auto-ok="true"
-                       format="YYYY-MM-DD"
+                       format="DD-MM-YYYY"
                        min-date = "minDate"
-                       max-date = "bookingDate2"
+                       max-date = "bookingDate2 ? bookingDate2 : today"
                        ng-model="bookingDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('bookingDate1',bookingDate1)">
     		</md-input-container>
     		<label>To</label>
     		<md-input-container class = "md-popup-input">
-       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toBookingDate" show-todays-date
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toBookingDate" name ="toBookingDate"
                		   click-outside-to-close="true"
                		   auto-ok="true"
-                       format="YYYY-MM-DD"
+                       format="DD-MM-YYYY"
                        min-date = "bookingDate1"
                        max-date = "today"
+                       ng-disabled="bookingDate1 === null"
                        ng-model="bookingDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('bookingDate2',bookingDate2)">
             </md-input-container>                 
-		    </md-list-item>
-		    
-		 <md-subheader class="md-no-sticky">{{bookingDate1}} & {{bookingDate2}}</md-subheader>
-	  
-		    
+		    </md-list-item>    
 		<md-divider ></md-divider>
+        
+        <div ng-show="hasPermission('USER_CASE')">
+        <md-subheader class="md-no-sticky">Search By Patient</md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['patient']" class = "md-popup-input" id="patient" name="patient" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+	    <div ng-show="hasPermission('USER_CASE')"> 
+	    <md-subheader class="md-no-sticky">Appointment Date
+	    <md-button md-no-ink class="md-primary" ng-click="resetAptDateFilter()">Clear</md-button>
+	    </md-subheader>
+	       	 <md-list-item class="md-1-line" ng-click="null">
+	       	 <label>From</label>
+	       	 <md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromAptDate" name ="fromAptDate" 
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "minDate"
+                       max-date = "aptMaxDate"
+                       ng-model="aptDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('aptDate1',aptDate1)">
+    		</md-input-container>
+    		<label>To</label>
+    		<md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toAptDate" name="toAptDate" 
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "aptDate1"
+                        max-date = "aptMaxDate"
+                       ng-disabled="aptDate1 === null"
+                       ng-model="aptDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('aptDate2',aptDate2)">
+            </md-input-container>                 
+		    </md-list-item>       
+		<md-divider ></md-divider>
+		</div>
+		
+		<div ng-show="hasPermission('ADMIN_CASE')">
 	    <md-subheader class="md-no-sticky">Search By User</md-subheader>
 	        
 	        <md-list-item class="md-1-line" ng-click="null">
 		        <md-input-container class = "md-popup-input">
 		  		<input type="text" ng-model="filter['createdBy']" class = "md-popup-input" id="user" name="user" dl-enter-key=applyFilter()>
 				</md-input-container>
-	        </md-list-item>     
-		     
+	        </md-list-item>    
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="hasPermission('USER_CASE')">
+	    <md-subheader class="md-no-sticky">Search By Status</md-subheader>
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()">
+          						<md-option value = "ALL">All</md-option>
+          						<md-option value = "BOOKED">BOOKED</md-option>
+            					<md-option value = "INPROCESS">INPROCES</md-option>
+            					<md-option value = "TRIAL">TRIAL</md-option>
+            					<md-option value = "DELIVERD">DELIVERD</md-option>
+            					<md-option value = "COMPLETED">COMPLETED</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+           <md-divider ></md-divider> 
+        </div>            
         </md-list>
         </md-content>
   	</md-sidenav>
 		<div class="row">
 		<div class="table-wrapper-scroll-y text-nowrap">
 				<table class="table">
-					<thead>
+					<thead ng-show = "isActive('/caseHistory')" >
 						<tr>
 							<!-- <th>
 							<md-checkbox  ng-checked="isChecked()" ng-click="toggleAll()"></md-checkbox>
 							</th> -->
 							<th scope="col">#</th>
+							
 							<th scope="col">OPD NO.
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
-							<th scope="col">Patient Name
+							
+							<th scope="col" ng-show="hasPermission('USER_CASE')">Patient Name
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
-							<th scope="col">Crown Details</th>
-							<th scope="col">Appointment Date
+							
+							<th ng-show="hasPermission('USER_CASE')" scope="col">Vendor Name</th>
+							
+							<th  ng-show="hasPermission('USER_CASE')" scope="col" >Doctor Name</th>
+						
+							<th scope="col" ng-show="hasPermission('USER_CASE')" >Appointment Date
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
-							<th scope="col">Doctor Name
-							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
-							</th>
-							<th scope="col">Vendor Name
-							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
-							</th>
+							
 							<th scope="col">Booking Date
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
-							<th scope="col">Booked By
+							
+							<th scope="col">Delivery Date</th>
+							
+							<th ng-show="hasPermission('ADMIN_CASE')" scope="col">Booked By
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
-							<th scope="col">Delivery Date
-							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
-							</th>
+							
 							<th scope="col">Status
-							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
+							<a ng-show="hasPermission('USER_CASE')" href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
+							
+							<th scope="col">Crown Details</th>
+							
+						</tr>
+					</thead>
+					<thead ng-show = "isActive('/lateCases')">
+					<tr>
+							<!-- <th>
+							<md-checkbox  ng-checked="isChecked()" ng-click="toggleAll()"></md-checkbox>
+							</th> -->
+							<th scope="col">#</th>
+							
+							<th scope="col">OPD NO.</th>
+							
+							<th scope="col" ng-show="hasPermission('USER_CASE')">Patient Name</th>
+							
+							<th ng-show="hasPermission('USER_CASE')" scope="col">Vendor Name</th>
+							
+							<th  ng-show="hasPermission('USER_CASE')" scope="col" >Doctor Name</th>
+						
+							<th scope="col" ng-show="hasPermission('USER_CASE')" >Appointment Date</th>
+							
+							<th scope="col">Booking Date</th>
+							
+							<th scope="col">Delivery Date</th>
+							
+							<th ng-show="hasPermission('ADMIN_CASE')" scope="col">Booked By</th>
+							
+							<th scope="col">Status</th>
+							
+							<th scope="col">Crown Details</th>
+							
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="result in searchResults">
 							<!-- <td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td> -->
 							<th scope="row">{{$index+1}}</th>
-							<td><a href="#"  ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a></td>
-							<td>{{result.patientName}}</td>
-							<td>{{result.crownDetails}}</td>
-							<td>{{result.appointmentDate}}</td>
-							<td>{{result.doctorName}}</td>
-							<td>{{result.vendorName}}</td>
+							
+							<td ng-show="hasPermission('ADMIN_CASE')|| (hasPermission('USER_CASE') && userId === result.createdBy)">
+							<a href="#"  ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
+							</td>
+						
+							<td ng-show="!hasPermission('ADMIN_CASE') && (hasPermission('VENDOR') || (hasPermission('USER_CASE') && userId != result.createdBy))">{{result.id}}</td>
+												
+							<td ng-show="hasPermission('USER_CASE')">{{result.patientName}}</td>
+							
+							<td ng-show="hasPermission('USER_CASE')">{{result.vendorName}}</td>
+							
+							<td ng-show="hasPermission('USER_CASE')" >{{result.doctorName}}</td>
+							
+							<td ng-show="hasPermission('USER_CASE')">{{result.appointmentDate}}</td> 
+					
 							<td>{{result.bookingDate}}</td>
-							<td>{{result.createdBy}}</td>
+							
 							<td>{{result.deliverdDate}}</td>
+							
+							<td ng-show="hasPermission('ADMIN_CASE')">{{result.createdBy}}</td>
+							
 							<td>{{result.status}}</td>
+							
+							<td>{{result.crownDetails}}</td>
+							
 							<!-- <td class = "selectList">
   			<select class="form-control" id="action" ng-model="result.action" name="action" 
   			ng-init=" result.action = result.actions[0]" ng-disabled="{{result.actions.length === 1}}">
