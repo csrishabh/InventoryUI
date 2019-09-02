@@ -212,6 +212,10 @@ td.selectList{
   background-color: #d59307d4;
 }
 
+.td-highlited{ 
+  background-color: #d59307d4;
+}
+
 .list-inline {
   display: flex;
   justify-content: center;
@@ -277,6 +281,9 @@ md-input-container.md-form-input label:not(.md-no-float):not(.md-container-ignor
 }
 
 .md-button.md-primary.md-form-input{
+	color: white !important;
+}
+label.md-form-input{
 	color: white !important;
 }
 

@@ -222,27 +222,39 @@
 						<tr ng-repeat="result in searchResults">
 							<th scope="row">{{$index+1}}</th>
 							
-							<td>{{result.id}}</td>
+							<td> {{result.id}}</td>
 												
 							<td>{{result.patientName}}</td>
 							
-							<td>{{result.vendorName}}</td>
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.vendorName != searchResults[$index+1].vendorName )"> <b>{{result.vendorName}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.vendorName === searchResults[$index+1].vendorName )">{{result.vendorName}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.vendorName}}</td>
 							
-							<td>{{result.doctorName}}</td>
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.doctorName != searchResults[$index+1].doctorName )"> <b>{{result.doctorName}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.doctorName === searchResults[$index+1].doctorName )">{{result.doctorName}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.doctorName}}</td>
 							
-							<td>{{result.appointmentDate}}</td> 
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.appointmentDate != searchResults[$index+1].appointmentDate )"> <b>{{result.appointmentDate}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.appointmentDate === searchResults[$index+1].appointmentDate )">{{result.appointmentDate}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.appointmentDate}}</td>
 					
 							<td>{{result.bookingDate}}</td>
 							
-							<td>{{result.deliverdDate}}</td>
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.deliverdDate != searchResults[$index+1].deliverdDate )"> <b>{{result.deliverdDate}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.deliverdDate === searchResults[$index+1].deliverdDate )">{{result.deliverdDate}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.deliverdDate}}</td>
 							
 							<td>{{result.updateBy}}</td>
 							
 							<td>{{result.updateDate}}</td>
 							
-							<td>{{result.status}}</td>
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.status != searchResults[$index+1].status )"> <b>{{result.status}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.status === searchResults[$index+1].status )">{{result.status}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.status}}</td>
 							
-							<td>{{result.crownDetails}}</td>
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.crownDetails != searchResults[$index+1].crownDetails)"> <b>{{result.crownDetails}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.crownDetails === searchResults[$index+1].crownDetails)">{{result.crownDetails}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.crownDetails}}</td>
 						</tr>
 					</tbody>
 				</table>

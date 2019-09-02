@@ -8,6 +8,7 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
 	$scope.filter = {};	
 	$scope.filter['startDate'] = $filter('date')(new Date(), 'dd-MM-yyyy');
 	$scope.filter['endDate'] = $filter('date')(new Date(), 'dd-MM-yyyy');
+	$scope.totalAmount = 0;
 	
 	var config = {
             headers : {
@@ -63,7 +64,7 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
     	var modal = SpinnerService.startSpinner();	
     	var t = {};
     	t.id = data[6];
-    	t.amount = data[3];
+    	t.amount = data[3]*data[2];
     	t.quantity= data[2];
     	
     	$http.post(weburl+"/audit",t).success(function(response, status, headers, config){
@@ -144,6 +145,14 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
 			return data.data;
 		});
 	};
+	
+	
+	 $scope.calculateTotalAmount = function(){
+		 $scope.totalAmount = 0;
+		 $scope.transctions.forEach(function (t, index) {
+			$scope.totalAmount = $scope.totalAmount + (t[2]*t[3]);
+	 });
+	 }
     
     $scope.getAdtTransctions();
     
