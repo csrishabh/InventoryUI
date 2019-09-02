@@ -4,7 +4,7 @@
 		
 		<div class="row">
 		<!-- Left Panel-->
-		<div class="col-md-3">
+		<div class="col-md-3" ng-show = "!showTransction">
 		<!-- First Row-->
 				<!-- <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span> -->
 				<md-autocomplete
@@ -15,7 +15,7 @@
           			md-items="product in getProduct(searchText)"
           			md-item-text="product.name"
           			md-min-length="1"
-          			placeholder="Search Product...">
+          			md-floating-label="Search Product...">
         		<md-item-template>
           			<span d-highlight-text="searchText" md-highlight-flags="^i">{{product.name}}</span>
         		</md-item-template>
@@ -27,7 +27,7 @@
 		<!-- Right Panel-->
 		<div class="col-md-9">
 		<div ng-show = "showTransction" class="row">
-			<div class="table-wrapper-scroll-y">
+			<div class="table-wrapper-scroll-y text-nowrap">
 				<table class="table">
 					<thead>
 						<tr>
@@ -44,14 +44,15 @@
 							<td>{{t.date| date:'MM/dd/yyyy'}}</td>
 							<td>{{t.productName}}</td>
 							<td>{{t.type}}</td>
-							<td ng-show = "!checked" ><input next-on-enter type="number" class="form-control col-xs-2"
-								id=quantity ng-value="t.quantityBack/1000.0"
-								ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001"
-								ng-init=t[2] ng-readonly="true"></td>
-							<td ng-show = "checked" ><input next-on-enter type="number" class="form-control col-xs-2"
+							<td ng-show = "!checked">
+							<md-input-container class="md-form-input md-table-input">
+  								<input id=quantity name = quantity type="number" required class="md-form-input col-xs-2" id="quantity" name="quantity" ng-value="t.quantityBack/1000.0" ng-disabled="true"> 
+							</md-input-container>
+							</td>
+							<!-- <td ng-show = "checked" ><input next-on-enter type="number" class="form-control col-xs-2"
 								id=quantity ng-model="t.quantity"
 								ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001"/>
-							</td>	
+							</td> -->	
 							<td> 
 								<!-- <a href="#"   ng-model="checked" ng-init= "checked=false" ng-click = "checked = setEdit(checked)"> <span class="glyphicon glyphicon-edit"></span></a> -->
 								<a href="#"   ng-click = "updateTransction($index,true)"> <span class="glyphicon glyphicon-trash"></span></a>
@@ -63,7 +64,7 @@
 			</div>
 		</div>
 		<div ng-show = "!showTransction" class="row">
-			<div class="table-wrapper-scroll-y">
+			<div class="table-wrapper-scroll-y text-nowrap">
 				<table class="table">
 					<thead>
 						<tr>
@@ -95,27 +96,52 @@
 							<td>{{product.name}}</td>
 							<td>{{product.qtyAbl}}</td>
 							<td>
-								<input type="date" class="form-control" id=date ng-model="product.date" ng-init="product.date=(date)">
+								<md-input-container class="md-form-input md-table-input">
+  							    <input mdc-datetime-picker date="true" time="false" type="text" id="date"
+               					click-outside-to-close="true"
+               					auto-ok="true"
+               					format="DD-MM-YYYY"
+               					ng-model="product.date" class="md-form-input" tabindex="-1" 
+               					ng-init="product.date=(date)"
+               					required>
+  							    </md-input-container>
 							</td>
-							<td><input next-on-enter type="number" class="form-control col-xs-2"
-								id=quantity ng-model="product.quantity"
+							<td ng-show ="product.unit != 'PIECES'" >
+							<md-input-container class="md-form-input md-table-input">
+							<input next-on-enter type="number" class="md-form-input col-xs-2"
+								id=quantity name = quantity ng-model="product.quantity"
 								ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001"
-								ng-init = "product.quantity = 0"></td>	
+								ng-init = "product.quantity = 0">
+							</md-input-container>	
+							</td>
+								
+							<td ng-show ="product.unit == 'PIECES'" >
+								<md-input-container class="md-form-input md-table-input">
+  								<input id=quantity name = quantity
+  								type="number" ng-model="product.quantity" 
+  								required class="md-form-input col-xs-2" id="quantity" name="quantity">
+								</md-input-container>
+							</td>	
+									
 							<td>
-							<select class="form-control" ng-model="unit" ng-init="unit = product.unit" >
-										<option ng-show="product.unit == 'KILOGRAM'" value = "KILOGRAM">Kg</option>
-										<option ng-show="product.unit == 'KILOGRAM'" value = "GRAM">Gm</option>
-										<option ng-show="product.unit == 'LITER'" value = "LITER">Lt</option>
-										<option ng-show="product.unit == 'LITER'" value = "MILILITER">Ml</option>
-										<option ng-show="product.unit == 'PIECES'"value = "PIECES">Pc</option>
-							</select>
+								<md-input-container class="md-form-input md-table-input">
+          						<md-select class="md-form-input" ng-model="unit" ng-init="unit = product.unit">
+            					<md-option ng-show="product.unit == 'KILOGRAM'" value = "KILOGRAM">Kg</md-option>
+            					<md-option ng-show="product.unit == 'KILOGRAM'" value = "GRAM">Gm</md-option>
+            					<md-option ng-show="product.unit == 'LITER'" value = "LITER">Lt</md-option>
+            					<md-option ng-show="product.unit == 'LITER'" value = "MILILITER">Ml</md-option>
+            					<md-option ng-show="product.unit == 'PIECES'"value = "PIECES">Pc</md-option>
+          					    </md-select>
+          					    </md-input-container>
+        					
 						   </td>	
 							<td> 
 								<div>
-								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product,unit)">Add</button>
-        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(product.date,product.quantity,product,unit)">Dispatch</button>
+								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Add</button>
+        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(product.date,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Dispatch</button>
 								</div>
 							</td>
+						
 						</tr>
 					</tbody>
 				</table>
@@ -127,13 +153,13 @@
 		<ul ng-if="pager.pages.length" class="list-inline">
 		
 			<li class ="item">
-				<a ng-class="{disabled:pager.currentPage === 1}" ng-click="getAllProduct((pager.currentPage) - 1)"><span class="glyphicon glyphicon-backward"></span></a>
+				<a ng-class="{disabled:pager.currentPage === 1}" ng-click="pager.currentPage === 1 ? '' : getAllProduct((pager.currentPage) - 1)"><span class="glyphicon glyphicon-backward"></span></a>
 			</li>
 			<li ng-repeat="page in pager.pages" class ="item">
 				<a ng-class="{active:pager.currentPage === page}" ng-click="getAllProduct(page)">{{page}}</a>
 			</li>                
 			<li class ="item">
-				<a ng-class="{disabled:pager.currentPage === pager.totalPages}" ng-click="getAllProduct((pager.currentPage) + 1)"><span class="glyphicon glyphicon-forward"></span></a>
+				<a ng-class="{disabled:pager.currentPage === pager.totalPages}" ng-click="pager.currentPage === pager.totalPages ? '' : getAllProduct((pager.currentPage) + 1)"><span class="glyphicon glyphicon-forward"></span></a>
 			</li>
 		</ul>
 		</div>

@@ -1,0 +1,61 @@
+<!-- Modal -->
+<div id="addCrownModel" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" 
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+	
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <form name="form" ng-submit="addCrowninCase(crown)" role="form">
+      
+      <div class="modal-header">
+        <button type="button" ng-click="closePopUp()" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">ADD CROWN</h4>
+       </div>
+	  
+	 <div class="row">
+	 <div class="form-group col-md-2">
+	 	<label>Crown Type</label>
+	 </div>	
+	 	<div class="form-group col-md-2">
+	 	<md-input-container class = "md-popup-input">
+  			<select class="form-control" ng-model="crown.type" required id="crownType" name="crownType">
+    			<option value = "TYPE1">Type1</option>
+    			<option value = "TYPE2">Type2</option>
+    			<option value = "TYPE3">Type3</option>
+  			</select>
+  		<div ng-messages="form.crownType.$error" ng-show="form.crownType.$dirty && form.crownType.$error.required">
+      			<div ng-message="required">Crown Type is required</div>
+    	</div>	
+  		</md-input-container>	
+		</div>
+		<div class="col-md-4">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Crown No.</label>
+  		<input type="text" ng-model="crown.crownNo" required md-maxlength="100" class = "md-popup-input" id="crownNo" name="crownNo" pattern="^[0-9/,]*$" ng-pattern-restrict>
+  		<div ng-messages="form.crownNo.$error" ng-show="form.crownNo.$dirty && form.crownNo.$error.required">
+      			<div ng-message="required">Crown No. is required</div>
+    	</div>
+		</md-input-container>
+		</div>
+		<div class="col-md-4">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Shade</label>
+  		<input type="text" ng-model="crown.shade" required md-maxlength="3" class = "md-popup-input text-uppercase" id="shade" name="shade" pattern="^[A-Za-z0-9]*$" ng-pattern-restrict>
+  		<div ng-messages="form.shade.$error" ng-show="form.shade.$dirty && form.shade.$error.required">
+      			<div ng-message="required">Crown shade is required</div>
+    	</div>
+		</md-input-container>
+		</div>
+	</div>	
+	
+    <div class="modal-footer">
+    	<button type="button" ng-click ="closeAddCrownModel()" class="btn btn-primary">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Add</button>
+	</div>
+	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

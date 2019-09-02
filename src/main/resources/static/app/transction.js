@@ -1,48 +1,82 @@
-app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$interval','SpinnerService','userService', function($http ,$scope ,$filter ,$q ,$interval ,SpinnerService,userService){
+app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$interval','SpinnerService','userService','$mdSidenav', function($http ,$scope ,$filter ,$q ,$interval ,SpinnerService,userService,$mdSidenav){
 	$scope.search = {};
 	$scope.search.date1 = $scope.search.date2 = new Date();
 	$scope.transctions = {};
 	$scope.transction = []
+	$scope.today = new Date();
+	$scope.minDate = new Date(2018,00,01);
+	$scope.filter = {};	
+	$scope.filter['startDate'] = $filter('date')(new Date(), 'dd-MM-yyyy');
+	$scope.filter['endDate'] = $filter('date')(new Date(), 'dd-MM-yyyy');
 	
-	document.getElementById('date').focus();
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'
             }
         };	
 	
-	var currDate = $filter('date')(new Date(), 'dd-MM-yyyy');
-	var d = new Date();
-	d.setDate(d.getDate() +1);
-	var tomorrowDate = $filter('date')(d, 'dd-MM-yyyy');
-	var url = weburl+"/transction?&startDate="+currDate+"&endDate="+(tomorrowDate);
+    $scope.openFilterNav = function() {
+	    $mdSidenav('left').toggle();
+	};
+	
+	$scope.getFilterString = function(){
+		var filterString = "?";
+		angular.forEach($scope.filter,function(value,key){
+			filterString = filterString + key + "=" +value + "&";
+		});
+		return filterString;
+	}
+	
+	$scope.onDateChange = function(key,date){
+		
+		$scope.filter[key] = $filter('date')(date, 'dd-MM-yyyy');	
+		$scope.getTransctions();
+	}
+	
+	$scope.onFilterChange = function(key,value){
+		if(value != undefined){
+		$scope.filter[key] = value;	
+		$scope.getTransctions();
+		}
+	}
+	
+	$scope.resetDateFilter = function(){
+		$scope.search.date1 = null;
+		$scope.search.date2 = null;
+		delete $scope.filter['startDate'];
+		delete $scope.filter['endDate']
+		$scope.getTransctions();
+	}
+	
+	$scope.getUser = function(searchStr, type) {
+		if (!searchStr) {
+			var searchStrEncoded = "";
+		} else {
+			var searchStrEncoded = escape(searchStr);
+		}
+		var url = weburl + "/user/" + searchStrEncoded + "/" + type;
+		return $http({
+			url : url,
+			method : 'GET'
+		}).then(function(data) {
+			return data.data;
+		});
+	};
+	
+	$scope.applyFilter = function() {
+		$scope.getTransctions();
+	};
+	
+    $scope.getTransctions = function (){
+	var url = weburl+"/transction"+$scope.getFilterString();
 	var modal = SpinnerService.startSpinner();
     $http.get(url).success(function(data){	
     	$scope.transctions = data;
     	SpinnerService.endSpinner(modal);
-		
-	},function myError(response) {
+	}).error(function(response,status){
 		SpinnerService.endSpinner(modal);
 		$scope.addAlert('warning', 'Please Try Again');
     });
-    
-    
-    $scope.getTransctions = function (){
-    var date1 = $filter('date')($scope.search.date1, 'dd-MM-yyyy');
-    var d = $scope.search.date2;
-	d.setDate(d.getDate() +1);
-	var date2 = $filter('date')(d, 'dd-MM-yyyy');
-	if($scope.search.date1 > $scope.search.date2){
-		$scope.addAlert('warning', 'FROM date can not be less greater then TO date');
-	}
-	else{
-	var url = weburl+"/transction?&startDate="+date1+"&endDate="+(date2);
-	var modal = SpinnerService.startSpinner();
-    $http.get(url).success(function(data){	
-    	$scope.transctions = data;
-    	SpinnerService.endSpinner(modal);
-	});
-	}
   }  
     
     $scope.hasPermission = function(permission){
@@ -80,6 +114,8 @@ app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$inte
 		});
     	$scope.hideRemarkPopUp();
     }
+    
+    $scope.getTransctions();
     
     $scope.alerts = [
                    ];

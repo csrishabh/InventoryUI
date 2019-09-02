@@ -14,6 +14,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.reverseSort = false;
 	$scope.unit="";
 	$scope.productName = "";
+	$scope.units = ['BOOKED','INPROCESS','TRIAL','DELIVERD','COMPLETED'];
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'
@@ -60,15 +61,24 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	    	$scope.products = $scope.searchResult.content;
 	    	$scope.setPage(pageNo);
 	    	SpinnerService.endSpinner(modal);
+	    },function(data){
+	    	$location.path('/login');
+	    	SpinnerService.endSpinner(modal);
 	    });
 	};
 	
 	$scope.next = function() {
-		$scope.showTransction = true; 
+		
 		var modal = SpinnerService.startSpinner();
 		$http.get(weburl+"/getCart",config).success(function(data,status){	
 			SpinnerService.endSpinner(modal);
 			$scope.transctions = data;
+				if(data.length >0 ){
+					$scope.showTransction = true; 
+				}
+				else{
+					$scope.addAlert('warning', 'Your cart is empty');
+				}
 			}).error(function(data, status) {
 			$scope.transctions = [];
 			SpinnerService.endSpinner(modal);
@@ -141,6 +151,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	
 	$scope.showPopUp = function(product){
 			$scope.transction.date= new Date();
+			$scope.transction.quantity = 0;
 			$scope.product = product;
 			$scope.searchText = null;
 			$('#paymentDedtailsModal').modal('show');

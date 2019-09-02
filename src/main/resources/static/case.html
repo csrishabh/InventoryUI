@@ -1,0 +1,192 @@
+<div class= "container-fluid" ng-controller="caseController as vm">
+<div ng-include="'addNewPerson.html'"></div>
+<div ng-include="'addCrown.html'"></div>
+		<div class="row">
+		<div class="col-md-8">
+		<form name="form" ng-submit="saveCase(Case)" role="form">
+			<div class="row">
+			
+			<div class="col-md-3">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">OPD No.</label>
+  			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.opdNo" required md-maxlength="10" class="md-form-input text-uppercase" id="opdNo" name="opdNo" pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="1">
+  			 <div ng-messages="form.opdNo.$error" ng-show="form.opdNo.$dirty && form.opdNo.$error.required">
+      			<div ng-message="required">OPD No. is required</div>
+    		 </div>
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-3">
+			<md-input-container>
+        	<label class="md-form-input">Booking Date</label>
+       	    <input mdc-datetime-picker date="true" time="false" type="text" id="bookingDate"
+               click-outside-to-close="true"
+               ng-disabled="isCaseEdit"
+               auto-ok="true"
+               format="YYYY-MM-DD"
+               ng-change="onBookingDateChange(Case.bookingDate)"
+               ng-model="Case.bookingDate" class="md-form-input" tabindex="-1" 
+               required>
+    		</md-input-container>
+			</div>
+			
+			<div class="col-md-3">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Patient Name</label>
+  			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.patient" required md-maxlength="20" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
+  			 <div ng-messages="form.patient.$error" ng-show="form.patient.$dirty && form.patient.$error.required">
+      			<div ng-message="required">Patient is required</div>
+    		 </div>
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-3" ng-show="isCaseEdit">
+			<md-input-container>
+          		<label>Status</label>
+          			<md-select class="md-form-input" ng-model="Case.status">
+            			<md-option ng-repeat="status in actions" ng-value ="status">{{status}}</md-option>
+          			</md-select>
+        	</md-input-container>
+			</div>
+			
+			</div>
+		
+			<div class="row">
+			
+			<div class="col-md-3">
+			<md-input-container>
+        	<label class="md-form-input">Appointment Date</label>
+       	    <input mdc-datetime-picker date="true" time="true" type="text" id="appoinmentDate"
+               click-outside-to-close="true"
+               auto-ok="true"
+               minute-steps="10"
+               format="YYYY-MM-DD hh:mm a"
+               ng-change=""
+               ng-model="Case.appointmentDate" class="md-form-input" tabindex="-1" required>
+    		</md-input-container>
+			</div>
+			
+			
+			<div class="col-md-3">
+			<md-input-container>
+        	<label class="md-form-input">Delivery Date</label>
+       	    <input mdc-datetime-picker date="true" time="false" type="text" id="deliveryDate"
+               click-outside-to-close="true"
+               auto-ok="true"
+               format="YYYY-MM-DD"
+               ng-model="Case.deliveredDate" class="md-form-input" tabindex="-1" required>
+    		</md-input-container>
+			</div>
+			
+			
+			<div class="col-md-3">
+			<md-autocomplete
+					tabindex="3"
+					name = "doctor"
+					md-input-name="doctor"
+          			ng-disabled="disabled"
+          			md-selected-item="Case.doctor"
+          			md-no-cache="true"
+          			md-search-text="doctorName"
+          			md-selected-item-change=""
+          			md-items="person in getPerson(doctorName,'DOCTOR')"
+          			md-item-text="person.fullname"
+          			md-min-length="1"
+          			md-floating-label="Doctor..."
+          			md-require-match = "true" required>
+        		<md-item-template>
+          			<span d-highlight-text="doctorName" md-highlight-flags="^i">{{person.fullname}}</span>
+        		</md-item-template>
+        	<!-- <md-not-found>
+          		<a class="addNew" ng-click="addNewPerson(doctorName,'DOCTOR')">Create a new one!</a>
+        	</md-not-found> -->
+        	<div ng-messages="form.doctor.$error" ng-show="form.doctor.$dirty && form.doctor.$error.required">
+      		<div class="md-input-message-animation" ng-message="required">Doctor is required</div>
+      		</div>
+      		</md-autocomplete>
+			</div>
+			
+			<div class="col-md-3">
+			<md-autocomplete
+					tabindex="4"
+					name = "vender"
+					md-input-name="vender"
+          			ng-disabled="disabled"
+          			md-selected-item="Case.vender"
+          			md-no-cache="true"
+          			md-search-text="venderName"
+          			md-selected-item-change=""
+          			md-items="person in getPerson(venderName,'VENDER')"
+          			md-item-text="person.fullname"
+          			md-min-length="1"
+          			md-floating-label="Vender..."
+          			md-require-match = "true" required>
+        		<md-item-template>
+          			<span d-highlight-text="venderName" md-highlight-flags="^i">{{person.fullname}}</span>
+        		</md-item-template>
+        	<!-- <md-not-found>
+          		<a class="addNew" ng-click="addNewPerson(venderName,'VENDER')">Create a new one!</a>
+        	</md-not-found> -->
+        	<div ng-messages="form.vender.$error" ng-show="form.vender.$dirty && form.vender.$error.required">
+      		<div class="md-input-message-animation" ng-message="required">Vender is required</div>
+      		</div>
+      		</md-autocomplete>
+			</div>
+			
+			</div>
+			<div class="row" ng-show="isCaseEdit">
+			<div class="col-md-3">
+				<md-input-container class="md-form-input">
+  					<label>Remark</label>
+  					<input type="text" class="md-form-input" ng-model="Case.remark" md-maxlength="100">
+				</md-input-container>
+			</div>
+			</div>
+			
+			
+			<div class="row">
+			<div class="col-md-6">
+			<div class="input-group">
+				<div class="form-actions">
+					<button type="submit" ng-show="!isCaseEdit" class="btn btn-primary" ng-disabled="form.$invalid" tabindex="6">Submit</button>
+					<button type="button" ng-show="isCaseEdit" ng-click = "updateCase(Case)" class="btn btn-primary" ng-disabled="form.$invalid" tabindex="6">Update</button>
+				</div>
+			</div>
+			</div>
+			</div>
+		</form>
+		</div>
+		<div class="col-md-4">
+			<div class="table-wrapper-scroll-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Crown Type</th>
+							<th scope="col">Numbers</th>
+							<th scope="col">Shade</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="c in Case.crown.details">
+							<th scope="row">{{$index+1}}</th>
+							<td>{{c.type}}</td>
+							<td>{{c.crownNo}}</td>
+							<td>{{c.shade}}</td>
+							<td>
+							<a href="#"   ng-click = "updateCrowns(c)"> <span class="glyphicon glyphicon-trash"></span></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<button type="button"  ng-click="addCrown()" class="btn btn-primary pull-right" tabindex="5" >Add Crown</button>
+		</div>
+		</div>
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>
+
+
+
+

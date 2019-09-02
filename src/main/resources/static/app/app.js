@@ -1,12 +1,15 @@
-var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages']);
+var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages','ngMaterialDatePicker','ngRoute','ngPatternRestrict']);
   // set a custom templ
-var weburl = "https://spotliback.herokuapp.com";
+var weburl = "https://spback.herokuapp.com";
 //var weburl = "http://localhost:8080";
 var UIUrl = "";
 
-app.config(function($stateProvider, $urlRouterProvider ,$httpProvider) {
+app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationProvider,$routeProvider) {
+	$locationProvider.html5Mode({
+		  enabled: true,
+		  requireBase: false
+	});
 	$stateProvider
-	
 	.state('product',{
 		url: '/product',
 		templateUrl: UIUrl+'/product.html'
@@ -32,9 +35,30 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider) {
 		templateUrl: UIUrl+'/transction.html'
 	})
 	
+	.state('case',{
+		url: '/case',
+		templateUrl: UIUrl+'/case.html'
+	})
+	
+	.state('caseHistory',{
+		url: '/caseHistory',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
+	.state('lateCases',{
+		url: '/lateCases',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
 	$httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 	
+});
+
+
+app.config(function($mdAriaProvider) {
+	   // Globally disables all ARIA warnings.
+	   $mdAriaProvider.disableWarnings();
 });
 
 app.directive('nextOnEnter', function () {
@@ -66,6 +90,25 @@ app.directive('nextOnEnter', function () {
     }
 });
 
+app.directive('dlEnterKey', function () {
+	return function(scope, element, attrs) {
+
+        element.bind("keydown keypress", function(event) {
+            var keyCode = event.which || event.keyCode;
+
+            // If enter key is pressed
+            if (keyCode === 13) {
+                scope.$apply(function() {
+                        // Evaluate the expression
+                    scope.$eval(attrs.dlEnterKey);
+                });
+
+                event.preventDefault();
+            }
+        });
+    }
+});
+
 
 app.directive('input', ['$interval', function($interval) {
     return {
@@ -87,14 +130,35 @@ app.directive('input', ['$interval', function($interval) {
 ]);
 
 
-app.controller('myctrl',['$location','$cookies','$rootScope','userService','$http', function($location, $cookies, $rootScope,userService,$http){
+app.controller('myctrl',['$location','$cookies','$rootScope','userService','$http' ,'AppService','$scope', function($location, $cookies, $rootScope,userService,$http,AppService,$scope){
+	
+	$scope.hasPermission = function(permission){
+		var roles = userService.get().roles;
+		if(permission != "" && roles != undefined){
+			return roles.indexOf(permission) != -1;
+		}
+		return false;
+	}
 	
 	if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
 		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
 		var user = JSON.parse($cookies.get("user"));
 		$rootScope.name = user.fullname;
+		$rootScope.userId = user.username;
 		userService.set(user);
-		$location.path('/product');
+		if($scope.hasPermission('VENDOR')){
+			$location.path('/caseHistory');
+		}
+		else if($scope.hasPermission('USER_CASE')){
+			
+			AppService.getLateCaseCount().success(function(data){
+				$rootScope.lateCaseCount = data.data.count;
+			});
+		$location.path('/caseHistory');
+		}
+		else{
+			$location.path('/product');
+		}
 	}
 	else{
 		$location.path('/login');
@@ -103,8 +167,7 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 }]);	
 
 
-app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope){
-	
+app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService){
 	
 	this.showConsignment = function(consignments){
 		$location.path('/showBooking')
@@ -137,6 +200,17 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	this.login = function(){
 		$location.path('/login')
 	}
+	this.bookCase = function(){
+		AppService.clearCaseData();
+		$location.path('/case')
+	}
+	this.ViewCaseHistory = function(){
+		AppService.clearCaseFilter();
+		$location.path('/caseHistory')
+	}
+	this.ViewLateCase = function(){
+		$location.path('/lateCases')
+	}
 	this.showInventory = function(){
 		$scope.isCollapsed = true;
 		$location.path('/inventory')
@@ -157,6 +231,11 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		}
 		return false;
 	}
+	
+	this.isActive = function (viewLocation) { 
+        return viewLocation === $location.path();
+    }
+	
 });
 
 app.run(function($rootScope){
@@ -179,8 +258,50 @@ app.factory('userService', function() {
 	  set: set,
 	  get: get,
 	  clear: clear
-	 }
-	});
+	 } 
+});
+
+
+app.factory('AppService', ['$rootScope', '$http', '$q', 'SpinnerService', function($rootScope, $http, $q, SpinnerService) {
+	var caseData = undefined;
+	var caseFilter = undefined;
+	
+	function setCaseData(data) {
+		caseData = data;
+	}
+	function getCaseData() {
+		  return caseData;
+	}
+	function clearCaseData() {
+		caseData = undefined;
+    }
+	
+	function setCaseFilter(data) {
+		caseFilter = data;
+	}
+	function getCaseFilter() {
+		  return caseFilter;
+	}
+	function clearCaseFilter() {
+		caseFilter = undefined;
+    }
+	
+	return{
+		getLateCaseCount : function(){
+			return $http.get(weburl + "/get/count/lateCase").success(function(data) {
+				return data.data.count;
+			});
+		},
+		
+		setCaseData: setCaseData,
+		getCaseData: getCaseData,
+		clearCaseData:clearCaseData,
+		setCaseFilter:setCaseFilter,
+		getCaseFilter:getCaseFilter,
+		clearCaseFilter:clearCaseFilter
+	};
+	
+}]);
 
 app.factory('myService', function() {
 	 var savedData = {}
