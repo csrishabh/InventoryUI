@@ -18,15 +18,15 @@
 	 </div>	
 	 	<div class="form-group col-md-10">
 	 	<md-input-container class = "md-popup-input">
-  			<select class="form-control" ng-model="crown.type" required id="crownType" name="crownType">
-    			<option value = "FULL_METAL_CERAMIC">FULL METAL CERAMIC</option>
-    			<option value = "CERAMIC_FACING">CERAMIC FACING</option>
-    			<option value = "METAL_FREE">METAL FREE</option>
-    			<option value = "REMOVEABLE_PARTIAL_DENTURE">REMOVEABLE PARTIAL DENTURE</option>
-    			<option value = "COMPLETE_DENTURE_UPPER">COMPLETEDENTURE UPPER</option>
-    			<option value = "TEMPORARY">TEMPORARY</option>
-    			<option value = "COMPLETE_DENTURE_LOWER">COMPLETE DENTURE LOWER</option>
-    			<option value = "NIGHT_GUARD">NIGHT GUARD</option>
+  			<select class="form-control" ng-model="crown.type" required id="crownType" name="crownType" ng-init= "crown.type = 'CERAMIC_FACING' ">
+    			<option value = "CERAMIC_FACING">Ceramic Facing</option>
+    			<option value = "COMPLETE_DENTURE_LOWER">Complete Denture - Lower</option>
+    			<option value = "COMPLETE_DENTURE_UPPER">Complete Denture - Upper</option>
+    			<option value = "FULL_METAL_CERAMIC">Full Metal Ceramic</option>
+    			<option value = "METAL_FREE">Metal Free</option>
+    			<option value = "NIGHT_GUARD">Night Guard</option>
+    			<option value = "REMOVEABLE_PARTIAL_DENTURE">Removeable Partial Denture</option>
+    			<option value = "TEMPORARY">Temporary</option>	
   			</select>
   		<div ng-messages="form.crownType.$error" ng-show="form.crownType.$dirty && form.crownType.$error.required">
       			<div ng-message="required">Crown Type is required</div>

@@ -40,6 +40,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
+	.state('editCase',{
+		url: '/editCase',
+		templateUrl: UIUrl+'/case.html'
+	})
+	
 	.state('caseHistory',{
 		url: '/caseHistory',
 		templateUrl: UIUrl+'/caseHistory.html'

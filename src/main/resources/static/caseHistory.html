@@ -1,11 +1,14 @@
 <div class= "container-fluid" ng-controller="caseHistoryController as vm">
+<div ng-include="'ShowCrown.html'"></div>
 	<md-sidenav md-component-id="left" class="md-sidenav-left">
    		<md-toolbar class="md-theme-indigo">
        		<h1 class="md-toolbar-tools">Filter Cases</h1>
      	</md-toolbar>
      	<md-content>
       	<md-list class="md-dense" flex>
-        <md-subheader class="md-no-sticky">Search By OPD No</md-subheader>
+        <md-subheader class="md-no-sticky">Search By OPD No
+        <a class="blueIcon pull-right" ng-click="resetFilter('opdNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
 	        
 	        <md-list-item class="md-1-line" ng-click="null">
 		        <md-input-container class = "md-popup-input">
@@ -16,7 +19,7 @@
         <md-divider ></md-divider>
         
         <md-subheader class="md-no-sticky"> Booking Date
-	    <md-button md-no-ink class="md-primary" ng-click="resetBookingDateFilter()">Clear</md-button>
+        <a class="blueIcon pull-right" ng-click="resetBookingDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
 	    </md-subheader>
 	       	 <md-list-item class="md-1-line" ng-click="null">
 	       	 <label>From</label>
@@ -42,9 +45,41 @@
             </md-input-container>                 
 		    </md-list-item>    
 		<md-divider ></md-divider>
+		
+		<div> 
+	    <md-subheader class="md-no-sticky">Delivery Date
+	    <a class="blueIcon pull-right" ng-click="resetDlvDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader>
+	       	 <md-list-item class="md-1-line" ng-click="null">
+	       	 <label>From</label>
+	       	 <md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromdlvDate" name ="fromdlvDate" 
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "minDate"
+                       max-date = "dlvDate2 ? dlvDate2 :aptMaxDate"
+                       ng-model="dlvDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('dlvDate1',dlvDate1)">
+    		</md-input-container>
+    		<label>To</label>
+    		<md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toDlvDate" name="toDlvDate" 
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "dlvDate1"
+                       max-date = "aptMaxDate"
+                       ng-disabled="dlvDate1 === null"
+                       ng-model="dlvDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('dlvDate2',dlvDate2)">
+            </md-input-container>                 
+		    </md-list-item>       
+		<md-divider ></md-divider>
+		</div>
         
         <div ng-show="hasPermission('USER_CASE')">
-        <md-subheader class="md-no-sticky">Search By Patient</md-subheader>
+        <md-subheader class="md-no-sticky">Search By Patient
+         <a class="blueIcon pull-right" ng-click="resetFilter('patient')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
         <md-list-item class="md-1-line" ng-click="null">
 		        <md-input-container class = "md-popup-input">
 		  		<input type="text" ng-model="filter['patient']" class = "md-popup-input" id="patient" name="patient" dl-enter-key=applyFilter()>
@@ -55,7 +90,7 @@
 	    
 	    <div ng-show="hasPermission('USER_CASE')"> 
 	    <md-subheader class="md-no-sticky">Appointment Date
-	    <md-button md-no-ink class="md-primary" ng-click="resetAptDateFilter()">Clear</md-button>
+	    <a class="blueIcon pull-right" ng-click="resetAptDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
 	    </md-subheader>
 	       	 <md-list-item class="md-1-line" ng-click="null">
 	       	 <label>From</label>
@@ -65,7 +100,7 @@
                		   auto-ok="true"
                        format="DD-MM-YYYY"
                        min-date = "minDate"
-                       max-date = "aptMaxDate"
+                       max-date = "aptDate2 ? aptDate2 :aptMaxDate"
                        ng-model="aptDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('aptDate1',aptDate1)">
     		</md-input-container>
     		<label>To</label>
@@ -84,15 +119,80 @@
 		</div>
 		
 		<div ng-show="hasPermission('ADMIN_CASE')">
-	    <md-subheader class="md-no-sticky">Search By User</md-subheader>
-	        
-	        <md-list-item class="md-1-line" ng-click="null">
-		        <md-input-container class = "md-popup-input">
-		  		<input type="text" ng-model="filter['createdBy']" class = "md-popup-input" id="user" name="user" dl-enter-key=applyFilter()>
-				</md-input-container>
-	        </md-list-item>    
+	    <md-subheader class="md-no-sticky">Search By User
+	     <a class="blueIcon pull-right" ng-click="resetFilter('createdBy')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "user"
+					md-input-name="user"
+          			md-no-cache="true"
+          			md-search-text="userName"
+          			md-selected-item="user"
+          			md-selected-item-change="onFilterChange('createdBy',user.username)"
+          			md-items="user in getUser(userName,'USER_CASE')"
+          			md-item-text="user.fullname"
+          			md-min-length="1"
+          			md-floating-label="User">
+        		<md-item-template>
+          			<span d-highlight-text="userName" md-highlight-flags="^i">{{user.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
 	    <md-divider ></md-divider> 
 	    </div>
+	    
+	    <div ng-show="hasPermission('USER_CASE')">
+	    <md-subheader class="md-no-sticky">Search By Doctor
+	    <a class="blueIcon pull-right" ng-click="resetFilter('doctor')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "doctor"
+					md-input-name="doctor"
+          			md-no-cache="true"
+          			md-search-text="doctorName"
+          			md-selected-item="doctor"
+          			md-selected-item-change="onFilterChange('doctor',doctor.id)"
+          			md-items="doctor in getUser(doctorName,'DOCTOR')"
+          			md-item-text="doctor.fullname"
+          			md-min-length="1"
+          			md-floating-label="doctor">
+        		<md-item-template>
+          			<span d-highlight-text="doctorName" md-highlight-flags="^i">{{doctor.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="hasPermission('USER_CASE')">
+	    <md-subheader class="md-no-sticky">Search By Vendor
+	    <a class="blueIcon pull-right" ng-click="resetFilter('vender')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "vendor"
+					md-input-name="vendor"
+          			md-no-cache="true"
+          			md-search-text="vendorName"
+          			md-selected-item="vendor"
+          			md-selected-item-change="onFilterChange('vender',vendor.id)"
+          			md-items="vendor in getUser(vendorName,'VENDOR')"
+          			md-item-text="vendor.fullname"
+          			md-min-length="1"
+          			md-floating-label="vendor">
+        		<md-item-template>
+          			<span d-highlight-text="vendorName" md-highlight-flags="^i">{{vendor.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
 	    
 	    <div ng-show="hasPermission('USER_CASE')">
 	    <md-subheader class="md-no-sticky">Search By Status</md-subheader>
@@ -100,11 +200,12 @@
 	        <md-input-container class="md-popup-input md-table-input">
           						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()">
           						<md-option value = "ALL">All</md-option>
-          						<md-option value = "BOOKED">BOOKED</md-option>
-            					<md-option value = "INPROCESS">INPROCES</md-option>
-            					<md-option value = "TRIAL">TRIAL</md-option>
-            					<md-option value = "DELIVERD">DELIVERD</md-option>
-            					<md-option value = "COMPLETED">COMPLETED</md-option>
+          						<md-option value = "BOOKED">Booked</md-option>
+          						<md-option value = "DELIVERD">Delivered</md-option>
+            					<md-option value = "INPROCESS">In Process</md-option>
+            					<md-option value = "INSERTION_DONE">Insertion Done</md-option>
+            					<md-option value = "REPEAT">Repeat</md-option>
+            					<md-option value = "TRIAL">Trial</md-option>	
             </md-select>
            </md-input-container> 
            </md-list-item>
@@ -131,9 +232,13 @@
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
-							<th ng-show="hasPermission('USER_CASE')" scope="col">Vendor Name</th>
+							<th ng-show="hasPermission('USER_CASE')" scope="col">Vendor Name
+							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
 							
-							<th  ng-show="hasPermission('USER_CASE')" scope="col" >Doctor Name</th>
+							<th  ng-show="hasPermission('USER_CASE')" scope="col" >Doctor Name
+							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
 						
 							<th scope="col" ng-show="hasPermission('USER_CASE')" >Appointment Date
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
@@ -143,7 +248,9 @@
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
-							<th scope="col">Delivery Date</th>
+							<th scope="col">Delivery Date
+							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
 							
 							<th ng-show="hasPermission('ADMIN_CASE')" scope="col">Booked By
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
@@ -192,7 +299,7 @@
 							<th scope="row">{{$index+1}}</th>
 							
 							<td ng-show="hasPermission('ADMIN_CASE')|| (hasPermission('USER_CASE') && userId === result.createdBy)">
-							<a href="#"  ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
+							<a href="#" class = "underline" ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
 							</td>
 						
 							<td ng-show="!hasPermission('ADMIN_CASE') && (hasPermission('VENDOR') || (hasPermission('USER_CASE') && userId != result.createdBy))">{{result.id}}</td>
@@ -213,7 +320,7 @@
 							
 							<td>{{result.status}}</td>
 							
-							<td>{{result.crownDetails}}</td>
+							<td><a href="#" class = "underline" ng-click = "ShowCrownDetails(result.crown)">Show Details</a></td>
 							
 							<!-- <td class = "selectList">
   			<select class="form-control" id="action" ng-model="result.action" name="action" 

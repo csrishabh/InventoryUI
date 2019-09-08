@@ -1,6 +1,7 @@
 <div class= "container-fluid" ng-controller="caseController as vm">
 <div ng-include="'addNewPerson.html'"></div>
 <div ng-include="'addCrown.html'"></div>
+<div ng-include="'ShowCrown.html'"></div>
 		<div class="row">
 		<div class="col-md-8">
 		<form name="form" ng-submit="saveCase(Case)" role="form">
@@ -11,8 +12,9 @@
   			<label class="md-form-input">OPD No.</label>
   			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.opdNo" required md-maxlength="10" class="md-form-input text-uppercase" id="opdNo" 
   			name="opdNo" pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="1" ng-blur = "checkOpdNoExist(Case.opdNo)">
-  			 <div ng-messages="form.opdNo.$error" ng-show="form.opdNo.$dirty && form.opdNo.$error.required">
+  			 <div ng-messages="form.opdNo.$error" ng-show="form.opdNo.$dirty">
       			<div ng-message="required">OPD No. is required</div>
+      			<div ng-message="md-maxlength">That's too long!</div>
     		 </div>
 			</md-input-container>
 			</div>
@@ -35,8 +37,9 @@
 			<md-input-container class="md-form-input">
   			<label class="md-form-input">Patient Name</label>
   			<input type="text" ng-disabled="isCaseEdit || isOpdFound " ng-model="Case.patient" required md-maxlength="20" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
-  			 <div ng-messages="form.patient.$error" ng-show="form.patient.$dirty && form.patient.$error.required">
+  			 <div ng-messages="form.patient.$error" ng-show="form.patient.$dirty">
       			<div ng-message="required">Patient is required</div>
+      			<div ng-message="md-maxlength">That's too long!</div>
     		 </div>
 			</md-input-container>
 			</div>
@@ -45,7 +48,12 @@
 			<md-input-container>
           		<label>Status</label>
           			<md-select class="md-form-input" ng-model="Case.status">
-            			<md-option ng-repeat="status in actions" ng-value ="status">{{status}}</md-option>
+          						<md-option value = "BOOKED">Booked</md-option>
+          						<md-option value = "DELIVERD">Delivered</md-option>
+            					<md-option value = "INPROCESS">In Process</md-option>
+            					<md-option value = "INSERTION_DONE">Insertion Done</md-option>
+            					<md-option value = "REPEAT">Repeat</md-option>
+            					<md-option value = "TRIAL">Trial</md-option>	
           			</md-select>
         	</md-input-container>
 			</div>
@@ -93,7 +101,7 @@
           			md-items="person in getPerson(doctorName,'DOCTOR')"
           			md-item-text="person.fullname"
           			md-min-length="1"
-          			md-floating-label="Doctor..."
+          			md-floating-label="Doctor"
           			md-require-match = "true" required>
         		<md-item-template>
           			<span d-highlight-text="doctorName" md-highlight-flags="^i">{{person.fullname}}</span>
@@ -120,7 +128,7 @@
           			md-items="person in getPerson(venderName,'VENDOR')"
           			md-item-text="person.fullname"
           			md-min-length="1"
-          			md-floating-label="Vender..."
+          			md-floating-label="Vendor"
           			md-require-match = "true" required>
         		<md-item-template>
           			<span d-highlight-text="venderName" md-highlight-flags="^i">{{person.fullname}}</span>
@@ -129,7 +137,7 @@
           		<a class="addNew" ng-click="addNewPerson(venderName,'VENDER')">Create a new one!</a>
         	</md-not-found> -->
         	<div ng-messages="form.vender.$error" ng-show="form.vender.$dirty && form.vender.$error.required">
-      		<div class="md-input-message-animation" ng-message="required">Vender is required</div>
+      		<div class="md-input-message-animation" ng-message="required">Vendor is required</div>
       		</div>
       		</md-autocomplete>
 			</div>
@@ -139,7 +147,7 @@
 			<div class="col-md-3">
 				<md-input-container class="md-form-input">
   					<label>Remark</label>
-  					<input type="text" class="md-form-input" ng-model="Case.remark" md-maxlength="100">
+  					<input type="text" class="md-form-input" ng-model="Case.remark"  ng-init="Case.remark = '' " md-maxlength="100">
 				</md-input-container>
 			</div>
 			</div>
@@ -171,7 +179,14 @@
 					<tbody>
 						<tr ng-repeat="c in Case.crown.details">
 							<th scope="row">{{$index+1}}</th>
-							<td>{{c.type}}</td>
+							<td ng-show = "c.type == 'CERAMIC_FACING'">Ceramic Facing</td>
+    						<td ng-show = "c.type == 'COMPLETE_DENTURE_LOWER'">Complete Denture - Lower</td>
+    						<td ng-show = "c.type == 'COMPLETE_DENTURE_UPPER'">Complete Denture - Upper</td>
+    						<td ng-show = "c.type == 'FULL_METAL_CERAMIC'">Full Metal Ceramic</td>
+    						<td ng-show = "c.type == 'METAL_FREE'">Metal Free</td>
+    						<td ng-show = "c.type == 'NIGHT_GUARD'">Night Guard</td>
+    						<td ng-show = "c.type == 'REMOVEABLE_PARTIAL_DENTURE'">Removeable Partial Denture</td>
+    						<td ng-show = "c.type == 'TEMPORARY'">Temporary</td>
 							<td>{{c.crownNo}}</td>
 							<td>{{c.shade}}</td>
 							<td>
@@ -214,6 +229,8 @@
 							
 							<th scope="col">Status</th>
 							
+							<th scope="col">Remark</th>
+							
 							<th scope="col">Crown Details</th>
 							
 						</tr>
@@ -252,9 +269,11 @@
 							<td ng-show = "($index != (searchResults.length) -1) && (result.status === searchResults[$index+1].status )">{{result.status}}</td>
 							<td ng-show = "($index === (searchResults.length) -1)">{{result.status}}</td>
 							
-							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.crownDetails != searchResults[$index+1].crownDetails)"> <b>{{result.crownDetails}}</b></td>
+							<td>{{result.remark}}</td>
+							<td><a href="#" class = "underline" ng-click = "ShowCrownDetails(result.crown)">Show Details</a></td>
+							<!-- <td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.crownDetails != searchResults[$index+1].crownDetails)"> <b>{{result.crownDetails}}</b></td>
 							<td ng-show = "($index != (searchResults.length) -1) && (result.crownDetails === searchResults[$index+1].crownDetails)">{{result.crownDetails}}</td>
-							<td ng-show = "($index === (searchResults.length) -1)">{{result.crownDetails}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.crownDetails}}</td> -->
 						</tr>
 					</tbody>
 				</table>

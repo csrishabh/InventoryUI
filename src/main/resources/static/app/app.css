@@ -233,11 +233,15 @@ a{
 a:hover ,a:focus{
 	color: white;
 }
+a.underline{
+	text-decoration: underline;
+}
 .addNew{
 	color: #428bca;
 }
 a.blueIcon{
 	color: #428bca;
+	cursor: pointer;
 }
 a.blueIcon:focus{
 	color: #428bca !important;
@@ -406,6 +410,16 @@ md-autocomplete.filter-search md-autocomplete-wrap input{
 md-autocomplete.filter-search md-autocomplete-wrap input:focus{
 	color: black !important;
 	border-color: #428bca !important;
+}
+
+.md-subheader{
+    color: black;
+    background-color: rgba(0,0,0,0.12);
+}
+.btn.filter-search {
+    text-transform: uppercase;
+    border-color: rgba(255, 255, 255, 0);
+    border-radius:0px;
 }
 
 /* Filters */

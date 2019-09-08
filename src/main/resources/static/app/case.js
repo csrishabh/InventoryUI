@@ -23,6 +23,7 @@ app.controller('caseController', [
 			$scope.actions = ['BOOKED','INPROCESS','TRIAL','DELIVERD','INSERTION_DONE', 'REPEAT'];
 			$scope.searchResults = [];
 			$scope.isShowHistory = false;
+			$scope.crown = null;
 			$scope.getUser = function() {
 
 				$http.get(weburl + "/username").success(function(data) {
@@ -30,6 +31,11 @@ app.controller('caseController', [
 					userService.set(data);
 					$cookies.put("user", JSON.stringify(data));
 				});
+			}
+			
+			$scope.ShowCrownDetails = function(c) {
+				$scope.crown = c;
+				$('#crownDetails').modal('show');
 			}
 			
 			$scope.hasPermission = function(permission){

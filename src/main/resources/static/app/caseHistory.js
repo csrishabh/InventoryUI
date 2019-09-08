@@ -14,7 +14,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.searchResults = [];
 		$scope.filter = AppService.getCaseFilter();
 		
-		$scope.bookingDate1 = new Date(new Date().setDate(1));
+		$scope.bookingDate1 = new Date(new Date().setDate(new Date().getDate()-6));
 		$scope.bookingDate2 = new Date();
 		$scope.aptDate1 = null;
 		$scope.aptDate2 = null;
@@ -22,6 +22,15 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.minDate = new Date(2018,00,01);
 		$scope.aptMaxDate = new Date(2025,00,31);
 		$scope.selected = [];
+		$scope.user = null;
+		$scope.doctor = null;
+		$scope.vendor = null;
+		$scope.crown = null;
+		
+		$scope.ShowCrownDetails = function(c) {
+			$scope.crown = c;
+			$('#crownDetails').modal('show');
+		}
 		
 		$scope.formatFilterDate = function(resp) {
 			if(resp == undefined || resp == ''){
@@ -32,10 +41,25 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			return new Date(response);
 		};
 		
+		$scope.getUser = function(searchStr, type) {
+			if (!searchStr) {
+				var searchStrEncoded = "";
+			} else {
+				var searchStrEncoded = escape(searchStr);
+			}
+			var url = weburl + "/user/" + searchStrEncoded + "/" + type;
+			return $http({
+				url : url,
+				method : 'GET'
+			}).then(function(data) {
+				return data.data;
+			});
+		};
+		
 		
 		if($scope.filter === undefined){
 			$scope.filter = {};	
-			$scope.filter['bookingDate1'] = $filter('date')(new Date(new Date().setDate(1)), 'dd-MM-yyyy');
+			$scope.filter['bookingDate1'] = $filter('date')(new Date(new Date().setDate(new Date().getDate()-6)), 'dd-MM-yyyy');
 			$scope.filter['bookingDate2'] = $filter('date')(new Date(), 'dd-MM-yyyy');
 			$scope.filter['status'] = "ALL";
 			}
@@ -44,6 +68,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 				$scope.bookingDate2 = $scope.formatFilterDate($scope.filter['bookingDate2']);
 				$scope.aptDate1 = $scope.formatFilterDate($scope.filter['aptDate1']);
 				$scope.aptDate2 = $scope.formatFilterDate($scope.filter['aptDate2']);
+				$scope.dlvDate1 = $scope.formatFilterDate($scope.filter['dlvDate1']);
+				$scope.dlvDate2 = $scope.formatFilterDate($scope.filter['dlvDate2']);
 			}
 		
 		
@@ -153,6 +179,27 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.getCaseHistory();
 		}
 		
+		$scope.onFilterChange = function(key,value){
+			if(value != undefined){
+			$scope.filter[key] = value;	
+			$scope.getCaseHistory();
+			}
+		}
+		
+		$scope.resetFilter = function(key){
+			delete $scope.filter[key];
+			if(key === 'createdBy'){
+				$scope.user = null;
+			}
+			else if(key === 'doctor'){
+				$scope.doctor = null;
+			}
+			else if(key === 'vender'){
+				$scope.vendor = null;
+			}
+			$scope.getCaseHistory();
+		}
+		
 		$scope.resetBookingDateFilter = function(){
 			$scope.bookingDate1 = null;
 			$scope.bookingDate2 = null;
@@ -167,6 +214,13 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			delete $scope.filter['aptDate2']
 			$scope.getCaseHistory();
 		}
+		$scope.resetDlvDateFilter = function(){
+			$scope.dlvDate1 = null;
+			$scope.dlvDate2 = null;
+			delete $scope.filter['dlvDate1'];
+			delete $scope.filter['dlvDate2']
+			$scope.getCaseHistory();
+		}
 		
 		$scope.applyFilter = function() {
 			$scope.getCaseHistory();
@@ -179,7 +233,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 						if(data.success){
 							AppService.setCaseData(data.data);
 							AppService.setCaseFilter($scope.filter);
-							$location.path('/case');
+							$location.path('/editCase');
 						}
 						else{
 							$scope.addAlert('warning', data.msg[0]);
