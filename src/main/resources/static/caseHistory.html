@@ -298,7 +298,7 @@
 							<!-- <td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td> -->
 							<th scope="row">{{$index+1}}</th>
 							
-							<td ng-show="hasPermission('ADMIN_CASE')|| (hasPermission('USER_CASE') && userId === result.createdBy)">
+							<td ng-show="hasPermission('ADMIN_CASE')|| (hasPermission('USER_CASE') && name === result.createdBy)">
 							<a href="#" class = "underline" ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
 							</td>
 						
