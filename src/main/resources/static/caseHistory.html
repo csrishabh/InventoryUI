@@ -118,7 +118,7 @@
 		<md-divider ></md-divider>
 		</div>
 		
-		<div ng-show="hasPermission('ADMIN_CASE')">
+		<div ng-show="hasPermission('USER_CASE')">
 	    <md-subheader class="md-no-sticky">Search By User
 	     <a class="blueIcon pull-right" ng-click="resetFilter('createdBy')"><span class="glyphicon glyphicon-remove"></span></a>
 	    </md-subheader> 
@@ -252,7 +252,7 @@
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
-							<th ng-show="hasPermission('ADMIN_CASE')" scope="col">Booked By
+							<th ng-show="hasPermission('USER_CASE')" scope="col">Booked By
 							<a href="#"  ng-click = "openFilterNav()"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
@@ -285,7 +285,7 @@
 							
 							<th scope="col">Delivery Date</th>
 							
-							<th ng-show="hasPermission('ADMIN_CASE')" scope="col">Booked By</th>
+							<th ng-show="hasPermission('USER_CASE')" scope="col">Booked By</th>
 							
 							<th scope="col">Status</th>
 							
@@ -298,11 +298,11 @@
 							<!-- <td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td> -->
 							<th scope="row">{{$index+1}}</th>
 							
-							<td ng-show="hasPermission('ADMIN_CASE')|| (hasPermission('USER_CASE') && name === result.createdBy)">
+							<td ng-show="(hasPermission('USER_CASE')">
 							<a href="#" class = "underline" ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
 							</td>
 						
-							<td ng-show="!hasPermission('ADMIN_CASE') && (hasPermission('VENDOR') || (hasPermission('USER_CASE') && userId != result.createdBy))">{{result.id}}</td>
+							<td ng-show="(hasPermission('VENDOR')">{{result.id}}</td>
 												
 							<td ng-show="hasPermission('USER_CASE')">{{result.patientName}}</td>
 							
@@ -316,7 +316,7 @@
 							
 							<td>{{result.deliverdDate}}</td>
 							
-							<td ng-show="hasPermission('ADMIN_CASE')">{{result.createdBy}}</td>
+							<td ng-show="hasPermission('USER_CASE')">{{result.createdBy}}</td>
 							
 							<td>{{result.status}}</td>
 							
