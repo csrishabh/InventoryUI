@@ -5,7 +5,7 @@ app.factory('SpinnerService', ['$uibModal', '$rootScope', function($uibModal, $r
 	var countF = 0;
 	return {
 	   startSpinner : function() {
-		   var loaderGif = '<div class="loader-spinner"><img class="loader-spinner-img" alt="loader" src="icons/loader.gif"></div>';
+		   var loaderGif = '<div class="loader-spinner"><img class="loader-spinner-img" alt="loader" src="/icons/loader.gif"></div>';
 		   if (countF == 0) {
 			   countF++;
 			   return $uibModal.open({

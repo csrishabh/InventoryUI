@@ -26,7 +26,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.doctor = null;
 		$scope.vendor = null;
 		$scope.crown = null;
-		
+		$scope.activeFilter = 1;
 		$scope.ShowCrownDetails = function(c) {
 			$scope.crown = c;
 			$('#crownDetails').modal('show');
@@ -40,6 +40,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			var response = date[1] + "-" + date[0] + "-" + date[2];
 			return new Date(response);
 		};
+		
 		
 		$scope.getUser = function(searchStr, type) {
 			if (!searchStr) {
@@ -169,7 +170,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			return filterString;
 		}
 		
-		$scope.openFilterNav = function() {
+		$scope.openFilterNav = function(filterNo) {
+			$scope.activeFilter = filterNo;
 		    $mdSidenav('left').toggle();
 		};
 		
@@ -204,21 +206,21 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.bookingDate1 = null;
 			$scope.bookingDate2 = null;
 			delete $scope.filter['bookingDate1'];
-			delete $scope.filter['bookingDate2']
+			delete $scope.filter['bookingDate2'];
 			$scope.getCaseHistory();
 		}
 		$scope.resetAptDateFilter = function(){
 			$scope.aptDate1 = null;
 			$scope.aptDate2 = null;
 			delete $scope.filter['aptDate1'];
-			delete $scope.filter['aptDate2']
+			delete $scope.filter['aptDate2'];
 			$scope.getCaseHistory();
 		}
 		$scope.resetDlvDateFilter = function(){
 			$scope.dlvDate1 = null;
 			$scope.dlvDate2 = null;
 			delete $scope.filter['dlvDate1'];
-			delete $scope.filter['dlvDate2']
+			delete $scope.filter['dlvDate2'];
 			$scope.getCaseHistory();
 		}
 		
@@ -280,6 +282,18 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		
 		if($location.path() === '/lateCases'){
 		$scope.getLateCases();
+		}
+		else if($location.path() === '/todayCases'){
+			$scope.bookingDate1 = null;
+			$scope.bookingDate2 = null;
+			delete $scope.filter['bookingDate1'];
+			delete $scope.filter['bookingDate2'];
+			var todayDate = new Date();
+			$scope.aptDate1 = todayDate;
+			$scope.aptDate2 = todayDate;
+			$scope.filter['aptDate1'] = $filter('date')(todayDate, 'dd-MM-yyyy');
+			$scope.filter['aptDate2'] = $scope.filter['aptDate1'];
+			$scope.getCaseHistory();
 		}
 		else{
 		$scope.getCaseHistory();

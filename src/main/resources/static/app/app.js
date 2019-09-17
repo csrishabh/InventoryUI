@@ -9,6 +9,7 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		  enabled: true,
 		  requireBase: false
 	});
+	
 	$stateProvider
 	.state('product',{
 		url: '/product',
@@ -45,6 +46,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
+	.state('editcase',{
+		url: '/editcase/:caseId/:date',
+		templateUrl: UIUrl+'/case.html'
+	})
+	
 	.state('caseHistory',{
 		url: '/caseHistory',
 		templateUrl: UIUrl+'/caseHistory.html'
@@ -54,6 +60,10 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		url: '/lateCases',
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
+	.state('todayCases',{
+		url: '/todayCases',
+		templateUrl: UIUrl+'/caseHistory.html'
+	});
 	
 	$httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -159,7 +169,10 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 			AppService.getLateCaseCount().success(function(data){
 				$rootScope.lateCaseCount = data.data.count;
 			});
-		$location.path('/caseHistory');
+			
+			if(!$location.path().includes("editcase")){
+			$location.path('/caseHistory');
+			}
 		}
 		else{
 			$location.path('/product');
@@ -215,6 +228,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	}
 	this.ViewLateCase = function(){
 		$location.path('/lateCases')
+	}
+	this.ViewTodayCase = function(){
+		$location.path('/todayCases')
 	}
 	this.showInventory = function(){
 		$scope.isCollapsed = true;

@@ -10,8 +10,9 @@ app.controller('caseController', [
 		'SpinnerService',
 		'$mdDialog',
 		'AppService',
+		'$stateParams',
 		function($http, $scope, $filter, $window, $location, $cookies,
-				$rootScope, userService, SpinnerService,$mdDialog,AppService) {
+				$rootScope, userService, SpinnerService,$mdDialog,AppService,$stateParams) {
 			
 			$scope.isCaseEdit = false;
 			$scope.isOpdFound = false;
@@ -24,6 +25,7 @@ app.controller('caseController', [
 			$scope.searchResults = [];
 			$scope.isShowHistory = false;
 			$scope.crown = null;
+			$scope.today = new Date();
 			$scope.getUser = function() {
 
 				$http.get(weburl + "/username").success(function(data) {
@@ -32,6 +34,26 @@ app.controller('caseController', [
 					$cookies.put("user", JSON.stringify(data));
 				});
 			}
+			
+			
+			$scope.getCase = function(opdNo,date) {
+				var modal = SpinnerService.startSpinner();	
+				$http.get(weburl + "/case/"+opdNo+"/"+date).success(
+						function(data, status) {
+							if(data.success){
+								$scope.isCaseEdit = true;
+								$scope.Case = data.data;
+								$scope.Case.remark = '';
+							}
+							else{
+								$scope.addAlert('warning', data.msg[0]);
+							}
+							SpinnerService.endSpinner(modal);
+						}).error(function(data, status) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+					SpinnerService.endSpinner(modal);
+				});
+			};
 			
 			$scope.ShowCrownDetails = function(c) {
 				$scope.crown = c;
@@ -125,7 +147,6 @@ app.controller('caseController', [
 							AppService.getLateCaseCount().success(function(data){
 								$rootScope.lateCaseCount = data.data.count;
 							});
-							$location.path('/caseHistory');
 							$scope.addAlert('success', data.msg[0]);
 							}
 							else{
@@ -178,7 +199,7 @@ app.controller('caseController', [
 				var result = new Date(date.getTime());
 				for (var i = 0; i < days; i++) {
 					result = $scope.addOneDay(result);
-					if (result.getDay() === 6 || result.getDay() === 0)
+					if (result.getDay() === 0)
 						i--;
 				}
 				;
@@ -190,7 +211,10 @@ app.controller('caseController', [
 				$http.get(weburl + "/patient/"+opdNo).success(
 						function(data, status) {
 							if(data.success){
-								$scope.Case.patient = data.data;
+								data.data.bookingDate = $scope.Case.bookingDate;
+								data.data.appointmentDate = $scope.Case.appointmentDate;
+								data.data.deliveredDate = $scope.Case.deliveredDate;
+								$scope.Case = data.data;
 								$scope.isOpdFound = true;
 							}
 							else{
@@ -213,7 +237,7 @@ app.controller('caseController', [
 			
 			$scope.getCaseHistory = function() {
 				var modal = SpinnerService.startSpinner();
-				var date = $filter('date')($scope.Case.bookingDate._d, 'dd-MM-yyyy');
+				var date = $filter('date')($scope.Case.bookingDate, 'dd-MM-yyyy');
 				var opdNo = $scope.Case.opdNo;
 				$http.get(weburl + "/case/history/"+opdNo+"/"+date).success(
 						function(data, status) {
@@ -231,8 +255,8 @@ app.controller('caseController', [
 				});
 			};
 			
-			if($scope.Case != undefined){
-				$scope.isCaseEdit = true;
+			if($stateParams.caseId != undefined && $stateParams.date != undefined ){
+				$scope.getCase($stateParams.caseId,$stateParams.date)
 			}
 			else{
 				$scope.initilizeNewCase()

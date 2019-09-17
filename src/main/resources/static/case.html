@@ -1,13 +1,13 @@
 <div class= "container-fluid" ng-controller="caseController as vm">
-<div ng-include="'addNewPerson.html'"></div>
-<div ng-include="'addCrown.html'"></div>
-<div ng-include="'showCrown.html'"></div>
+<div ng-include="'/addNewPerson.html'"></div>
+<div ng-include="'/addCrown.html'"></div>
+<div ng-include="'/showCrown.html'"></div>
 		<div class="row">
 		<div class="col-md-8">
 		<form name="form" ng-submit="saveCase(Case)" role="form">
 			<div class="row">
 			
-			<div class="col-md-3">
+			<div class="col-md-2">
 			<md-input-container class="md-form-input">
   			<label class="md-form-input">OPD No.</label>
   			<input type="text" ng-disabled="isCaseEdit" ng-model="Case.opdNo" required md-maxlength="10" class="md-form-input text-uppercase" id="opdNo" 
@@ -19,7 +19,7 @@
 			</md-input-container>
 			</div>
 			
-			<div class="col-md-3">
+			<div class="col-md-2">
 			<md-input-container>
         	<label class="md-form-input">Booking Date</label>
        	    <input mdc-datetime-picker date="true" time="false" type="text" id="bookingDate"
@@ -44,7 +44,7 @@
 			</md-input-container>
 			</div>
 			
-			<div class="col-md-3" ng-show="isCaseEdit">
+			<div class="col-md-2" ng-show="isCaseEdit">
 			<md-input-container>
           		<label>Status</label>
           			<md-select class="md-form-input" ng-model="Case.status">
@@ -52,6 +52,15 @@
           						<md-option value = "DELIVERD">Delivered</md-option>
             					<md-option value = "INPROCESS">In Process</md-option>
             					<md-option value = "INSERTION_DONE">Insertion Done</md-option>
+          			</md-select>
+        	</md-input-container>
+			</div>
+			
+			<div class="col-md-3" ng-show="isCaseEdit">
+			<md-input-container>
+          		<label>Sub Status</label>
+          			<md-select class="md-form-input" ng-model="Case.subStatus" style="width:100px;">
+          						<md-option value = "NONE">None</md-option>
             					<md-option value = "REPEAT">Repeat</md-option>
             					<md-option value = "TRIAL">Trial</md-option>	
           			</md-select>
@@ -229,6 +238,8 @@
 							
 							<th scope="col">Status</th>
 							
+							<th scope="col">Sub status</th>
+							
 							<th scope="col">Remark</th>
 							
 							<th scope="col">Crown Details</th>
@@ -268,6 +279,10 @@
 							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.status != searchResults[$index+1].status )"> <b>{{result.status}}</b></td>
 							<td ng-show = "($index != (searchResults.length) -1) && (result.status === searchResults[$index+1].status )">{{result.status}}</td>
 							<td ng-show = "($index === (searchResults.length) -1)">{{result.status}}</td>
+							
+							<td class = "td-highlited" ng-show = "($index != (searchResults.length) -1) && (result.subStatus != searchResults[$index+1].subStatus )"> <b>{{result.subStatus}}</b></td>
+							<td ng-show = "($index != (searchResults.length) -1) && (result.subStatus === searchResults[$index+1].subStatus )">{{result.subStatus}}</td>
+							<td ng-show = "($index === (searchResults.length) -1)">{{result.subStatus}}</td>
 							
 							<td>{{result.remark}}</td>
 							<td><a href="#" class = "underline" ng-click = "ShowCrownDetails(result.crown)">Show Details</a></td>
