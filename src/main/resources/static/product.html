@@ -7,7 +7,7 @@
 		<div class="col-md-3" ng-show = "!showTransction">
 		<!-- First Row-->
 				<!-- <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span> -->
-				<md-autocomplete
+				<!-- <md-autocomplete
           			ng-disabled="disabled"
           			md-no-cache="true"
           			md-search-text="searchText"
@@ -22,7 +22,23 @@
         	<md-not-found>
           		<a class="addNew" ng-click="addNewProduct(searchText)">Create a new one!</a>
         	</md-not-found>
-      		</md-autocomplete>
+      		</md-autocomplete> -->
+      		<md-input-container class="md-form-input">
+  				<label class="md-form-input">Search Product</label>
+  				<input type="text" ng-model="productName" required md-maxlength="20" id="prdName" class="md-form-input"
+  				name="prdName" dl-enter-key="getAllProduct(1)">
+		    </md-input-container>
+		    
+		    
+			<md-fab-speed-dial md-direction="right">
+			<md-fab-trigger class="align-with-text">
+      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="addNewProduct('')">
+      			<md-tooltip>Add New Product</md-tooltip>
+       			<md-icon md-font-library="material-icons">add</md-icon>
+      			</md-button>
+      		</md-fab-trigger>	
+  			</md-fab-speed-dial>
+  			
 		</div>
 		<!-- Right Panel-->
 		<div class="col-md-9">
@@ -175,7 +191,7 @@
 				ng-click="saveTransctions(transctions)" tabindex="10">Submit</button>
 		</div>
 		
-	
+		
 		<div  ng-show = "!showTransction" class="col-md-12">
 			<button  class="btn btn-primary pull-right" value="Next"
 				ng-click="next()" tabindex="10">Next</button>
@@ -184,7 +200,7 @@
 		</div>
 		</div>
 		</div>
-
+		
 		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
 			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
 	   </div>

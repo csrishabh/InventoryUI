@@ -52,6 +52,9 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	
 	$scope.getAllProduct = function(pageNo) {
 		var modal = SpinnerService.startSpinner();
+		if($scope.productName == undefined){
+			$scope.productName = '';
+		}
 		var url = weburl+"/searchProducts/"+(pageNo-1)+"?reverseSort="+$scope.reverseSort+"&orderBy="+$scope.orderByField+"&name="+$scope.productName;
 	    return $http({
 	        url: url,
@@ -129,9 +132,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 			$http.post(weburl+"/addProduct",product,config).success(function(data){
 				$scope.addAlert('success', 'Done');	
 				$scope.product = {};
-				if(isupdate){
 					$('#addNewProductModal').modal('hide');
-				}
 			},function myError(response) {
 		    
 		    });	

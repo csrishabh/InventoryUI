@@ -10,17 +10,22 @@ app.controller('caseController', [
 		'SpinnerService',
 		'$mdDialog',
 		'AppService',
+		'$stateParams',
 		function($http, $scope, $filter, $window, $location, $cookies,
-				$rootScope, userService, SpinnerService,$mdDialog,AppService) {
+				$rootScope, userService, SpinnerService,$mdDialog,AppService,$stateParams) {
 			
 			$scope.isCaseEdit = false;
+			$scope.isOpdFound = false;
 			$scope.Case = {};
 			$scope.Case.crown={};
 			$scope.Case.crown.details= [];
 			$scope.person = {};
 			$scope.Case = AppService.getCaseData();
-			$scope.actions = ['BOOKED','INPROCESS','TRIAL','DELIVERD','COMPLETED'];
-			
+			$scope.actions = ['BOOKED','INPROCESS','TRIAL','DELIVERD','INSERTION_DONE', 'REPEAT'];
+			$scope.searchResults = [];
+			$scope.isShowHistory = false;
+			$scope.crown = null;
+			$scope.today = new Date();
 			$scope.getUser = function() {
 
 				$http.get(weburl + "/username").success(function(data) {
@@ -28,6 +33,39 @@ app.controller('caseController', [
 					userService.set(data);
 					$cookies.put("user", JSON.stringify(data));
 				});
+			}
+			
+			
+			$scope.getCase = function(opdNo,date) {
+				var modal = SpinnerService.startSpinner();	
+				$http.get(weburl + "/case/"+opdNo+"/"+date).success(
+						function(data, status) {
+							if(data.success){
+								$scope.isCaseEdit = true;
+								$scope.Case = data.data;
+								$scope.Case.remark = '';
+							}
+							else{
+								$scope.addAlert('warning', data.msg[0]);
+							}
+							SpinnerService.endSpinner(modal);
+						}).error(function(data, status) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+					SpinnerService.endSpinner(modal);
+				});
+			};
+			
+			$scope.ShowCrownDetails = function(c) {
+				$scope.crown = c;
+				$('#crownDetails').modal('show');
+			}
+			
+			$scope.hasPermission = function(permission){
+				var roles = userService.get().roles;
+				if(permission != "" && roles != undefined){
+					return roles.indexOf(permission) != -1;
+				}
+				return false;
 			}
 
 			$scope.getPerson = function(searchStr, type) {
@@ -42,7 +80,9 @@ app.controller('caseController', [
 					method : 'GET'
 				}).then(function(data) {
 					return data.data;
-				});
+				}).catch(function(data) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+	            });
 			};
 
 			$scope.addNewPerson = function(name, type) {
@@ -104,7 +144,9 @@ app.controller('caseController', [
 						function(data, status) {
 							if(data.success){
 							$scope.isCaseEdit = false;
-							$location.path('/caseHistory');
+							AppService.getLateCaseCount().success(function(data){
+								$rootScope.lateCaseCount = data.data.count;
+							});
 							$scope.addAlert('success', data.msg[0]);
 							}
 							else{
@@ -157,15 +199,64 @@ app.controller('caseController', [
 				var result = new Date(date.getTime());
 				for (var i = 0; i < days; i++) {
 					result = $scope.addOneDay(result);
-					if (result.getDay() === 6 || result.getDay() === 0)
+					if (result.getDay() === 0)
 						i--;
 				}
 				;
 				return result;
 			};
 			
-			if($scope.Case != undefined){
-				$scope.isCaseEdit = true;
+			$scope.checkOpdNoExist = function(opdNo) {
+				var modal = SpinnerService.startSpinner();	
+				$http.get(weburl + "/patient/"+opdNo).success(
+						function(data, status) {
+							if(data.success){
+								data.data.bookingDate = $scope.Case.bookingDate;
+								data.data.appointmentDate = $scope.Case.appointmentDate;
+								data.data.deliveredDate = $scope.Case.deliveredDate;
+								$scope.Case = data.data;
+								$scope.isOpdFound = true;
+							}
+							else{
+								if(data.msg[0] == 'CASE NOT FOUND'){
+									$scope.Case.patient = "";
+									$scope.isOpdFound = false;
+								}
+								else{
+									$scope.Case.opdNo = "";
+									$scope.isOpdFound = false;
+									$scope.addAlert('warning', 'Please Try Again !!!');
+								}
+							}
+							SpinnerService.endSpinner(modal);
+						}).error(function(data, status) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+					SpinnerService.endSpinner(modal);
+				});
+			};
+			
+			$scope.getCaseHistory = function() {
+				var modal = SpinnerService.startSpinner();
+				var date = $filter('date')($scope.Case.bookingDate, 'dd-MM-yyyy');
+				var opdNo = $scope.Case.opdNo;
+				$http.get(weburl + "/case/history/"+opdNo+"/"+date).success(
+						function(data, status) {
+							if(data.success){
+								$scope.searchResults = data.data;
+								$scope.isShowHistory = true;
+							}
+							else{
+								$scope.addAlert('warning', data.msg[0]);
+							}
+							SpinnerService.endSpinner(modal);
+						}).error(function(data, status) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+					SpinnerService.endSpinner(modal);
+				});
+			};
+			
+			if($stateParams.caseId != undefined && $stateParams.date != undefined ){
+				$scope.getCase($stateParams.caseId,$stateParams.date)
 			}
 			else{
 				$scope.initilizeNewCase()
