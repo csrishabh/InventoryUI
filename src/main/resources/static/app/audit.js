@@ -64,7 +64,7 @@ app.controller('auditController', [ '$http' ,'$scope','$filter','$q','$interval'
     	var modal = SpinnerService.startSpinner();	
     	var t = {};
     	t.id = data[6];
-    	t.amount = data[3]*data[2];
+    	t.amount = data[3];
     	t.quantity= data[2];
     	
     	$http.post(weburl+"/audit",t).success(function(response, status, headers, config){

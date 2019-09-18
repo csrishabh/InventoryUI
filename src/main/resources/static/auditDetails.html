@@ -107,7 +107,7 @@
 							<td><input next-on-enter type="number" class="form-control col-xs-2"
 								id=amount ng-model="t[3]"
 								ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
-								ng-init=t[3] ng-change = "calculateTotalAmount()"></td>
+								ng-init=t[3]></td>
 							<td>{{t[4]}}</td>
 							<td>{{t[5]}}</td>
 							<td> 
@@ -121,7 +121,7 @@
 			</div>
 			</div>
 		</div>
-		<label class = "md-form-input"> Total Amount: {{totalAmount}}</label>
+		<!-- <label class = "md-form-input"> Total Amount: {{totalAmount}}</label> -->
 		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
 			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
 </div>
