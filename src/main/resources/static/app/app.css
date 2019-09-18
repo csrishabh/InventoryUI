@@ -449,3 +449,7 @@ md-checkbox.md-checked .md-icon {
 	float: right;
 }
 
+.md-button.md-primary.md-fab{
+	 background-color: #d59307 !important;
+}
+
