@@ -129,18 +129,24 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 			$scope.addAlert('warning', 'Please Enter alert Quantity');
 		}
 		else{
-			$http.post(weburl+"/addProduct",product,config).success(function(data){
+			$http.post(weburl+"/addProduct",product,config).success(function(data,status){
+				if(status == 208){
+					$scope.addAlert('warning', 'This Product is Already Added');
+				}
+				else{
 				$scope.addAlert('success', 'Done');	
 				$scope.product = {};
-					$('#addNewProductModal').modal('hide');
+				$('#addNewProductModal').modal('hide');
+				}	
 			},function myError(response) {
-		    
+				$scope.addAlert('warning', 'Please Try Again');
 		    });	
 		}
 	}
 	
 	$scope.addNewProduct = function(name){
 		$scope.product.name = name;
+		$scope.product.unit = 'PIECES';
 		$('#addNewProductModal').modal('show');
 	}
 	
