@@ -81,7 +81,7 @@
 		<md-divider ></md-divider>
 		</div>
         
-        <div ng-show="hasPermission('USER_CASE') && activeFilter==4">
+        <div ng-show="activeFilter==4">
         <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Patient
          <a class="blueIcon pull-right" ng-click="resetFilter('patient')"><span class="glyphicon glyphicon-remove"></span></a>
         </md-subheader>
@@ -305,7 +305,7 @@
 		<md-divider ></md-divider>
 		</div>
         
-        <div ng-show="hasPermission('USER_CASE') && activeFilter!=4">
+        <div ng-show="activeFilter!=4">
         <md-subheader class="md-no-sticky">Search By Patient
          <a class="blueIcon pull-right" ng-click="resetFilter('patient')"><span class="glyphicon glyphicon-remove"></span></a>
         </md-subheader>
@@ -471,7 +471,7 @@
 							<a href="#"  ng-click = "openFilterNav(1)"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
-							<th scope="col" ng-show="hasPermission('USER_CASE')">Patient Name
+							<th scope="col">Patient Name
 							<a href="#"  ng-click = "openFilterNav(4)"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
@@ -520,7 +520,7 @@
 							
 							<th scope="col">OPD NO.</th>
 							
-							<th scope="col" ng-show="hasPermission('USER_CASE')">Patient Name</th>
+							<th scope="col">Patient Name</th>
 							
 							<th ng-show="hasPermission('USER_CASE')" scope="col">Vendor Name</th>
 							
@@ -554,7 +554,7 @@
 						
 							<td ng-show="hasPermission('VENDOR')">{{result.id}}</td>
 												
-							<td ng-show="hasPermission('USER_CASE')">{{result.patientName}}</td>
+							<td>{{result.patientName}}</td>
 							
 							<td ng-show="hasPermission('USER_CASE')">{{result.vendorName}}</td>
 							

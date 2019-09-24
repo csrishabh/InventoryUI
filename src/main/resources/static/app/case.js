@@ -143,7 +143,6 @@ app.controller('caseController', [
 				$http.post(weburl + "/update/case", Case).success(
 						function(data, status) {
 							if(data.success){
-							$scope.isCaseEdit = false;
 							AppService.getLateCaseCount().success(function(data){
 								$rootScope.lateCaseCount = data.data.count;
 							});
