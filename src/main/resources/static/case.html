@@ -56,10 +56,10 @@
         	</md-input-container>
 			</div>
 			
-			<div class="col-md-3" ng-show="isCaseEdit">
+			<div class="col-md-3">
 			<md-input-container>
           		<label>Sub Status</label>
-          			<md-select class="md-form-input" ng-model="Case.subStatus" style="width:100px;">
+          			<md-select class="md-form-input" ng-model="Case.subStatus" ng-init = "Case.subStatus = 'NONE'" style="width:100px;">
           						<md-option value = "NONE">None</md-option>
             					<md-option value = "REPEAT">Repeat</md-option>
             					<md-option value = "TRIAL">Trial</md-option>	
@@ -79,7 +79,7 @@
                auto-ok="true"
                minute-steps="10"
                format="YYYY-MM-DD hh:mm a"
-               ng-change=""
+               ng-change="onAppointmentDateChange(Case.appointmentDate)"
                ng-model="Case.appointmentDate" class="md-form-input" tabindex="-1" required>
     		</md-input-container>
 			</div>

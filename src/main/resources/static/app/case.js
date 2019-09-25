@@ -143,7 +143,6 @@ app.controller('caseController', [
 				$http.post(weburl + "/update/case", Case).success(
 						function(data, status) {
 							if(data.success){
-							$scope.isCaseEdit = false;
 							AppService.getLateCaseCount().success(function(data){
 								$rootScope.lateCaseCount = data.data.count;
 							});
@@ -189,10 +188,20 @@ app.controller('caseController', [
 				result.setDate(result.getDate() + 1);
 				return result;
 			};
+			
+			$scope.subOneDay = function(date) {
+				var result = new Date(date.getTime());
+				result.setDate(result.getDate() - 1);
+				return result;
+			};
 
 			$scope.onBookingDateChange = function(date) {
 				$scope.Case.appointmentDate = $scope.addWeekDays(date, 4);
 				$scope.Case.deliveredDate = $scope.addWeekDays(date, 3);
+			};
+			
+			$scope.onAppointmentDateChange = function(date) {
+				$scope.Case.deliveredDate = $scope.subWeekDays(date, 1);
 			};
 
 			$scope.addWeekDays = function(date, days) {
@@ -202,7 +211,16 @@ app.controller('caseController', [
 					if (result.getDay() === 0)
 						i--;
 				}
-				;
+				return result;
+			};
+			
+			$scope.subWeekDays = function(date, days) {
+				var result = new Date(date.getTime());
+				for (var i = 0; i < days; i++) {
+					result = $scope.subOneDay(result);
+					if (result.getDay() === 0)
+						i--;
+				}
 				return result;
 			};
 			

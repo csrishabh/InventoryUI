@@ -10,7 +10,8 @@ app.controller('caseHistoryController', [
 		'SpinnerService',
 		'$mdSidenav',
 		'AppService',
-function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userService, SpinnerService,$mdSidenav,AppService) {
+		'$stateParams',
+function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userService, SpinnerService,$mdSidenav,AppService,$stateParams) {
 		$scope.searchResults = [];
 		$scope.filter = AppService.getCaseFilter();
 		
@@ -83,7 +84,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		}
 		
 		$scope.isActive = function (viewLocation) { 
-	        return viewLocation === $location.path();
+	        return $location.path().includes(viewLocation);
 	    }
 		
 		$scope.isChecked = function() {
@@ -294,6 +295,19 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.filter['aptDate1'] = $filter('date')(todayDate, 'dd-MM-yyyy');
 			$scope.filter['aptDate2'] = $scope.filter['aptDate1'];
 			$scope.getCaseHistory();
+		}
+		else if($stateParams.searchTxt){
+			$scope.bookingDate1 = null;
+			$scope.bookingDate2 = null;
+			delete $scope.filter['bookingDate1'];
+			delete $scope.filter['bookingDate2'];
+			if($stateParams.searchTxt.match(/\d+/g)== null){
+				$scope.filter['patient'] = $stateParams.searchTxt;
+			}
+			else{
+				$scope.filter['opdNo'] = $stateParams.searchTxt
+			}
+			$scope.getCaseHistory();	
 		}
 		else{
 		$scope.getCaseHistory();
