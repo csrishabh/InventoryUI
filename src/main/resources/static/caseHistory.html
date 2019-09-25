@@ -511,7 +511,7 @@
 							
 						</tr>
 					</thead>
-					<thead ng-show = "isActive('/lateCases')">
+					<thead ng-show = "isActive('/lateCases') || isActive('/searchCase')">
 					<tr>
 							<!-- <th>
 							<md-checkbox  ng-checked="isChecked()" ng-click="toggleAll()"></md-checkbox>
@@ -578,6 +578,7 @@
 							&& result.appointmentDate.includes('{{ today | date :  'dd-MM-yyyy' }}') ">
 							<span class="glyphicon glyphicon-earphone"></span>
 							</td>
+							<td>{{$location.path()}}</td>
 							
 							<!-- <td class = "selectList">
   			<select class="form-control" id="action" ng-model="result.action" name="action" 

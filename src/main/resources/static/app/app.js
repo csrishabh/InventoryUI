@@ -41,11 +41,6 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
-	.state('editCase',{
-		url: '/editCase',
-		templateUrl: UIUrl+'/case.html'
-	})
-	
 	.state('editcase',{
 		url: '/editcase/:caseId/:date',
 		templateUrl: UIUrl+'/case.html'
@@ -53,6 +48,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 	
 	.state('caseHistory',{
 		url: '/caseHistory',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
+	.state('searchCase',{
+		url: '/searchCase/:searchTxt',
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
 	
@@ -252,6 +252,46 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		}
 		return false;
 	}
+	
+	this.searchCase = function(opdNo){
+		$location.path('/searchCase/'+opdNo)
+	}
+	
+	this.openResetPassModel = function(){
+		$('#resetPassword').modal('show');
+	}
+	
+	this.resetPassword = function(currPass,newPass){
+		var param = {};
+		param["currPass"] = currPass;
+		param["newPass"] = newPass;
+		$http.post(weburl + "/password/reset", param).success(
+				function(data, status) {
+					if(data.success){
+					$scope.addAlert('success', data.msg[0]);
+					$('#resetPassword').modal('hide');
+					}
+					else{
+						$scope.addAlert('warning', data.msg[0]);
+					}
+				}).error(function(data, status) {
+			$scope.addAlert('warning', 'Please Try Again !!!');
+		});
+		
+	}
+	
+	$scope.alerts = [];
+
+	$scope.addAlert = function(type, messege) {
+		$scope.alerts.push({
+			type : type,
+			msg : messege
+		});
+	};
+
+	$scope.closeAlert = function(index) {
+		$scope.alerts.splice(index, 1);
+	};
 	
 	this.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
