@@ -51,6 +51,16 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
 	
+	.state('caseHistory/view',{
+		url: '/caseHistory/:view',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
+	.state('caseHistory/view/searchTxt',{
+		url: '/caseHistory/:view/:searchTxt',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
 	.state('searchCase',{
 		url: '/searchCase/:searchTxt',
 		templateUrl: UIUrl+'/caseHistory.html'
@@ -230,7 +240,7 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		$location.path('/lateCases')
 	}
 	this.ViewTodayCase = function(){
-		$location.path('/todayCases')
+		$location.path('/caseHistory/todayCases')
 	}
 	this.showInventory = function(){
 		$scope.isCollapsed = true;
@@ -254,7 +264,7 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	}
 	
 	this.searchCase = function(opdNo){
-		$location.path('/searchCase/'+opdNo)
+		$location.path('/caseHistory/search/'+opdNo);
 	}
 	
 	this.openResetPassModel = function(){
@@ -280,6 +290,14 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		
 	}
 	
+	this.viewPendingCase = function(){
+		$location.path('/caseHistory/pending')
+	}
+	
+	this.viewNotifyCase = function(){
+	$location.path('/caseHistory/notify')
+	}
+	 
 	$scope.alerts = [];
 
 	$scope.addAlert = function(type, messege) {

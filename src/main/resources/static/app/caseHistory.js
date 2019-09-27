@@ -19,6 +19,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.bookingDate2 = new Date();
 		$scope.aptDate1 = null;
 		$scope.aptDate2 = null;
+		$scope.dlvDate1 = null;
+		$scope.dlvDate2 = null;
 		$scope.today = new Date();
 		$scope.minDate = new Date(2018,00,01);
 		$scope.aptMaxDate = new Date(2025,00,31);
@@ -63,7 +65,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.filter = {};	
 			$scope.filter['bookingDate1'] = $filter('date')(new Date(new Date().setDate(new Date().getDate()-6)), 'dd-MM-yyyy');
 			$scope.filter['bookingDate2'] = $filter('date')(new Date(), 'dd-MM-yyyy');
-			$scope.filter['status'] = "ALL";
+			$scope.filter['status'] = ['BOOKED','DELIVERD','INPROCESS'];
+			$scope.filter['subStatus'] = ['NONE','REPEAT','TRIAL'];
 			}
 			else{
 				$scope.bookingDate1 = $scope.formatFilterDate($scope.filter['bookingDate1']);
@@ -284,18 +287,6 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		if($location.path() === '/lateCases'){
 		$scope.getLateCases();
 		}
-		else if($location.path() === '/todayCases'){
-			$scope.bookingDate1 = null;
-			$scope.bookingDate2 = null;
-			delete $scope.filter['bookingDate1'];
-			delete $scope.filter['bookingDate2'];
-			var todayDate = new Date();
-			$scope.aptDate1 = todayDate;
-			$scope.aptDate2 = todayDate;
-			$scope.filter['aptDate1'] = $filter('date')(todayDate, 'dd-MM-yyyy');
-			$scope.filter['aptDate2'] = $scope.filter['aptDate1'];
-			$scope.getCaseHistory();
-		}
 		else if($stateParams.searchTxt){
 			$scope.bookingDate1 = null;
 			$scope.bookingDate2 = null;
@@ -308,6 +299,35 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 				$scope.filter['opdNo'] = $stateParams.searchTxt
 			}
 			$scope.getCaseHistory();	
+		}
+		else if($stateParams.view === 'pending'){
+			$scope.bookingDate1 = null;
+			$scope.bookingDate2 = null;
+			delete $scope.filter['bookingDate1'];
+			delete $scope.filter['bookingDate2'];
+			$scope.filter['status'] = ['BOOKED'];
+			$scope.getCaseHistory();	
+		}
+		else if($stateParams.view === 'notify'){
+			$scope.bookingDate1 = null;
+			$scope.bookingDate2 = null;
+			delete $scope.filter['bookingDate1'];
+			delete $scope.filter['bookingDate2'];
+			$scope.filter['status'] = ['DELIVERD'];
+			$scope.filter['subStatus'] = ['REPEAT','TRIAL'];
+			$scope.getCaseHistory();	
+		}
+		else if($stateParams.view === 'todayCases'){
+			$scope.bookingDate1 = null;
+			$scope.bookingDate2 = null;
+			delete $scope.filter['bookingDate1'];
+			delete $scope.filter['bookingDate2'];
+			var todayDate = new Date();
+			$scope.aptDate1 = todayDate;
+			$scope.aptDate2 = todayDate;
+			$scope.filter['aptDate1'] = $filter('date')(todayDate, 'dd-MM-yyyy');
+			$scope.filter['aptDate2'] = $scope.filter['aptDate1'];
+			$scope.getCaseHistory();
 		}
 		else{
 		$scope.getCaseHistory();
