@@ -36,7 +36,7 @@
 			<div class="col-md-3">
 			<md-input-container class="md-form-input">
   			<label class="md-form-input">Patient Name</label>
-  			<input type="text" ng-disabled="isCaseEdit || isOpdFound " ng-model="Case.patient" required md-maxlength="20" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
+  			<input type="text" ng-disabled="isCaseEdit || isOpdFound " ng-model="Case.patient" required md-maxlength="40" class="md-form-input" id="patient" name="patient" pattern="^[A-Za-z\- ]*$" ng-pattern-restrict tabindex="1">
   			 <div ng-messages="form.patient.$error" ng-show="form.patient.$dirty">
       			<div ng-message="required">Patient is required</div>
       			<div ng-message="md-maxlength">That's too long!</div>
@@ -52,6 +52,7 @@
           						<md-option value = "DELIVERD">Delivered</md-option>
             					<md-option value = "INPROCESS">In Process</md-option>
             					<md-option value = "INSERTION_DONE">Insertion Done</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE') && isCaseEdit" value = "CANCELED">Canceled</md-option>
           			</md-select>
         	</md-input-container>
 			</div>
