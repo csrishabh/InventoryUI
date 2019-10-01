@@ -292,6 +292,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.bookingDate2 = null;
 			delete $scope.filter['bookingDate1'];
 			delete $scope.filter['bookingDate2'];
+			$scope.filter['status'] = ['BOOKED','DELIVERD','INPROCESS','INSERTION_DONE'];
 			if($stateParams.searchTxt.match(/\d+/g)== null){
 				$scope.filter['patient'] = $stateParams.searchTxt;
 			}

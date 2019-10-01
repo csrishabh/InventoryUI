@@ -48,6 +48,12 @@
       </div>
     </form>
     
+    <form class="navbar-form navbar-right" ng-show = "ctrl.hasPermission('USER_INV')">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search Product" name="search" ng-model="searchPrd" dl-enter-key="ctrl.searchProduct(searchPrd)">
+      </div>
+    </form>
+    
     </div>
     </div>
     </nav>

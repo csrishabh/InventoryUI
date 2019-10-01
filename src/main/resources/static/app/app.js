@@ -31,6 +31,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/Inventory.html'
 	})
 	
+	.state('inventory/view/searchTxt',{
+		url: '/inventory/:view/:searchTxt',
+		templateUrl: UIUrl+'/Inventory.html'
+	})
+	
 	.state('transction',{
 		url: '/transction',
 		templateUrl: UIUrl+'/transction.html'
@@ -265,6 +270,10 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	
 	this.searchCase = function(opdNo){
 		$location.path('/caseHistory/search/'+opdNo);
+	}
+	
+	this.searchProduct = function(searchTxt){
+		$location.path('/inventory/search/'+searchTxt);
 	}
 	
 	this.openResetPassModel = function(){
