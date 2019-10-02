@@ -200,7 +200,38 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 }]);	
 
 
-app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService){
+app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService,$filter,FileSaver,SpinnerService){
+	
+	this.getUser = function(searchStr, type) {
+		if (!searchStr) {
+			var searchStrEncoded = "";
+		} else {
+			var searchStrEncoded = escape(searchStr);
+		}
+		var url = weburl + "/user/" + searchStrEncoded + "/" + type;
+		return $http({
+			url : url,
+			method : 'GET'
+		}).then(function(data) {
+			return data.data;
+		});
+	};
+	
+	this.downloadVendorReport = function(vendorId,date1,date2){
+		var formDate = $filter('date')(date1, 'dd-MM-yyyy');
+		var toDate = $filter('date')(date2, 'dd-MM-yyyy');
+    	var url = weburl+"/report/vendor?status=INSERTION_DONE,DELIVERD&subStatus=NONE,REPEAT,TRIAL&vender="+vendorId+
+    	"&updateDate1="+formDate+"&updateDate2="+toDate;
+    	$('#downloadVendorReport').modal('hide');
+    	var modal = SpinnerService.startSpinner();
+		$http.get(url, { responseType: "arraybuffer" }).success(function(data){
+			SpinnerService.endSpinner(modal);
+			FileSaver.saveAs(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "vendor_report.xlsx");
+		}).error(function(data, status) {
+			$scope.addAlert('warning', 'Please Try Again !!!');
+			SpinnerService.endSpinner(modal);
+		});
+    }
 	
 	this.showConsignment = function(consignments){
 		$location.path('/showBooking')
@@ -323,6 +354,10 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	this.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
     }
+	
+	this.openReportModel = function(){
+		$('#downloadVendorReport').modal('show');
+	}
 	
 });
 

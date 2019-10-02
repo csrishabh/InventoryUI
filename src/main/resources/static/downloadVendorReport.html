@@ -1,0 +1,56 @@
+<!-- Modal -->
+<div id="downloadVendorReport" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+    <form name="form"  role="form">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">Download Report</h4>
+       </div>
+	  
+	  <div class="row">
+	   <div class="col-md-3">
+	    <label class = "md-popup-input">Select Vendor</label>	
+	    <md-autocomplete class = "filter-search"
+					name = "vendor"
+					md-input-name="vendor"
+          			md-no-cache="true"
+          			md-search-text="vendorName"
+          			md-selected-item="vendor"
+          			md-items="vendor in ctrl.getUser(vendorName,'VENDOR')"
+          			md-item-text="vendor.fullname"
+          			md-min-length="1"
+          			md-floating-label="vendor">
+        		<md-item-template>
+          			<span d-highlight-text="vendorName" md-highlight-flags="^i">{{vendor.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	   </div>     
+	 </div>	
+		
+		 <!--  Second Row -->
+		<div class="row">	
+	       	<div class="col-md-3">
+	       	<label class = "md-popup-input">Form</label>
+			<input type="date" class="form-control" id=date1 ng-model="date1" required >
+	   		</div>  
+	   		
+	   		
+	   		<div class="col-md-3">
+	   		<label class = "md-popup-input">To</label>	
+			<input type="date" class="form-control" id=date2 ng-model="date2" required >
+	   		</div>            
+		</div> 
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  ng-disabled="vendor === null || form.$invalid" ng-click="ctrl.downloadVendorReport(vendor.id,date1,date2)">Submit</button>
+	   	</div>
+	   	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

@@ -412,6 +412,10 @@ md-autocomplete.filter-search md-autocomplete-wrap input:focus{
 	border-color: #428bca !important;
 }
 
+.md-autocomplete-suggestions-container{  
+   z-index:100000 !important; /* any number of choice > 1050*/
+}
+
 .md-subheader{
     color: black;
     background-color: rgba(0,0,0,0.12);
