@@ -211,7 +211,7 @@
 		</div>
 		
 		<div class="row">
-		<md-button md-no-ink class="md-primary md-form-input pull-right" ng-click="getCaseHistory()" ng-show="hasPermission('ADMIN_CASE') && isCaseEdit && !isShowHistory"> <span class="glyphicon glyphicon-time"></span> Show Case History</md-button>
+		<md-button md-no-ink class="md-primary md-form-input pull-right" ng-click="getCaseHistory()" ng-show="isCaseEdit && !isShowHistory"> <span class="glyphicon glyphicon-time"></span> Show Case History</md-button>
 		<div></div>
 		<div class="table-wrapper-scroll-y text-nowrap">
 				<table class="table" ng-show="hasPermission('ADMIN_CASE') && isShowHistory">
