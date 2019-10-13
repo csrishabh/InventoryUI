@@ -224,9 +224,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
     	"&updateDate1="+formDate+"&updateDate2="+toDate;
     	$('#downloadVendorReport').modal('hide');
     	var modal = SpinnerService.startSpinner();
-		$http.get(url, { responseType: "arraybuffer" }).success(function(data){
+		$http.get(url).success(function(data){
 			SpinnerService.endSpinner(modal);
-			FileSaver.saveAs(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "vendor_report.xlsx");
+			$scope.addAlert('success', data.msg[0]);
 		}).error(function(data, status) {
 			$scope.addAlert('warning', 'Please Try Again !!!');
 			SpinnerService.endSpinner(modal);
