@@ -13,9 +13,31 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 	$scope.login = function(user){
 		var modal = SpinnerService.startSpinner();
 		$http.post(weburl+"/login",user,config).success(function(data, status, headers, config){
-			$http.defaults.headers.common.Authorization = headers(['authorization']);
+			if(data.success){
+			data = data.data;
+			$http.defaults.headers.common.Authorization = data.token;
 			$cookies.put("access_token", headers(['authorization']));
-			$scope.getUser();
+			$rootScope.name = data.user.fullname;
+			$rootScope.userId = data.user.username;
+			userService.set(data.user);
+			$cookies.put("user", JSON.stringify(data.user));
+			if($scope.hasPermission('VENDOR')){
+				$location.path('/caseHistory');
+			}
+			else if($scope.hasPermission('USER_CASE')){
+				
+				AppService.getLateCaseCount().success(function(data){
+					$rootScope.lateCaseCount = data.data.count;
+				});
+			$location.path('/caseHistory');
+			}
+			else{
+				$location.path('/product');
+			}
+			}
+			else{
+				$scope.addAlert('warning', data.msg[0]);
+			}
 			SpinnerService.endSpinner(modal);
 			
 		}).error(function(data, status) {

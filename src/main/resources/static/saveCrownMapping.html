@@ -1,0 +1,83 @@
+<!-- Modal -->
+<div id="saveCrownMapping" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+    <form name="form"  role="form">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">Crown Mapping</h4>
+       </div>
+	  
+	  <div class="row">
+	   <div class="col-md-3">
+	    <label class = "md-popup-input">Select Vendor</label>	
+	    <md-autocomplete class = "filter-search"
+					name = "vendor"
+					md-input-name="vendor"
+          			md-no-cache="true"
+          			md-search-text="vendorName"
+          			md-selected-item="vendor"
+          			md-items="vendor in ctrl.getUser(vendorName,'VENDOR')"
+          			md-selected-item-change="ctrl.updatePrice(vendor.id,crownType)"
+          			md-item-text="vendor.fullname"
+          			md-min-length="1"
+          			md-floating-label="vendor">
+        		<md-item-template>
+          			<span d-highlight-text="vendorName" md-highlight-flags="^i">{{vendor.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	   </div>     
+	 </div>	
+		
+		 <!--  Second Row -->
+		<div class="row">	
+	       	<div class="col-md-6">
+	       	<md-input-container class = "md-popup-input">
+  			<select class="form-control" ng-model="crownType" required id="crownType" name="crownType" ng-change = "ctrl.updatePrice(vendor.id,crownType)" ng-init = "crownType = 'CERAMIC_FACING'">
+    			<option value = "CERAMIC_FACING">Ceramic Facing</option>
+    			<option value = "COMPLETE_DENTURE_LOWER">Complete Denture - Lower</option>
+    			<option value = "COMPLETE_DENTURE_UPPER">Complete Denture - Upper</option>
+    			<option value = "FULL_METAL_CERAMIC">Full Metal Ceramic</option>
+    			<option value = "FULL_METAL_CERAMIC_PLUS" >Full Metal Ceramic Plus</option>
+    			<option value = "METAL_FREE" >Metal Free</option>
+    			<option value = "NIGHT_GUARD">Night Guard</option>
+    			<option value = "REMOVEABLE_PARTIAL_DENTURE">Removeable Partial Denture</option>
+    			<option value = "TEMPORARY">Temporary</option>	
+  			</select>
+  		<div ng-messages="form.crownType.$error" ng-show="form.crownType.$dirty && form.crownType.$error.required">
+      			<div ng-message="required">Crown Type is required</div>
+    	</div>	
+  		</md-input-container>	
+	   	</div>  
+	    <div class="col-md-3">
+	   		<md-input-container class = "md-popup-input">
+  				<label class = "md-popup-input">Current Price</label>
+  				<input type="number" ng-model="currPrice" class = "md-popup-input" id="currPrice" name="currPrice" ng-readonly="true">
+			</md-input-container>
+	   	</div>    		
+	   		
+	   <div class="col-md-3">
+	   		<md-input-container class = "md-popup-input">
+  				<label class = "md-popup-input">New Price</label>
+  				<input type="number" ng-model="price" required class = "md-popup-input" id="price" name="price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"  step="0.01" ng-pattern-restrict>
+  				<div ng-messages="form.price.$error" ng-show="form.price.$dirty && form.price.$error.required">
+      			<div ng-message="required">Price is required</div>
+    			</div>
+			</md-input-container>
+	   		</div>   
+	   		
+	   		         
+		</div> 
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  ng-disabled="vendor === null || crownType == null || price <= '0' || form.$invalid" ng-click="ctrl.saveCrownMapping(vendor.id,crownType,price)">Submit</button>
+	   	</div>
+	   	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

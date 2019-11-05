@@ -5,7 +5,7 @@
 	
     <!-- Modal content-->
     <div class="modal-content" style="border-radius: 25px">
-      <form name="form" ng-submit="addCrowninCase(crown)" role="form">
+      <form name="form" ng-submit="addCrowninCase(crownDetail)" role="form">
       
       <div class="modal-header">
         <button type="button" ng-click="closePopUp()" class="close" data-dismiss="modal">&times;</button>
@@ -18,16 +18,16 @@
 	 </div>	
 	 	<div class="form-group col-md-10">
 	 	<md-input-container class = "md-popup-input">
-  			<select class="form-control" ng-model="crown.type" required id="crownType" name="crownType" ng-init= "crown.type = 'CERAMIC_FACING' ">
-    			<option value = "CERAMIC_FACING">Ceramic Facing</option>
-    			<option value = "COMPLETE_DENTURE_LOWER">Complete Denture - Lower</option>
-    			<option value = "COMPLETE_DENTURE_UPPER">Complete Denture - Upper</option>
-    			<option value = "FULL_METAL_CERAMIC">Full Metal Ceramic</option>
-    			<option value = "FULL_METAL_CERAMIC_PLUS">Full Metal Ceramic Plus</option>
-    			<option value = "METAL_FREE">Metal Free</option>
-    			<option value = "NIGHT_GUARD">Night Guard</option>
-    			<option value = "REMOVEABLE_PARTIAL_DENTURE">Removeable Partial Denture</option>
-    			<option value = "TEMPORARY">Temporary</option>	
+  			<select class="form-control" ng-model="crownDetail.type" required id="crownType" name="crownType">
+    			<option value = "CERAMIC_FACING" ng-show="isCrownMappingPresent('CERAMIC_FACING')">Ceramic Facing</option>
+    			<option value = "COMPLETE_DENTURE_LOWER" ng-show="isCrownMappingPresent('COMPLETE_DENTURE_LOWER')">Complete Denture - Lower</option>
+    			<option value = "COMPLETE_DENTURE_UPPER" ng-show="isCrownMappingPresent('COMPLETE_DENTURE_UPPER')">Complete Denture - Upper</option>
+    			<option value = "FULL_METAL_CERAMIC" ng-show="isCrownMappingPresent('FULL_METAL_CERAMIC')">Full Metal Ceramic</option>
+    			<option value = "FULL_METAL_CERAMIC_PLUS" ng-show="isCrownMappingPresent('FULL_METAL_CERAMIC_PLUS')">Full Metal Ceramic Plus</option>
+    			<option value = "METAL_FREE" ng-show="isCrownMappingPresent('METAL_FREE')">Metal Free</option>
+    			<option value = "NIGHT_GUARD" ng-show="isCrownMappingPresent('NIGHT_GUARD')">Night Guard</option>
+    			<option value = "REMOVEABLE_PARTIAL_DENTURE" ng-show="isCrownMappingPresent('REMOVEABLE_PARTIAL_DENTURE')">Removeable Partial Denture</option>
+    			<option value = "TEMPORARY" ng-show="isCrownMappingPresent('TEMPORARY')">Temporary</option>	
   			</select>
   		<div ng-messages="form.crownType.$error" ng-show="form.crownType.$dirty && form.crownType.$error.required">
       			<div ng-message="required">Crown Type is required</div>
@@ -39,7 +39,7 @@
 		<div class="col-md-4">
 		<md-input-container class = "md-popup-input">
   		<label class = "md-popup-input">Crown No.</label>
-  		<input type="text" ng-model="crown.crownNo" required md-maxlength="100" class = "md-popup-input" id="crownNo" name="crownNo" pattern="^[0-9/,]*$" ng-pattern-restrict>
+  		<input type="text" ng-model="crownDetail.crownNo" required md-maxlength="100" class = "md-popup-input" id="crownNo" name="crownNo" pattern="^[0-9/,]*$" ng-pattern-restrict>
   		<div ng-messages="form.crownNo.$error" ng-show="form.crownNo.$dirty && form.crownNo.$error.required">
       			<div ng-message="required">Crown No. is required</div>
     	</div>
@@ -48,7 +48,7 @@
 		<div class="col-md-6">
 		<md-input-container class = "md-popup-input">
   		<label class = "md-popup-input">Shade</label>
-  		<input type="text" ng-model="crown.shade" required md-maxlength="50" class = "md-popup-input" id="shade" name="shade">
+  		<input type="text" ng-model="crownDetail.shade" required md-maxlength="50" class = "md-popup-input" id="shade" name="shade">
   		<div ng-messages="form.shade.$error" ng-show="form.shade.$dirty && form.shade.$error.required">
       			<div ng-message="required">Crown shade is required</div>
     	</div>

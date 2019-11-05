@@ -1,6 +1,7 @@
 <div ng-controller = "headerController as ctrl">
 <div ng-include="'/resetPassword.html'"></div>
 <div ng-include="'/downloadVendorReport.html'"></div>
+<div ng-include="'/saveCrownMapping.html'"></div>
   <nav class="navbar navbar-inverse">
   	<div class="container-fluid">
     <div class="navbar-header">
@@ -27,6 +28,7 @@
           <li><a href="#" ng-click = "ctrl.viewNotifyCase()">To Be Call</a></li>
           <li><a href="#" ng-click = "ctrl.viewPendingCase()">Pending Cases</a></li>
           <li><a href="#" ng-click = "ctrl.openReportModel()">Download Vender Report</a></li>
+          <li ng-show = "ctrl.hasPermission('ADMIN_CASE')"><a href="#" ng-click = "ctrl.openCrownMappingModel()">Crown Mapping</a></li>
         </ul>
        </li>
       </ul>

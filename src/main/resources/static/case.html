@@ -130,11 +130,11 @@
 					tabindex="4"
 					name = "vender"
 					md-input-name="vender"
-          			ng-disabled="disabled"
+          			ng-disabled="isCaseEdit || Case.crown.details.length > 0"
           			md-selected-item="Case.vender"
           			md-no-cache="true"
           			md-search-text="venderName"
-          			md-selected-item-change=""
+          			md-selected-item-change="getCrownMapping(Case.vender.id)"
           			md-items="person in getPerson(venderName,'VENDOR')"
           			md-item-text="person.fullname"
           			md-min-length="1"
@@ -207,7 +207,7 @@
 					</tbody>
 				</table>
 			</div>
-			<button type="button"  ng-click="addCrown()" class="btn btn-primary pull-right" tabindex="5" >Add Crown</button>
+			<button type="button"  ng-click="addCrown()" class="btn btn-primary pull-right" tabindex="5" ng-disabled = "Case.vender == null || Case.vender == undefined || crownMapping.length === 0">Add Crown</button>
 		</div>
 		</div>
 		

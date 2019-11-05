@@ -1,7 +1,6 @@
 var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages','ngMaterialDatePicker','ngRoute','ngPatternRestrict']);
   // set a custom templ
-var weburl = "https://jdback.herokuapp.com";
-//var weburl = "http://localhost:8080";
+var weburl = "http://localhost:8080";
 var UIUrl = "";
 
 app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationProvider,$routeProvider) {
@@ -170,6 +169,10 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 		return false;
 	}
 	
+	 $http.get('/backendUrl').success(function (response) {
+		 weburl = response.url;
+	 });
+	 
 	if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
 		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
 		var user = JSON.parse($cookies.get("user"));
@@ -201,6 +204,8 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 
 
 app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService,$filter,FileSaver,SpinnerService){
+	
+	$scope.currPrice = 0;
 	
 	this.getUser = function(searchStr, type) {
 		if (!searchStr) {
@@ -357,6 +362,37 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	
 	this.openReportModel = function(){
 		$('#downloadVendorReport').modal('show');
+	}
+	
+	this.openCrownMappingModel = function(){
+		$('#saveCrownMapping').modal('show');
+	}
+	
+	this.updatePrice = function(vendorId,type){
+		if(vendorId != null && type != null && vendorId != undefined && type != undefined ){
+			
+			$http.get(weburl+"/crown/price/"+vendorId+"/"+type).success(function(data){	
+				if(data.success){
+					$scope.currPrice = data.data;
+				}
+			});
+		}
+	}
+	
+	this.saveCrownMapping = function(vendorId,type,price){
+		if(vendorId != null && type != null && vendorId != undefined && type != undefined ){
+			$http.post(weburl+"/crown/save/"+vendorId+"/"+type,(price*100)).success(function(data){
+			if(data.success){
+				$scope.addAlert('success', data.msg[0]);
+				$scope.currPrice = price;
+			}
+			else{
+				$scope.addAlert('warning', data.msg[0]);
+			} 
+			}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+			});
+		}
 	}
 	
 });

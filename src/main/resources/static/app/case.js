@@ -16,6 +16,8 @@ app.controller('caseController', [
 			
 			$scope.isCaseEdit = false;
 			$scope.isOpdFound = false;
+			$scope.crownMapping = [];
+			$scope.crownDetail = {};
 			$scope.Case = {};
 			$scope.Case.crown={};
 			$scope.Case.crown.details= [];
@@ -35,6 +37,44 @@ app.controller('caseController', [
 				});
 			}
 			
+			$scope.getCrownMapping = function(vendorId) {
+				if(vendorId){
+				var modal = SpinnerService.startSpinner();	
+				$http.get(weburl + "/crown/"+vendorId).success(
+						function(data, status) {
+							if(data.success){
+								$scope.crownMapping = data.data;
+							}
+							else{
+								$scope.addAlert('warning', data.msg[0]);
+							}
+							SpinnerService.endSpinner(modal);
+						}).error(function(data, status) {
+					$scope.addAlert('warning', 'Please Try Again !!!');
+					SpinnerService.endSpinner(modal);
+				});
+				}
+			};
+			
+			$scope.isCrownMappingPresent = function(type) {
+				var isFound = false;
+				$scope.crownMapping.forEach(function (mapping) {
+					   if(mapping.crown === type){
+						   isFound = true;
+					   }
+				});
+				return isFound;
+			};
+			
+			$scope.getCrownVersion = function(type) {
+				var version = 0;
+				$scope.crownMapping.forEach(function (mapping) {
+					   if(mapping.crown === type){
+						   version = mapping.version;
+					   }
+				});
+				return version;
+			};
 			
 			$scope.getCase = function(opdNo,date) {
 				var modal = SpinnerService.startSpinner();	
@@ -49,6 +89,7 @@ app.controller('caseController', [
 								$scope.addAlert('warning', data.msg[0]);
 							}
 							SpinnerService.endSpinner(modal);
+							$scope.getCrownMapping($scope.Case.vender.id);
 						}).error(function(data, status) {
 					$scope.addAlert('warning', 'Please Try Again !!!');
 					SpinnerService.endSpinner(modal);
@@ -92,7 +133,11 @@ app.controller('caseController', [
 			}
 
 			$scope.addCrown = function() {
-				$('#addCrownModel').modal('show');
+				if($scope.crownMapping.length >0){
+					$scope.crownDetail = {};
+					$scope.crownDetail.type = $scope.crownMapping[0].crown;
+					$('#addCrownModel').modal('show');
+				}
 			}
 			
 			$scope.addCrowninCase = function(crown) {
@@ -100,6 +145,7 @@ app.controller('caseController', [
 				c.type = crown.type;
 				c.crownNo = crown.crownNo;
 				c.shade = crown.shade;
+				c.version = $scope.getCrownVersion(crown.type);
 				$scope.Case.crown.details[$scope.Case.crown.details.length] = c;
 			}
 			
