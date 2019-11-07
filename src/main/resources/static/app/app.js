@@ -172,10 +172,12 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 	
 	 $http.get('/backendUrl').success(function (response) {
 		 weburl = response.url;
+		 $cookies.put("backendUrl", response.url);
 	 });
 	 
 	if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
 		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
+		weburl = $cookies.get("backendUrl");
 		var user = JSON.parse($cookies.get("user"));
 		$rootScope.name = user.fullname;
 		$rootScope.userId = user.username;
