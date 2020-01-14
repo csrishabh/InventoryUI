@@ -1,4 +1,5 @@
-app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$interval','SpinnerService','userService','$mdSidenav', function($http ,$scope ,$filter ,$q ,$interval ,SpinnerService,userService,$mdSidenav){
+app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$interval','SpinnerService','userService','$mdSidenav','FileSaver', 
+	function($http ,$scope ,$filter ,$q ,$interval ,SpinnerService,userService,$mdSidenav,FileSaver){
 	$scope.search = {};
 	$scope.search.date1 = $scope.search.date2 = new Date();
 	$scope.transctions = {};
@@ -78,6 +79,15 @@ app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$inte
 		$scope.addAlert('warning', 'Please Try Again');
     });
   }  
+    
+    $scope.downloadReport = function(){
+    	
+    	var url = weburl+"/transction/download"+$scope.getFilterString();
+		$http.get(url, { responseType: "arraybuffer" }).success(function(data){
+			FileSaver.saveAs(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "Transction.xlsx");
+		});
+    }
+    
     
     $scope.hasPermission = function(permission){
 		var roles = userService.get().roles;

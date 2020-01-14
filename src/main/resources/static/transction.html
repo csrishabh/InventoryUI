@@ -126,6 +126,19 @@
 			</div>
 			</div>
 		</div>
+		
+		<div class="row ">
+		<div class="col-md-12">
+		<md-fab-speed-dial md-direction="right">
+			<md-fab-trigger class="align-with-text">
+      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="downloadReport()">
+      			<md-tooltip>Download Report</md-tooltip>
+       			<md-icon md-font-library="material-icons">cloud_download</md-icon>
+      			</md-button>
+      		</md-fab-trigger>	
+  			</md-fab-speed-dial>
+  		</div>	
+		</div>
 
 		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
 			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
