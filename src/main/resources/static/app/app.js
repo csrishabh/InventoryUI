@@ -46,9 +46,19 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
+	.state('consignment',{
+		url: '/consignment',
+		templateUrl: UIUrl+'/bookConsignment.html'
+	})
+	
 	.state('editcase',{
 		url: '/editcase/:caseId/:date',
 		templateUrl: UIUrl+'/case.html'
+	})
+	
+	.state('consignmentHistory',{
+		url: '/consignmentHistory',
+		templateUrl: UIUrl+'/consignmentHistory.html'
 	})
 	
 	.state('caseHistory',{
@@ -195,6 +205,9 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 			$location.path('/caseHistory');
 			}
 		}
+		else if($scope.hasPermission('USER_CARGO')){
+			$location.path('/consignment');
+		}
 		else{
 			$location.path('/product');
 		}
@@ -276,9 +289,15 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		AppService.clearCaseData();
 		$location.path('/case')
 	}
+	this.bookConsignment = function(){
+		$location.path('/consignment')
+	}
 	this.ViewCaseHistory = function(){
 		AppService.clearCaseFilter();
 		$location.path('/caseHistory')
+	}
+	this.ViewConsignmentHistory = function(){
+		$location.path('/consignmentHistory')
 	}
 	this.ViewLateCase = function(){
 		$location.path('/lateCases')
@@ -371,6 +390,10 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		$('#saveCrownMapping').modal('show');
 	}
 	
+	this.openUnitMappingModel = function(){
+		$('#saveUnitMapping').modal('show');
+	}
+	
 	this.updatePrice = function(vendorId,type){
 		if(vendorId != null && type != null && vendorId != undefined && type != undefined ){
 			
@@ -398,6 +421,32 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		}
 	}
 	
+	this.updateUnitPrice = function(companyId,type){
+		if(companyId != null && type != null && companyId != undefined && type != undefined ){
+			
+			$http.get(weburl+"/unit/price/"+companyId+"/"+type).success(function(data){	
+				if(data.success){
+					$scope.currPrice = data.data;
+				}
+			});
+		}
+	}
+	
+	this.saveUnitMapping = function(companyId,type,price){
+		if(companyId != null && type != null && companyId != undefined && type != undefined ){
+			$http.post(weburl+"/unit/save/"+companyId+"/"+type,(price*100)).success(function(data){
+			if(data.success){
+				$scope.addAlert('success', data.msg[0]);
+				$scope.currPrice = price;
+			}
+			else{
+				$scope.addAlert('warning', data.msg[0]);
+			} 
+			}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+			});
+		}
+	}
 });
 
 app.run(function($rootScope){

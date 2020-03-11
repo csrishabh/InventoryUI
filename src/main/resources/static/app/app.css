@@ -328,6 +328,7 @@ md-input-container .md-input.md-popup-input{
 	border-color: #428bca;
 }
 md-input-container .md-input[disabled].md-popup-input{
+	color: black !important;
 	border-bottom-color: gray !important;
 	opacity: 1 !important;
 }

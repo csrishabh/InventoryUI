@@ -1,0 +1,299 @@
+<div class= "container-fluid" ng-controller="consignmentController as vm">
+<div ng-include="'/paidBy.html'"></div>
+		<div class="row">
+		<form name="form" ng-submit="saveConsignment(consignment)" role="form">
+		<div class="col-md-8">
+			<div class="row">
+			
+			<div class="col-md-2">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Bilty No.</label>
+  			<input type="text" ng-disabled="isConsignmentEdit" ng-model="consignment.biltyNo" required md-maxlength="10" class="md-form-input text-uppercase" id="biltyNo" 
+  			name="biltyNo" pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="1" ng-blur = "checkConsignmentNoExist(consignment.biltyNo)">
+  			 <div ng-messages="form.biltyNo.$error" ng-show="form.biltyNo.$dirty">
+      			<div ng-message="required">Bilty No is required</div>
+      			<div ng-message="md-maxlength">That's too long!</div>
+    		 </div>
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-2">
+			<md-input-container>
+        	<label class="md-form-input">Booking Date</label>
+       	    <input mdc-datetime-picker date="true" time="false" type="text" id="bookingDate"
+               click-outside-to-close="true"
+               ng-disabled="isCaseEdit"
+               auto-ok="true"
+               format="YYYY-MM-DD"
+               ng-model="consignment.bookingDate" class="md-form-input" tabindex="-1" 
+               required>
+    		</md-input-container>
+			</div>
+			
+			<div class="col-md-2">
+			<md-input-container>
+          		<label>BilingType</label>
+          			<md-select class="md-form-input" required ng-model="consignment.billingType" ng-change="onBillingTypeChange()" tabindex="2">
+          						<md-option value = "PAID">Paid</md-option>
+          						<md-option value = "TO_PAY">To Pay</md-option>
+            					<md-option value = "CREDIT">Credit</md-option>
+          			</md-select>
+        	</md-input-container>
+			</div>
+			
+			<div class="col-md-2">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Eway Bill No.</label>
+  			<input type="text"  ng-model="consignment.ewayNo" md-maxlength="20" class="md-form-input text-uppercase" id="ewayNo" 
+  			name="ewayNo" pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="3">
+			</md-input-container>
+			</div>
+			
+			
+			<div class="col-md-2">
+			<md-autocomplete
+					tabindex="4"
+					name = "destination"
+					md-input-name="destination"
+          			ng-disabled="disabled"
+          			md-no-cache="true"
+          			md-search-text="destination"
+          			md-items="city in getCommonData(destination,1)"
+          			md-selected-item-change="setDestination(city.value)"
+          			md-item-text="city.name"
+          			md-min-length="1"
+          			md-floating-label="Destination"
+          			md-require-match = "true" required>
+        		<md-item-template>
+          			<span d-highlight-text="destination" md-highlight-flags="^i">{{city.name}}</span>
+        		</md-item-template>
+        	<!-- <md-not-found>
+          		<a class="addNew" ng-click="addNewPerson(doctorName,'DOCTOR')">Create a new one!</a>
+        	</md-not-found> -->
+        	<div ng-messages="form.destination.$error" ng-show="form.destination.$dirty && form.destination.$error.required">
+      		<div class="md-input-message-animation" ng-message="required">Destination is required</div>
+      		</div>
+      		</md-autocomplete>
+			</div>
+			
+			</div>
+		
+			<div class="row">
+			
+			<div class="col-md-2">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Contents</label>
+  			<input type="text"  ng-model="consignment.contents" md-maxlength="20" class="md-form-input text-uppercase" id="contents" name="contents" tabindex="5">
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-2">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Total Parcels</label>
+  			<input type="number"  ng-model="consignment.totalParcel" required class = "md-form-input" id="totalParcel" name="totalParcel" ng-change="calculateTotal()" ng-init="consignment.totalParcel=0" tabindex="6">
+  			 <div ng-messages="form.totalParcel.$error" ng-show="form.totalParcel.$dirty">
+      			<div ng-message="required">totalParcel is required</div>
+    		 </div>
+			</md-input-container>	
+			</div>
+			
+			<div class="col-md-2">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Weight</label>
+  			<input type="number"  ng-model="consignment.weight" required class = "md-form-input" id="weight" name="weight" ng-change="calculateTotal()" ng-init="consignment.weight=0" ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001" tabindex="7">
+  			 <div ng-messages="form.weight.$error" ng-show="form.weight.$dirty">
+      			<div ng-message="required">Weight is required</div>
+    		 </div>
+			</md-input-container>	
+			</div>
+			
+			<div class="col-md-2">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Rate</label>
+  			<input type="number"  ng-model="consignment.rate" required class = "md-form-input" id="rate" name="rate" ng-change="calculateTotal()" ng-init="consignment.rate=0" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" tabindex="8">
+  			 <div ng-messages="form.rate.$error" ng-show="form.rate.$dirty">
+      			<div ng-message="required">Rate is required</div>
+    		 </div>
+			</md-input-container>	
+			</div>
+			
+			
+			<div class="col-md-2">
+			<md-input-container>
+          		<label>Price Unit</label>
+          			<md-select class="md-form-input" required ng-model="consignment.unit" ng-change="calculateTotal()" tabindex="9">
+          						<md-option value = "PIECES">Pieces</md-option>
+          						<md-option value = "KILOGRAM">Kilogram</md-option>
+          			</md-select>
+        	</md-input-container>
+			</div>
+			
+			</div>
+			<div class="row">
+			
+			<div class="col-md-2">
+				<md-input-container class="md-form-input">
+  					<label class="md-form-input">Discount</label>
+  					<input type="number"  ng-model="consignment.discount" class = "md-form-input" id="discount" name="discount" ng-change="calculateTotal()" ng-init="consignment.discount=0" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" tabindex="11">
+				</md-input-container>	
+			</div>
+			
+			<div class="col-md-2">
+				<md-input-container class="md-form-input">
+  					<label class="md-form-input">Tax %</label>
+  					<input type="number"  ng-model="consignment.tax" class = "md-form-input" id="tax" name="tax" ng-change="calculateTotal()" ng-init="consignment.tax=18" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" tabindex="12">
+			 	</md-input-container>	
+			</div>
+			
+			<div class="col-md-2">
+				<md-input-container class="md-form-input">
+  					<label>Sub total</label>
+  					<input type="number" ng-disabled= true class="md-form-input" ng-init="subtotal=0" ng-model="subtotal"  md-maxlength="100" tabindex="10">
+				</md-input-container>
+			</div>
+			
+			<div class="col-md-2">
+				<md-input-container class="md-form-input">
+  					<label class="md-form-input">Other 1</label>
+  					<input type="number" ng-model="consignment.remark1" class="md-form-input" id="remark1" name="remark1" ng-change="calculateTotal()" ng-init="consignment.remark1=0" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" tabindex="13">
+				</md-input-container>	
+			</div>
+			
+			<div class="col-md-2">
+				<md-input-container class="md-form-input">
+  					<label class="md-form-input">Other 2</label>
+  					<input type="number"  ng-model="consignment.remark2" class="md-form-input" id="remark2" name="remark2" ng-change="calculateTotal()" ng-init="consignment.remark2=0" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" tabindex="14">
+				</md-input-container>	
+			</div>
+			
+			</div>
+			
+			<div class="row">
+			
+			<div class="col-md-2">
+				<md-input-container class="md-form-input">
+  					<label>Grand Total</label>
+  					<input type="number" ng-disabled= true class="md-form-input"  ng-init="grandTotal=0" ng-model="grandTotal" md-maxlength="100">
+				</md-input-container>
+			</div>
+			
+			
+			
+			<div class="col-md-3">
+				<md-input-container class="md-form-input">
+  					<label class="md-form-input">Remark</label>
+  					<input type="text"  ng-model="consignment.remark" md-maxlength="100" class="md-form-input text-uppercase" id="remark" 
+  					name="remark" tabindex="15">
+				</md-input-container>	
+			</div>
+			</div>
+			
+			<div class="row">
+			<div class="col-md-6">
+			<div class="input-group">
+				<div class="form-actions">
+					<button type="submit" ng-show="!isCaseEdit" class="btn btn-primary" ng-disabled="form.$invalid" tabindex="19">Submit</button>
+					<button type="button" ng-show="isCaseEdit" ng-click = "updateCase(Case)" class="btn btn-primary" ng-disabled="form.$invalid" tabindex="19">Update</button>
+				</div>
+			</div>
+			</div>
+			</div>
+		</div>
+		
+		
+		<div class="col-md-4">
+		<div class="row">
+		<div class="col-md-6">
+			<md-autocomplete
+					tabindex="17"
+					name = "consignor"
+					md-selected-item="consignor"
+					md-input-name="consignor"
+          			ng-disabled="disabled"
+          			md-selected-item-change= "onConsignorChnage(person)"
+          			md-no-cache="true"
+          			md-search-text="consignorName"
+          			md-items="person in getPerson(consignorName,'CONSIGNOR')"
+          			md-item-text="person.fullname"
+          			md-min-length="1"
+          			md-floating-label="Consignor"
+          			md-require-match = "true" required>
+        		<md-item-template>
+          			<span d-highlight-text="consignorName" md-highlight-flags="^i">{{person.fullname}}</span>
+        		</md-item-template>
+        	<div ng-messages="form.consignor.$error" ng-show="form.consignor.$dirty && form.consignor.$error.required">
+      		<div class="md-input-message-animation" ng-message="required">Consignor is required</div>
+      		</div>
+      		</md-autocomplete>
+			</div>
+		
+		<div class="col-md-6">
+			<md-autocomplete
+					tabindex="18"
+					name = "consignee"
+					md-input-name="consignee"
+					md-selected-item="consignee"
+          			ng-disabled="disabled"
+          			md-selected-item-change= "onConsigneeChnage(person)"
+          			md-no-cache="true"
+          			md-search-text="consigneeName"
+          			md-items="person in getPerson(consigneeName,'CONSIGNEE')"
+          			md-item-text="person.fullname"
+          			md-min-length="1"
+          			md-floating-label="Consignee"
+          			md-require-match = "true" required>
+        		<md-item-template>
+          			<span d-highlight-text="consigneeName" md-highlight-flags="^i">{{person.fullname}}</span>
+        		</md-item-template>
+        	<div ng-messages="form.consignee.$error" ng-show="form.consignee.$dirty && form.consignee.$error.required">
+      		<div class="md-input-message-animation" ng-message="required">Consignee is required</div>
+      		</div>
+      		</md-autocomplete>
+			</div>	
+		</div>
+	    <div class="row">
+	    
+	    <div class="col-md-6">
+				<md-input-container class="md-form-input">
+  					<label>Address</label>
+  					<input type="text" ng-disabled= true class="md-form-input" ng-model="consignor.address">
+				</md-input-container>
+		</div>
+		
+		<div class="col-md-6">
+				<md-input-container class="md-form-input">
+  					<label>Address</label>
+  					<input type="Text" ng-disabled= true class="md-form-input" ng-model="consignee.address">
+				</md-input-container>
+		</div>
+	    
+	    </div>	
+	    
+	    <div class="row">
+	    
+	    <div class="col-md-6">
+				<md-input-container class="md-form-input">
+  					<label>Mobile</label>
+  					<input type="text" ng-disabled= true class="md-form-input" ng-model="consignor.mobileNo">
+				</md-input-container>
+		</div>
+		
+		<div class="col-md-6">
+				<md-input-container class="md-form-input">
+  					<label>Mobile</label>
+  					<input type="Text" ng-disabled= true class="md-form-input" ng-model="consignee.mobileNo">
+				</md-input-container>
+		</div>
+	    
+	    </div>		
+		</div>
+		</form>
+		</div>
+		
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>
+
+
+
+

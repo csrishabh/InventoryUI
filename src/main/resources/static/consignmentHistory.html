@@ -1,0 +1,309 @@
+<div class= "container-fluid" ng-controller="consignmentHistoryController as vm">
+<div ng-include="'/createManifestModel.html'"></div>
+	<md-sidenav md-component-id="left" class="md-sidenav-left">
+   		<md-toolbar class="md-theme-indigo">
+       		<h1 class="md-toolbar-tools">Filter Consignment</h1>
+     	</md-toolbar>
+     	<md-content>
+      	<md-list class="md-dense" flex>
+      	
+      	<div ng-show="activeFilter==1">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Bilty No
+        <a class="blueIcon pull-right" ng-click="resetFilter('biltyNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+	        
+	        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['biltyNo']" class = "md-popup-input" id="biltyNo" name="biltyNo" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+        
+        <md-divider ></md-divider>
+        </div>
+        
+        <div ng-show="activeFilter==2">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307"> Booking Date
+        <a class="blueIcon pull-right" ng-click="resetBookingDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader>
+	       	 <md-list-item class="md-1-line" ng-click="null">
+	       	 <label>From</label>
+	       	 <md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromBookingDate" name="fromBookingDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "minDate"
+                       max-date = "bookingDate2 ? bookingDate2 : today"
+                       ng-model="bookingDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('bookingDate1',bookingDate1)">
+    		</md-input-container>
+    		<label>To</label>
+    		<md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toBookingDate" name ="toBookingDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "bookingDate1"
+                       max-date = "today"
+                       ng-disabled="bookingDate1 === null"
+                       ng-model="bookingDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('bookingDate2',bookingDate2)">
+            </md-input-container>                 
+		    </md-list-item>    
+		<md-divider ></md-divider>
+		</div>
+		
+		
+        <div ng-show="activeFilter==3">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Destination
+         <a class="blueIcon pull-right" ng-click="resetFilter('des')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['des']" class = "md-popup-input" id="destination" name="destination" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+		<div ng-show="activeFilter==4">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Consignor
+	     <a class="blueIcon pull-right" ng-click="resetFilter('consignor')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "consignor"
+					md-input-name="consignor"
+          			md-no-cache="true"
+          			md-search-text="consignorName"
+          			md-selected-item="consignor"
+          			md-selected-item-change="onFilterChange('consignor',consignor.username)"
+          			md-items="consignor in getUser(consignorName,'CONSIGNOR')"
+          			md-item-text="consignor.fullname"
+          			md-min-length="1"
+          			md-floating-label="Consignor">
+        		<md-item-template>
+          			<span d-highlight-text="consignorName" md-highlight-flags="^i">{{consignor.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter==5">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Consignee
+	     <a class="blueIcon pull-right" ng-click="resetFilter('consignee')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "consignee"
+					md-input-name="consignee"
+          			md-no-cache="true"
+          			md-search-text="consigneeName"
+          			md-selected-item="consignee"
+          			md-selected-item-change="onFilterChange('consignee',consignee.username)"
+          			md-items="consignee in getUser(consigneeName,'CONSIGNEE')"
+          			md-item-text="consignee.fullname"
+          			md-min-length="1"
+          			md-floating-label="Consignee">
+        		<md-item-template>
+          			<span d-highlight-text="consigneeName" md-highlight-flags="^i">{{consignee.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    
+	    <div ng-show="activeFilter!=1">
+        <md-subheader class="md-no-sticky">Search By Bilty No
+        <a class="blueIcon pull-right" ng-click="resetFilter('biltyNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+	        
+	        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['biltyNo']" class = "md-popup-input" id="biltyNo" name="biltyNo" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+        
+        <md-divider ></md-divider>
+        </div>
+        
+        <div ng-show="activeFilter!=2">
+        <md-subheader class="md-no-sticky"> Booking Date
+        <a class="blueIcon pull-right" ng-click="resetBookingDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader>
+	       	 <md-list-item class="md-1-line" ng-click="null">
+	       	 <label>From</label>
+	       	 <md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromBookingDate" name="fromBookingDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "minDate"
+                       max-date = "bookingDate2 ? bookingDate2 : today"
+                       ng-model="bookingDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('bookingDate1',bookingDate1)">
+    		</md-input-container>
+    		<label>To</label>
+    		<md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toBookingDate" name ="toBookingDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "bookingDate1"
+                       max-date = "today"
+                       ng-disabled="bookingDate1 === null"
+                       ng-model="bookingDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('bookingDate2',bookingDate2)">
+            </md-input-container>                 
+		    </md-list-item>    
+		<md-divider ></md-divider>
+		</div>
+		
+		
+        <div ng-show="activeFilter!=3">
+        <md-subheader class="md-no-sticky">Search By Destination
+         <a class="blueIcon pull-right" ng-click="resetFilter('des')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['des']" class = "md-popup-input" id="destination" name="destination" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+		<div ng-show="activeFilter!=4">
+	    <md-subheader class="md-no-sticky">Search By Consignor
+	     <a class="blueIcon pull-right" ng-click="resetFilter('consignor')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "consignor"
+					md-input-name="consignor"
+          			md-no-cache="true"
+          			md-search-text="consignorName"
+          			md-selected-item="consignor"
+          			md-selected-item-change="onFilterChange('consignor',consignor.username)"
+          			md-items="consignor in getUser(consignorName,'CONSIGNOR')"
+          			md-item-text="consignor.fullname"
+          			md-min-length="1"
+          			md-floating-label="Consignor">
+        		<md-item-template>
+          			<span d-highlight-text="consignorName" md-highlight-flags="^i">{{consignor.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter!=5">
+	    <md-subheader class="md-no-sticky">Search By Consignee
+	     <a class="blueIcon pull-right" ng-click="resetFilter('consignee')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "consignee"
+					md-input-name="consignee"
+          			md-no-cache="true"
+          			md-search-text="consigneeName"
+          			md-selected-item="consignee"
+          			md-selected-item-change="onFilterChange('consignee',consignee.username)"
+          			md-items="consignee in getUser(consigneeName,'CONSIGNEE')"
+          			md-item-text="consignee.fullname"
+          			md-min-length="1"
+          			md-floating-label="Consignee">
+        		<md-item-template>
+          			<span d-highlight-text="consigneeName" md-highlight-flags="^i">{{consignee.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>          
+	    <md-divider ></md-divider> 
+	    </div>       
+        </md-list>
+        </md-content>
+  	</md-sidenav>
+  	
+		<div class="row">
+		<div class="table-wrapper-scroll-y text-nowrap" style="max-height: 600px;">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>
+							<md-checkbox  ng-checked="isChecked()" ng-click="toggleAll()"></md-checkbox>
+							</th>
+							<!-- <th scope="col">#</th> -->
+							
+							<th scope="col">Bilty NO.
+							<a href="#"  ng-click = "openFilterNav(1)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col">Booking Date
+							<a href="#"  ng-click = "openFilterNav(2)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col">Destination
+							<a href="#"  ng-click = "openFilterNav(3)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col" >Consignor
+							<a href="#"  ng-click = "openFilterNav(4)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+						
+							<th scope="col">Consignor
+							<a href="#"  ng-click = "openFilterNav(5)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col">Total Parcel</th>
+							<th scope="col">Weight</th>
+							<th scope="col">Rate</th>
+							<th scope="col">Discount</th>
+							<th scope="col">Sub total</th>
+							<th scope="col">Other 1</th>
+							<th scope="col">Other 2</th>
+							<th scope="col">Grand total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="result in searchResults">
+							<td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
+							<!-- <th scope="row">{{$index+1}}</th> -->
+							<!-- <td ng-show="hasPermission('USER_CASE') && result.status != 'Canceled'">
+							<a href="#" class = "underline" ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
+							<a href="/#editcase/{{result.id}}/{{result.bookingDate}}" target="_blank" class = "underline">{{result.biltyNo}}</a>
+							</td> -->
+							<td>{{result.biltyNo}}</td>					
+							<td>{{result.bookingDate}}</td>
+							<td>{{result.des}}</td>
+							<td>{{result.consignor[0]}}</td>
+							<td>{{result.consignee[0]}}</td> 
+							<td>{{result.totalParcel}}</td>
+							<td>{{result.weight}}</td>
+							<td>{{result.rate}}</td>
+							<td>{{result.discount}}</td>
+							<td>{{result.subTotal}}</td>
+							<td>{{result.other1}}</td>
+							<td>{{result.other2}}</td>
+							<td>{{result.grandTotal}}</td>
+							<td><a href="#"  ng-click = ""> <span class="glyphicon glyphicon-edit"></span></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<md-fab-speed-dial md-direction="right">
+			<md-fab-trigger class="align-with-text">
+      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="openManifestModel()">
+      			<md-tooltip>Create Manifest</md-tooltip>
+       			<md-icon md-font-library="material-icons">add</md-icon>
+      			</md-button>
+      		</md-fab-trigger>	
+  			</md-fab-speed-dial>
+  			
+		</div>
+		<!-- <div class="row">
+		<button type="button"  ng-click="changestatus()" class="btn btn-primary pull-right" ng-disabled="selected.length === 0" >Proceed</button>
+		</div> -->
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>

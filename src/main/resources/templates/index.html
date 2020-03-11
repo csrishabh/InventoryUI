@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="store" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+<title>Process Management</title>
+  <link rel="icon" th:href="@{/icons/icon.png}"></link>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.13/angular-material.css"></link>
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css"></link>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css"></link>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
+  <link rel="stylesheet" th:href="@{/dist/loading-bar/loading-bar.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/bootstrap/bootstrap.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/bootstrap/bootstrap-submenu.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/select2/select2.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/select2/select.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/badge/angular-material-badge.min.css}"></link>
+  <link rel="stylesheet" th:href="@{/app/app.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/dateTimePicker/material-datetimepicker.min.css}"></link>
+  <link rel="stylesheet" th:href="@{/dist/dateTimePicker/datetimepicker.css}"></link>
+  <style>
+ /* On small screens, set height to 'auto' for sidenav and grid */
+    @media only screen and (max-width: 600px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .alert{
+    	width: 90%;
+      }
+      .auditTable{
+      max-height: 200px;
+      }
+      .row.content {height:auto;} 
+       td{white-space: nowrap}  
+      
+      .table-wrapper-scroll-y {
+      	max-height: 400px;
+       }
+       
+    }
+    
+    @media only screen and (max-height: 600px) {
+      .auditTable{
+      max-height: 125px;
+      }
+      .inventoryTable{
+       max-height: 250px;
+      }
+      .productTable{
+      max-height: 250px;
+      } 
+      .table-wrapper-scroll-y {
+      	max-height: 450px;
+       }
+    }  
+ </style>
+</head>
+<body>
+<div ng-controller = "myctrl" ng-include="'/header.html'"></div>
+<div class = "page" ui-view=""> </div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>	
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-messages/1.5.8/angular-messages.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-cookies.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.13/angular-material.js"></script>
+<script type="text/javascript" src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ng-csv/0.3.6/ng-csv.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-saver/1.1.3/angular-file-saver.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<script type="text/javascript" th:src="@{/dist/select2/select2.js}"></script>
+<script type="text/javascript" th:src="@{/dist/select2/select.js}"></script>
+<script type="text/javascript" th:src="@{/dist/select2/select_2.js}"></script>
+<script type="text/javascript" th:src="@{/dist/badge/angular-material-badge.min.js}"></script>
+<script type="text/javascript" th:src="@{/app/app.js}"></script>
+<script type="text/javascript" th:src="@{/app/spinner_service.js}"></script>
+<script type="text/javascript" th:src="@{/dist/bootstrap/bootstrap-hover-dropdown.js}"></script>
+<script type="text/javascript" th:src="@{/dist/bootstrap/bootstrap-submenu.js}"></script>
+<script type="text/javascript" th:src="@{/dist/ng_pattern/ng-pattern-restrict.min.js}"></script>
+<script type="text/javascript" th:src="@{/dist/loading-bar/loading-bar.js}"></script>
+<script type="text/javascript" th:src="@{/dist/file-saver/angular-file-saver.bundle.min.js}"></script>
+<script type="text/javascript" th:src="@{/app/product.js}"></script>
+<script type="text/javascript" th:src="@{/app/login.js}"></script>
+<script type="text/javascript" th:src="@{/app/audit.js}"></script>
+<script type="text/javascript" th:src="@{/app/inventory.js}"></script>
+<script type="text/javascript" th:src="@{/app/pagerService.js}"></script>
+<script type="text/javascript" th:src="@{/app/transction.js}"></script>
+<script type="text/javascript" th:src="@{/app/case.js}"></script>
+<script type="text/javascript" th:src="@{/app/caseHistory.js}"></script>
+<script type="text/javascript" th:src="@{/app/consignment.js}"></script>
+<script type="text/javascript" th:src="@{/app/consignmentHistory.js}"></script>
+<script type="text/javascript" th:src="@{/dist/dateTimePicker/angular-material-datetimepicker.js}"></script>
+</body>
+</html>
