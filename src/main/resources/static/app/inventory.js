@@ -1,10 +1,16 @@
-app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$interval','userService' ,'SpinnerService','FileSaver', function($http , $scope ,$filter,$q,$interval,userService,SpinnerService,FileSaver){
+app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$interval','userService' ,'SpinnerService','FileSaver','$stateParams', 
+	function($http , $scope ,$filter,$q,$interval,userService,SpinnerService,FileSaver,$stateParams){
 	
 	$scope.products = {};
 	
-    $scope.getCurrentInventory = function (){
-    var modal = SpinnerService.startSpinner();		
+    $scope.getCurrentInventory = function (searchTxt){
+    var modal = SpinnerService.startSpinner();
+    if(searchTxt != ''){
+    	var url = weburl+"/products?name="+searchTxt;
+    }
+    else{
 	var url = weburl+"/products";
+    }
     $http.get(url).success(function(data){
     	SpinnerService.endSpinner(modal);
     	$scope.products = data;
@@ -29,8 +35,12 @@ app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$inter
 			FileSaver.saveAs(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "Inventory.xlsx");
 		});
     }
-    
-    $scope.getCurrentInventory();
+    if($stateParams.searchTxt){
+    	$scope.getCurrentInventory($stateParams.searchTxt);
+    }
+    else{
+    $scope.getCurrentInventory('');
+    }
     
     $scope.alerts = [
                    ];

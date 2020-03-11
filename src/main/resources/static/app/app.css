@@ -212,6 +212,10 @@ td.selectList{
   background-color: #d59307d4;
 }
 
+.td-highlited{ 
+  background-color: #d59307d4;
+}
+
 .list-inline {
   display: flex;
   justify-content: center;
@@ -229,11 +233,15 @@ a{
 a:hover ,a:focus{
 	color: white;
 }
+a.underline{
+	text-decoration: underline;
+}
 .addNew{
 	color: #428bca;
 }
 a.blueIcon{
 	color: #428bca;
+	cursor: pointer;
 }
 a.blueIcon:focus{
 	color: #428bca !important;
@@ -274,6 +282,13 @@ md-input-container.md-form-input .md-char-counter{
 /* * sign color*/
 md-input-container.md-form-input label:not(.md-no-float):not(.md-container-ignore):after{
 	color: #d59307 !important;
+}
+
+.md-button.md-primary.md-form-input{
+	color: white !important;
+}
+label.md-form-input{
+	color: white !important;
 }
 
 /* Form table input box */
@@ -397,6 +412,20 @@ md-autocomplete.filter-search md-autocomplete-wrap input:focus{
 	border-color: #428bca !important;
 }
 
+.md-autocomplete-suggestions-container{  
+   z-index:100000 !important; /* any number of choice > 1050*/
+}
+
+.md-subheader{
+    color: black;
+    background-color: rgba(0,0,0,0.12);
+}
+.btn.filter-search {
+    text-transform: uppercase;
+    border-color: rgba(255, 255, 255, 0);
+    border-radius:0px;
+}
+
 /* Filters */
 
 md-toolbar{
@@ -422,5 +451,9 @@ md-checkbox.md-checked .md-icon {
 .noificationCount{
 	background-color: red;
 	float: right;
+}
+
+.md-button.md-primary.md-fab{
+	 background-color: #d59307 !important;
 }
 

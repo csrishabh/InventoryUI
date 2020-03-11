@@ -14,7 +14,7 @@
 							<th scope="col">#</th>
 							<th scope="col">Product</th>
 							<th scope="col">Quantity</th>
-							<th ng-show= "hasPermission('ADMIN')" scope="col">Last Price</th>
+							<th ng-show= "hasPermission('ADMIN_INV')" scope="col">Last Price</th>
 							<th scope="col">Min Quantity</th>
 						</tr>
 					</thead>
@@ -23,7 +23,7 @@
 							<th scope="row">{{$index+1}}</th>
 							<td>{{p.name}}</td>
 							<td>{{p.qtyAbl | number:3}} {{p.unit}}</td>
-							<td ng-show= "hasPermission('ADMIN')">{{p.lastPrice+"/"+p.unit}}</td>
+							<td ng-show= "hasPermission('ADMIN_INV')">{{p.lastPrice+"/"+p.unit}}</td>
 							<td>{{p.alert+" "+p.unit}}</td>
 						</tr>
 					</tbody>

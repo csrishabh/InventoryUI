@@ -1,7 +1,7 @@
 var app = angular.module('store',['ui.bootstrap','ngAnimate','angular-loading-bar' ,'ui.router','ngSanitize','ui.select2', 'ui.select','ngCsv', 'ngCookies','ngMdBadge','ngAria','ngMaterial','ngFileSaver','ngMessages','ngMaterialDatePicker','ngRoute','ngPatternRestrict']);
   // set a custom templ
-var weburl = "https://spback.herokuapp.com";
-//var weburl = "http://localhost:8080";
+
+var weburl = "http://localhost:8080";
 var UIUrl = "";
 
 app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationProvider,$routeProvider) {
@@ -9,6 +9,7 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		  enabled: true,
 		  requireBase: false
 	});
+	
 	$stateProvider
 	.state('product',{
 		url: '/product',
@@ -30,6 +31,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/Inventory.html'
 	})
 	
+	.state('inventory/view/searchTxt',{
+		url: '/inventory/:view/:searchTxt',
+		templateUrl: UIUrl+'/Inventory.html'
+	})
+	
 	.state('transction',{
 		url: '/transction',
 		templateUrl: UIUrl+'/transction.html'
@@ -40,8 +46,28 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
+	.state('editcase',{
+		url: '/editcase/:caseId/:date',
+		templateUrl: UIUrl+'/case.html'
+	})
+	
 	.state('caseHistory',{
 		url: '/caseHistory',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
+	.state('caseHistory/view',{
+		url: '/caseHistory/:view',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
+	.state('caseHistory/view/searchTxt',{
+		url: '/caseHistory/:view/:searchTxt',
+		templateUrl: UIUrl+'/caseHistory.html'
+	})
+	
+	.state('searchCase',{
+		url: '/searchCase/:searchTxt',
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
 	
@@ -49,6 +75,10 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		url: '/lateCases',
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
+	.state('todayCases',{
+		url: '/todayCases',
+		templateUrl: UIUrl+'/caseHistory.html'
+	});
 	
 	$httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -140,8 +170,14 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 		return false;
 	}
 	
+	 $http.get('/backendUrl').success(function (response) {
+		 weburl = response.url;
+		 $cookies.put("backendUrl", response.url);
+	 });
+	 
 	if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
 		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
+		weburl = $cookies.get("backendUrl");
 		var user = JSON.parse($cookies.get("user"));
 		$rootScope.name = user.fullname;
 		$rootScope.userId = user.username;
@@ -154,7 +190,10 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 			AppService.getLateCaseCount().success(function(data){
 				$rootScope.lateCaseCount = data.data.count;
 			});
-		$location.path('/caseHistory');
+			
+			if(!$location.path().includes("editcase")){
+			$location.path('/caseHistory');
+			}
 		}
 		else{
 			$location.path('/product');
@@ -167,7 +206,40 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 }]);	
 
 
-app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService){
+app.controller('headerController', function($location, $http, $rootScope ,$cookies,userService ,$scope, AppService,$filter,FileSaver,SpinnerService){
+	
+	$scope.currPrice = 0;
+	
+	this.getUser = function(searchStr, type) {
+		if (!searchStr) {
+			var searchStrEncoded = "";
+		} else {
+			var searchStrEncoded = escape(searchStr);
+		}
+		var url = weburl + "/user/" + searchStrEncoded + "/" + type;
+		return $http({
+			url : url,
+			method : 'GET'
+		}).then(function(data) {
+			return data.data;
+		});
+	};
+	
+	this.downloadVendorReport = function(vendorId,date1,date2){
+		var formDate = $filter('date')(date1, 'dd-MM-yyyy');
+		var toDate = $filter('date')(date2, 'dd-MM-yyyy');
+    	var url = weburl+"/report/vendor?status=INSERTION_DONE,DELIVERD&subStatus=NONE,REPEAT,TRIAL&vender="+vendorId+
+    	"&updateDate1="+formDate+"&updateDate2="+toDate;
+    	$('#downloadVendorReport').modal('hide');
+    	var modal = SpinnerService.startSpinner();
+		$http.get(url).success(function(data){
+			SpinnerService.endSpinner(modal);
+			$scope.addAlert('success', data.msg[0]);
+		}).error(function(data, status) {
+			$scope.addAlert('warning', 'Please Try Again !!!');
+			SpinnerService.endSpinner(modal);
+		});
+    }
 	
 	this.showConsignment = function(consignments){
 		$location.path('/showBooking')
@@ -211,6 +283,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	this.ViewLateCase = function(){
 		$location.path('/lateCases')
 	}
+	this.ViewTodayCase = function(){
+		$location.path('/caseHistory/todayCases')
+	}
 	this.showInventory = function(){
 		$scope.isCollapsed = true;
 		$location.path('/inventory')
@@ -232,9 +307,96 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		return false;
 	}
 	
+	this.searchCase = function(opdNo){
+		$location.path('/caseHistory/search/'+opdNo);
+	}
+	
+	this.searchProduct = function(searchTxt){
+		$location.path('/inventory/search/'+searchTxt);
+	}
+	
+	this.openResetPassModel = function(){
+		$('#resetPassword').modal('show');
+	}
+	
+	this.resetPassword = function(currPass,newPass){
+		var param = {};
+		param["currPass"] = currPass;
+		param["newPass"] = newPass;
+		$http.post(weburl + "/password/reset", param).success(
+				function(data, status) {
+					if(data.success){
+					$scope.addAlert('success', data.msg[0]);
+					$('#resetPassword').modal('hide');
+					}
+					else{
+						$scope.addAlert('warning', data.msg[0]);
+					}
+				}).error(function(data, status) {
+			$scope.addAlert('warning', 'Please Try Again !!!');
+		});
+		
+	}
+	
+	this.viewPendingCase = function(){
+		$location.path('/caseHistory/pending')
+	}
+	
+	this.viewNotifyCase = function(){
+	$location.path('/caseHistory/notify')
+	}
+	 
+	$scope.alerts = [];
+
+	$scope.addAlert = function(type, messege) {
+		$scope.alerts.push({
+			type : type,
+			msg : messege
+		});
+	};
+
+	$scope.closeAlert = function(index) {
+		$scope.alerts.splice(index, 1);
+	};
+	
 	this.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
     }
+	
+	this.openReportModel = function(){
+		$('#downloadVendorReport').modal('show');
+	}
+	
+	this.openCrownMappingModel = function(){
+		$('#saveCrownMapping').modal('show');
+	}
+	
+	this.updatePrice = function(vendorId,type){
+		if(vendorId != null && type != null && vendorId != undefined && type != undefined ){
+			
+			$http.get(weburl+"/crown/price/"+vendorId+"/"+type).success(function(data){	
+				if(data.success){
+					$scope.currPrice = data.data;
+				}
+			});
+		}
+	}
+	
+	this.saveCrownMapping = function(vendorId,type,price){
+		if(vendorId != null && type != null && vendorId != undefined && type != undefined ){
+			$http.post(weburl+"/crown/save/"+vendorId+"/"+type,(price*100)).success(function(data){
+			if(data.success){
+				$scope.addAlert('success', data.msg[0]);
+				$scope.currPrice = price;
+			}
+			else{
+				$scope.addAlert('warning', data.msg[0]);
+			} 
+			}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+			});
+		}
+	}
 	
 });
 
