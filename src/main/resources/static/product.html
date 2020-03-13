@@ -58,7 +58,7 @@
 						<tr ng-repeat="t in transctions">
 							<th scope="row">{{$index+1}}</th>
 							<td>{{t.date| date:'MM/dd/yyyy'}}</td>
-							<td>{{t.productName}}</td>
+							<td>{{t.productName | uppercase}}</td>
 							<td>{{t.type}}</td>
 							<td ng-show = "!checked">
 							<md-input-container class="md-form-input md-table-input">
@@ -80,6 +80,18 @@
 			</div>
 		</div>
 		<div ng-show = "!showTransction" class="row">
+		<div class="col-md-2">
+		<md-input-container>
+        	<label class="md-form-input">Transition Date</label>
+       	    <input mdc-datetime-picker date="true" time="false" type="text" id="tDate"
+               click-outside-to-close="true"
+               auto-ok="true"
+               format="YYYY-MM-DD"
+               ng-model="tdate" class="md-form-input" tabindex="-1">
+    		
+    	</md-input-container>
+    	</div>
+    	<div class="col-md-10">	
 			<div class="table-wrapper-scroll-y text-nowrap">
 				<table class="table">
 					<thead>
@@ -101,7 +113,7 @@
 							</span>
           					</a>
           					</th>
-							<th scope="col">Date</th>
+							<!-- <th scope="col">Date</th> -->
 							<th scope="col">Quantity</th>
 							<th scope="col">Unit</th>
 						</tr>
@@ -109,9 +121,9 @@
 					<tbody>
 						<tr ng-repeat="product in products">
 							<th scope="row">{{$index+1}}</th>
-							<td>{{product.name}}</td>
+							<td>{{product.name  | uppercase}}</td>
 							<td>{{product.qtyAbl}}</td>
-							<td>
+							<!-- <td>
 								<md-input-container class="md-form-input md-table-input">
   							    <input mdc-datetime-picker date="true" time="false" type="text" id="date"
                					click-outside-to-close="true"
@@ -121,7 +133,7 @@
                					ng-init="product.date=(date)"
                					required>
   							    </md-input-container>
-							</td>
+							</td> -->
 							<td ng-show ="product.unit != 'PIECES'" >
 							<md-input-container class="md-form-input md-table-input">
 							<input next-on-enter type="number" class="md-form-input col-xs-2"
@@ -153,8 +165,8 @@
 						   </td>	
 							<td> 
 								<div>
-								<button type="button" class="btn btn-primary" ng-click="addProduct(product.date,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Add</button>
-        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(product.date,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Dispatch</button>
+								<button type="button" class="btn btn-primary" ng-click="addProduct(tdate,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Add</button>
+        						<button type="button" class="btn btn-primary" ng-click="DispatchProduct(tdate,product.quantity,product,unit)" ng-disabled="product.quantity <= 0 || product.quantity == undefined ">Dispatch</button>
 								</div>
 							</td>
 						
@@ -162,7 +174,7 @@
 					</tbody>
 				</table>
 			</div>
-		
+		</div>
 		</br>
 		
 		<div class="d-flex">	

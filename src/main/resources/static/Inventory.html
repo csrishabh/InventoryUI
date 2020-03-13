@@ -21,10 +21,10 @@
 					<tbody>
 						<tr ng-repeat="p in products" ng-class="{'tr-highlited': (p.qtyAbl < p.alert || p.qtyAbl == '0')}">
 							<th scope="row">{{$index+1}}</th>
-							<td>{{p.name}}</td>
-							<td>{{p.qtyAbl | number:3}} {{p.unit}}</td>
-							<td ng-show= "hasPermission('ADMIN_INV')">{{p.lastPrice+"/"+p.unit}}</td>
-							<td>{{p.alert+" "+p.unit}}</td>
+							<td>{{p.name | uppercase}}</td>
+							<td>{{p.qtyAbl | number:3}} {{p.unit | capitalize}}</td>
+							<td ng-show= "hasPermission('ADMIN_INV')">{{p.lastPrice+"/"}} {{p.unit | capitalize}}</td>
+							<td>{{p.alert}} {{p.unit | capitalize}}</td>
 						</tr>
 					</tbody>
 				</table>

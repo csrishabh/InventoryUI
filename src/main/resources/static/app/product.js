@@ -15,6 +15,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.unit="";
 	$scope.productName = "";
 	$scope.units = ['BOOKED','INPROCESS','TRIAL','DELIVERD','COMPLETED'];
+	$scope.tdate = new Date();
 	var config = {
             headers : {
                 'Content-Type': 'application/json;'
