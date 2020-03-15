@@ -1,5 +1,6 @@
 <div class= "container-fluid" ng-controller="consignmentHistoryController as vm">
 <div ng-include="'/createManifestModel.html'"></div>
+<div ng-include="'/manifestDetailModel.html'"></div>
 	<md-sidenav md-component-id="left" class="md-sidenav-left">
    		<md-toolbar class="md-theme-indigo">
        		<h1 class="md-toolbar-tools">Filter Consignment</h1>
@@ -114,7 +115,36 @@
 	    <md-divider ></md-divider> 
 	    </div>
 	    
+	    <div ng-show="activeFilter==6">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Type</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'false' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "true">Deleted</md-option>
+            					<md-option value = "false">Added</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
 	    
+	    <div ng-show="activeFilter==7">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Status</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'false' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "false">In Process</md-option>
+            					<md-option value = "true">Deliverd</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	  
 	    <div ng-show="activeFilter!=1">
         <md-subheader class="md-no-sticky">Search By Bilty No
         <a class="blueIcon pull-right" ng-click="resetFilter('biltyNo')"><span class="glyphicon glyphicon-remove"></span></a>
@@ -219,7 +249,38 @@
       		</md-autocomplete>
 	        </md-list-item>          
 	    <md-divider ></md-divider> 
-	    </div>       
+	    </div>         
+	    
+	    <div ng-show="activeFilter!=6">
+	    <md-subheader class="md-no-sticky">Search By Type</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'false' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "true">Deleted</md-option>
+            					<md-option value = "false">Added</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter!=7">
+	    <md-subheader class="md-no-sticky">Search By Status</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'false' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "false">In Process</md-option>
+            					<md-option value = "true">Deliverd</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	      
         </md-list>
         </md-content>
   	</md-sidenav>
@@ -250,7 +311,7 @@
 							<a href="#"  ng-click = "openFilterNav(4)"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 						
-							<th scope="col">Consignor
+							<th scope="col">Consignee
 							<a href="#"  ng-click = "openFilterNav(5)"> <span class="glyphicon glyphicon-filter"></span></a>
 							</th>
 							
@@ -262,11 +323,13 @@
 							<th scope="col">Other 1</th>
 							<th scope="col">Other 2</th>
 							<th scope="col">Grand total</th>
+							<th scope="col">Manifest details</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="result in searchResults">
-							<td><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
+							<td ng-show="!result.isDeliverd && !result.isDeleted"><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
+							<td ng-show="result.isDeliverd || result.isDeleted"><md-checkbox md-indeterminate ng-disabled="true" ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
 							<!-- <th scope="row">{{$index+1}}</th> -->
 							<!-- <td ng-show="hasPermission('USER_CASE') && result.status != 'Canceled'">
 							<a href="#" class = "underline" ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
@@ -285,7 +348,8 @@
 							<td>{{result.other1}}</td>
 							<td>{{result.other2}}</td>
 							<td>{{result.grandTotal}}</td>
-							<td><a href="#"  ng-click = ""> <span class="glyphicon glyphicon-edit"></span></a></td>
+							<td><a ng-class="{disabled:result.maniFestRefNo == null}" href="#" class = "underline" ng-click = "getManifestDetails(result.maniFestRefNo)">Show Details</a></td>
+							<td><a ng-class="{disabled:result.isDeleted || result.maniFestRefNo!=null}" href="#"  ng-click = "deletedConsignment(result.biltyNo)"> <span class="glyphicon glyphicon-trash"></span></a></td>
 						</tr>
 					</tbody>
 				</table>

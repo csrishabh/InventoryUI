@@ -128,27 +128,7 @@ app.controller('consignmentController', [
 				});
 			};
 			
-			$scope.updateCase = function(Case){
-				var modal = SpinnerService.startSpinner();
-				$http.post(weburl + "/update/case", Case).success(
-						function(data, status) {
-							if(data.success){
-							AppService.getLateCaseCount().success(function(data){
-								$rootScope.lateCaseCount = data.data.count;
-							});
-							$scope.addAlert('success', data.msg[0]);
-							}
-							else{
-								$scope.addAlert('warning', data.msg[0]);
-							}
-							SpinnerService.endSpinner(modal);
-						}).error(function(data, status) {
-					$scope.addAlert('warning', 'Please Try Again !!!');
-					SpinnerService.endSpinner(modal);
-				});	
-			}
-
-			
+		
 			$scope.initilizeNewConsignment = function() {
 				$scope.consignment= {};
 				$scope.consignment.bookingDate = new Date();
@@ -157,18 +137,19 @@ app.controller('consignmentController', [
 			$scope.calculateTotal = function(){
 				
 				if($scope.consignment.unit == 'PIECES'){
-					var total = $scope.consignment.totalParcel * $scope.consignment.rate;
+					var total = ($scope.consignment.totalParcel * $scope.consignment.rate) + $scope.consignment.remark1 + $scope.consignment.remark2;
 					var tax = ((total - $scope.consignment.discount) *  $scope.consignment.tax)/100;
-					$scope.subtotal = total - $scope.consignment.discount + tax;
-					$scope.grandTotal= $scope.subtotal + $scope.consignment.remark1 + $scope.consignment.remark2;
+					$scope.subtotal = total - $scope.consignment.discount;
+					$scope.grandTotal= $scope.subtotal + tax
 				}
 				else if($scope.consignment.unit == 'KILOGRAM'){
-					var total = $scope.consignment.weight * $scope.consignment.rate;
+					var total = ($scope.consignment.weight * $scope.consignment.rate) + $scope.consignment.remark1 + $scope.consignment.remark2 ;
 					var tax = ((total - $scope.consignment.discount) *  $scope.consignment.tax)/100;
-					$scope.subtotal = total - $scope.consignment.discount + tax;
-					$scope.grandTotal= $scope.subtotal + $scope.consignment.remark1 + $scope.consignment.remark2;
+					$scope.subtotal = total - $scope.consignment.discount;
+					$scope.grandTotal= $scope.subtotal + tax
 				}
 			}
+			
 			
 			$scope.checkOpdNoExist = function(opdNo) {
 				var modal = SpinnerService.startSpinner();	

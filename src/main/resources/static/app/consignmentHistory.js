@@ -13,6 +13,7 @@ app.controller('consignmentHistoryController', [
 		'$stateParams',
 function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userService, SpinnerService,$mdSidenav,AppService,$stateParams) {
 		$scope.searchResults = [];
+		$scope.manifestDetails=[];
 		$scope.bookingDate1 = new Date(new Date().setDate(new Date().getDate()-6));
 		$scope.bookingDate2 = new Date();
 		$scope.today = new Date();
@@ -37,24 +38,9 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			return new Date(response);
 		};
 		
-		$scope.getCrownMapping = function(vendorId) {
-			if(vendorId){
-			var modal = SpinnerService.startSpinner();	
-			$http.get(weburl + "/crown/"+vendorId).success(
-					function(data, status) {
-						if(data.success){
-							$scope.crownMapping = data.data;
-						}
-						else{
-							$scope.addAlert('warning', data.msg[0]);
-						}
-						SpinnerService.endSpinner(modal);
-					}).error(function(data, status) {
-				$scope.addAlert('warning', 'Please Try Again !!!');
-				SpinnerService.endSpinner(modal);
-			});
-			}
-		};
+		$scope.openManifestDetailModel = function(){
+			$('#manifestDetailModel').modal('show');
+		}
 		
 		$scope.openManifestModel = function(){
 			if($scope.selected.size == 0)
@@ -104,6 +90,23 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			
 		}
 		
+		$scope.deletedConsignment = function(biltyNo){
+			var modal = SpinnerService.startSpinner();
+			$http.post(weburl + "/deleted/consignment", biltyNo).success(
+					function(data, status) {
+						if(data.success){
+						$scope.addAlert('success', data.msg[0]);
+						$scope.getConsignmentHistory();
+						}
+						else{
+							$scope.addAlert('warning', data.msg[0]);
+						}
+						SpinnerService.endSpinner(modal);
+					}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+				SpinnerService.endSpinner(modal);
+			});	
+		}
 		
 		$scope.updateCompany = function(company){
 			if(company){
@@ -127,7 +130,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			});
 		}
 		
-		$scope.getCompany = function(searchStr, type) {
+		$scope.getUser = function(searchStr, type) {
 			if (!searchStr) {
 				var searchStrEncoded = "";
 			} else {
@@ -194,6 +197,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.filter = {};	
 			$scope.filter['bookingDate1'] = $filter('date')(new Date(new Date().setDate(new Date().getDate()-6)), 'dd-MM-yyyy');
 			$scope.filter['bookingDate2'] = $filter('date')(new Date(), 'dd-MM-yyyy');
+			$scope.filter['status'] = 'false';
+			$scope.filter['type'] ='false';
 		}
 		
 		
@@ -211,10 +216,16 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		};
 		
 		$scope.toggleAll = function() {
-		    if ($scope.selected.length === $scope.searchResults.length) {
+			var items = [];
+	    	$scope.searchResults.forEach(function (item) {
+				   if(!item.isDeliverd && !item.isDeleted){
+					   items.push(item);
+				   }
+			});
+		    if ($scope.selected.length === items.length) {
 		      $scope.selected = [];
 		    } else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
-		      $scope.selected = $scope.searchResults.slice(0);
+		      $scope.selected = items.slice(0);
 		    }
 		};
 		
@@ -230,7 +241,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		    else {
 		      list.push(item);
 		    }
-		  };
+		};
 	  
 		$scope.getConsignmentHistory = function(){
 		var modal = SpinnerService.startSpinner();	
@@ -300,25 +311,22 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.getConsignmentHistory();
 		};
 		
-		$scope.editCase = function(opdNo,date) {
-			var modal = SpinnerService.startSpinner();	
-			$http.get(weburl + "/case/"+opdNo+"/"+date).success(
-					function(data, status) {
-						if(data.success){
-							AppService.setCaseData(data.data);
-							AppService.setCaseFilter($scope.filter);
-							$location.path('/editCase');
-						}
-						else{
-							$scope.addAlert('warning', data.msg[0]);
-						}
-						SpinnerService.endSpinner(modal);
-					}).error(function(data, status) {
-				$scope.addAlert('warning', 'Please Try Again !!!');
-				SpinnerService.endSpinner(modal);
-			});
-		};
 		
+		$scope.getManifestDetails = function(manifests){
+			var modal = SpinnerService.startSpinner();	
+			var url = weburl + "/get/manifest?refId="+manifests.toString();
+				return $http({
+					url : url,
+					method : 'GET'
+				}).then(function(data) {
+					$scope.manifestDetails = data.data;
+					SpinnerService.endSpinner(modal);
+					$scope.openManifestDetailModel();
+				}).catch(function(data) {
+					SpinnerService.endSpinner(modal);
+					$scope.addAlert('warning', 'Please Try Again !!!');
+	            });
+		}
 		
 		
 		if($stateParams.searchTxt){

@@ -446,6 +446,9 @@ md-checkbox .md-icon {
 md-checkbox.md-checked .md-icon {
     background-color: #d59307;
 }
+md-checkbox[disabled] .md-icon:after {
+    border-color: #d59307 !important;
+}
 
 /* noificationCount */
 

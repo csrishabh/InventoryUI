@@ -61,6 +61,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/consignmentHistory.html'
 	})
 	
+	.state('manifestHistory',{
+		url: '/manifestHistory',
+		templateUrl: UIUrl+'/manifestHistory.html'
+	})
+	
 	.state('caseHistory',{
 		url: '/caseHistory',
 		templateUrl: UIUrl+'/caseHistory.html'
@@ -298,6 +303,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	}
 	this.ViewConsignmentHistory = function(){
 		$location.path('/consignmentHistory')
+	}
+	this.ViewManifestHistory = function(){
+		$location.path('/manifestHistory')
 	}
 	this.ViewLateCase = function(){
 		$location.path('/lateCases')
