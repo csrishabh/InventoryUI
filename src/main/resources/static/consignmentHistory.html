@@ -329,7 +329,8 @@
 					<tbody>
 						<tr ng-repeat="result in searchResults">
 							<td ng-show="!result.isDeliverd && !result.isDeleted"><md-checkbox ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
-							<td ng-show="result.isDeliverd || result.isDeleted"><md-checkbox md-indeterminate ng-disabled="true" ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
+							<td ng-show="result.isDeleted"><md-checkbox md-indeterminate class="delete" ng-disabled="true" ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
+							<td ng-show="result.isDeliverd && !result.isDeleted"><md-checkbox md-indeterminate ng-disabled="true" ng-checked="exists(result, selected)" ng-click="toggle(result, selected)"></md-checkbox></td>
 							<!-- <th scope="row">{{$index+1}}</th> -->
 							<!-- <td ng-show="hasPermission('USER_CASE') && result.status != 'Canceled'">
 							<a href="#" class = "underline" ng-click = "editCase(result.id,result.bookingDate)">{{result.id}}</a>
@@ -348,22 +349,32 @@
 							<td>{{result.other1}}</td>
 							<td>{{result.other2}}</td>
 							<td>{{result.grandTotal}}</td>
-							<td><a ng-class="{disabled:result.maniFestRefNo == null}" href="#" class = "underline" ng-click = "getManifestDetails(result.maniFestRefNo)">Show Details</a></td>
-							<td><a ng-class="{disabled:result.isDeleted || result.maniFestRefNo!=null}" href="#"  ng-click = "deletedConsignment(result.biltyNo)"> <span class="glyphicon glyphicon-trash"></span></a></td>
+							<td><a a-disabled="result.maniFestRefNo == null || result.maniFestRefNo.length == 0" href="#" class = "underline" ng-click = "getManifestDetails(result.maniFestRefNo)">Show Details</a></td>
+							<td><a a-disabled="result.isDeleted || result.maniFestRefNo.length > 0" href="#"  ng-click = "deletedConsignment(result.biltyNo)"> <span class="glyphicon glyphicon-trash"></span></a></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-			
-			<md-fab-speed-dial md-direction="right">
+			<div class="d-flex">
+			<ul class="list-inline">
+			<li class ="item">
+			<a a-disabled="currentPage === 0" ng-click="updatePageNo(-1)"><span class="glyphicon glyphicon-backward"></span></a>
+			</li>
+			<li class ="item">
+			<a a-disabled="searchResults.length < pageSize" ng-click="updatePageNo(1)"><span class="glyphicon glyphicon-forward"></span></a>
+			</li>
+			</ul>
+			</div>
+		</div>
+		<div class = row>
+		<md-fab-speed-dial md-direction="right">
 			<md-fab-trigger class="align-with-text">
-      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="openManifestModel()">
+      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="openManifestModel()" ng-disabled="selected.length<=0">
       			<md-tooltip>Create Manifest</md-tooltip>
        			<md-icon md-font-library="material-icons">add</md-icon>
       			</md-button>
       		</md-fab-trigger>	
   			</md-fab-speed-dial>
-  			
 		</div>
 		<!-- <div class="row">
 		<button type="button"  ng-click="changestatus()" class="btn btn-primary pull-right" ng-disabled="selected.length === 0" >Proceed</button>

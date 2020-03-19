@@ -20,6 +20,9 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.minDate = new Date(2018,00,01);
 		$scope.company = null;
 		$scope.activeFilter = 1;
+		$scope.currentPage = 0;
+		$scope.pageSize = 15;
+		$scope.consignmentId=null;
 		
 		$scope.formatFilterDate = function(resp) {
 			if(resp == undefined || resp == ''){
@@ -30,17 +33,53 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			return new Date(response);
 		};
 		
+		$scope.setCurrentPage = function(pageNo){
+			$scope.currentPage = pageNo;
+			$scope.filter['pageNo'] = $scope.currentPage;
+			$scope.filter['pageSize'] = $scope.pageSize;
+		}
+		
+		$scope.updatePageNo = function(pageNo){
+			$scope.setCurrentPage($scope.currentPage + pageNo);
+			$scope.getManifestHistory();
+		}
+		
 		$scope.openConsignmentModel = function(){
 			$('#consignmentDetailModel').modal('show');
 		}
 		
-		$scope.deletedConsignment = function(biltyNo){
+		$scope.deleteManifest = function(refId){
 			var modal = SpinnerService.startSpinner();
-			$http.post(weburl + "/deleted/consignment", biltyNo).success(
+			$http.post(weburl + "/delete/manifest", refId).success(
 					function(data, status) {
 						if(data.success){
 						$scope.addAlert('success', data.msg[0]);
-						$scope.getConsignmentHistory();
+						SpinnerService.endSpinner(modal);
+						$scope.getManifestHistory();
+						}
+						else{
+							$scope.addAlert('warning', data.msg[0]);
+							SpinnerService.endSpinner(modal);
+						}	
+					}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+				SpinnerService.endSpinner(modal);
+			});	
+		}
+		
+		$scope.deleteConsignmentFromManifest = function(idx,refId,biltyNo){
+			var modal = SpinnerService.startSpinner();
+			$http.post(weburl + "/delete/manifest/consignment/"+biltyNo, refId).success(
+					function(data, status) {
+						if(data.success){
+						$scope.addAlert('success', data.msg[0]);
+						$scope.consignmentDetails.splice(idx, 1);
+						if($scope.consignmentDetails.length == 0){
+							$('#consignmentDetailModel').modal('hide');
+							SpinnerService.endSpinner(modal);
+							$scope.getManifestHistory();
+							return;
+						}
 						}
 						else{
 							$scope.addAlert('warning', data.msg[0]);
@@ -87,7 +126,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		}
 		
 		
-		$scope.getConsignmentDetails = function(consignments){
+		$scope.getConsignmentDetails = function(refId,consignments){
 			var modal = SpinnerService.startSpinner();	
 			var url = weburl + "/get/consignments?biltyNo="+consignments.toString();
 				return $http({
@@ -96,6 +135,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 				}).then(function(data) {
 					$scope.consignmentDetails = data.data;
 					SpinnerService.endSpinner(modal);
+					$scope.consignmentId = refId;
 					$scope.openConsignmentModel();
 				}).catch(function(data) {
 					SpinnerService.endSpinner(modal);
@@ -134,23 +174,25 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		
 		$scope.onDateChange = function(key,date){
 			
-			$scope.filter[key] = $filter('date')(date, 'dd-MM-yyyy');	
+			$scope.filter[key] = $filter('date')(date, 'dd-MM-yyyy');
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 		}
 		
 		$scope.onFilterChange = function(key,value){
 			if(value != undefined){
 			$scope.filter[key] = value;	
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 			}
 		}
 		
 		$scope.resetFilter = function(key){
 			delete $scope.filter[key];
-			
 			if(key === 'company'){
 				$scope.consignor = null;
 			}
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 		}
 		
@@ -159,10 +201,12 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.createdDate2 = null;
 			delete $scope.filter['createdDate1'];
 			delete $scope.filter['createdDate2'];
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 		}
 		
 		$scope.applyFilter = function() {
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 		};
 		
@@ -172,9 +216,11 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			delete $scope.filter['createdDate1'];
 			delete $scope.filter['createdDate2'];
 			$scope.filter['refId'] = $stateParams.searchTxt
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 		}
 		else{
+			$scope.setCurrentPage(0);
 			$scope.getManifestHistory();
 		}
 		

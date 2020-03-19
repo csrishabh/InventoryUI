@@ -28,6 +28,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.price = 0;
 		$scope.company = null;
 		$scope.destination = null;
+		$scope.currentPage = 0;
+		$scope.pageSize = 15;
 		
 		$scope.formatFilterDate = function(resp) {
 			if(resp == undefined || resp == ''){
@@ -242,7 +244,19 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		      list.push(item);
 		    }
 		};
-	  
+		
+		$scope.updatePageNo = function(pageNo){
+			$scope.setCurrentPage($scope.currentPage + pageNo);
+			$scope.getConsignmentHistory();
+		}
+		
+		$scope.setCurrentPage = function(pageNo){
+			$scope.currentPage = pageNo;
+			$scope.filter['pageNo'] = $scope.currentPage;
+			$scope.filter['pageSize'] = $scope.pageSize;
+		}
+		
+		
 		$scope.getConsignmentHistory = function(){
 		var modal = SpinnerService.startSpinner();	
 		
@@ -276,13 +290,15 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		
 		$scope.onDateChange = function(key,date){
 			
-			$scope.filter[key] = $filter('date')(date, 'dd-MM-yyyy');	
+			$scope.filter[key] = $filter('date')(date, 'dd-MM-yyyy');
+			$scope.setCurrentPage(0);
 			$scope.getConsignmentHistory();
 		}
 		
 		$scope.onFilterChange = function(key,value){
 			if(value != undefined){
-			$scope.filter[key] = value;	
+			$scope.filter[key] = value;
+			$scope.setCurrentPage(0);
 			$scope.getConsignmentHistory();
 			}
 		}
@@ -296,6 +312,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			else if(key === 'consignee'){
 				$scope.consignee = null;
 			}
+			$scope.setCurrentPage(0);
 			$scope.getConsignmentHistory();
 		}
 		
@@ -304,10 +321,12 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.bookingDate2 = null;
 			delete $scope.filter['bookingDate1'];
 			delete $scope.filter['bookingDate2'];
+			$scope.setCurrentPage(0);
 			$scope.getConsignmentHistory();
 		}
 		
 		$scope.applyFilter = function() {
+			$scope.setCurrentPage(0);
 			$scope.getConsignmentHistory();
 		};
 		
@@ -335,22 +354,12 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			delete $scope.filter['bookingDate1'];
 			delete $scope.filter['bookingDate2'];
 			$scope.filter['biltyNo'] = $stateParams.searchTxt
+			$scope.setCurrentPage(0);
 			$scope.getConsignmentHistory();	
 		}
-		else if($stateParams.view === 'todayCases'){
-			$scope.bookingDate1 = null;
-			$scope.bookingDate2 = null;
-			delete $scope.filter['bookingDate1'];
-			delete $scope.filter['bookingDate2'];
-			var todayDate = new Date();
-			$scope.aptDate1 = todayDate;
-			$scope.aptDate2 = todayDate;
-			$scope.filter['aptDate1'] = $filter('date')(todayDate, 'dd-MM-yyyy');
-			$scope.filter['aptDate2'] = $scope.filter['aptDate1'];
-			$scope.getConsignmentHistory();
-		}
 		else{
-		$scope.getConsignmentHistory();
+			$scope.setCurrentPage(0);
+			$scope.getConsignmentHistory();
 		}
 		
 		$scope.alerts = [];

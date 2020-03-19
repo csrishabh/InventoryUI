@@ -241,10 +241,22 @@
 							<td>{{result.des}}</td>
 							<td>{{result.company[0]}}</td>
 							<td>{{result.price+"/"}} {{result.paidBy | capitalize}}</td>
-							<td><a href="#" class = "underline" ng-click = "getConsignmentDetails(result.consignments)">Show Details</a></td>
+							<td><a a-disabled="result.consignments==null || result.consignments.lenght==0" href="#" class = "underline" ng-click = "getConsignmentDetails(result.refId,result.consignments)">Show Details</a></td>
+							<td><a a-disabled="result.isDeleted"  href="#"  ng-click = "deleteManifest(result.refId)"> <span class="glyphicon glyphicon-trash"></span></a></td>
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			
+			<div class="d-flex">
+			<ul class="list-inline">
+			<li class ="item">
+			<a a-disabled="currentPage === 0" ng-click="updatePageNo(-1)"><span class="glyphicon glyphicon-backward"></span></a>
+			</li>
+			<li class ="item">
+			<a a-disabled="searchResults.length < pageSize" ng-click="updatePageNo(1)"><span class="glyphicon glyphicon-forward"></span></a>
+			</li>
+			</ul>
 			</div>
 				
 		</div>
