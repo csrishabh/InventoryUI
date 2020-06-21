@@ -15,7 +15,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		$scope.searchResults = [];
 		$scope.activeFilter = 1;
 		$scope.currentPage = 0;
-		$scope.pageSize = 5;
+		$scope.pageSize = 10;
 		
 		$scope.setCurrentPage = function(pageNo){
 			$scope.currentPage = pageNo;

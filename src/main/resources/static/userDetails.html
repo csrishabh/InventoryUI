@@ -50,7 +50,7 @@
 	         
 	        <md-list-item class="md-1-line" ng-click="null"> 
 	        <md-input-container class="md-popup-input md-table-input">
-          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'true' ">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'ALL' ">
           						<md-option value = "ALL">All</md-option>
             					<md-option value = "true">Enabled</md-option>
             					<md-option value = "false">Disabled</md-option>
@@ -77,6 +77,7 @@
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "DOCTOR">Doctor</md-option>
             </md-select>
            </md-input-container> 
            </md-list-item>
@@ -129,7 +130,7 @@
 	         
 	        <md-list-item class="md-1-line" ng-click="null"> 
 	        <md-input-container class="md-popup-input md-table-input">
-          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'true' ">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'ALL' ">
           						<md-option value = "ALL">All</md-option>
             					<md-option value = "true">Enabled</md-option>
             					<md-option value = "false">Disabled</md-option>
@@ -155,6 +156,7 @@
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "DOCTOR">Doctor</md-option>
             </md-select>
            </md-input-container> 
            </md-list-item>
@@ -216,6 +218,7 @@
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "DOCTOR">Doctor</md-option>
             					</md-select>
           				 </md-input-container>
 							</td>
