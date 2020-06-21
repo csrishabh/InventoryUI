@@ -46,6 +46,16 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
+	.state('user',{
+		url: '/user',
+		templateUrl: UIUrl+'/addUser.html'
+	})
+	
+	.state('editUser/userId',{
+		url: '/editUser/:userId',
+		templateUrl: UIUrl+'/addUser.html'
+	})
+	
 	.state('consignment',{
 		url: '/consignment',
 		templateUrl: UIUrl+'/bookConsignment.html'
@@ -59,6 +69,11 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 	.state('consignmentHistory',{
 		url: '/consignmentHistory',
 		templateUrl: UIUrl+'/consignmentHistory.html'
+	})
+	
+	.state('userDetail',{
+		url: '/userDetail',
+		templateUrl: UIUrl+'/userDetails.html'
 	})
 	
 	.state('manifestHistory',{
@@ -222,6 +237,8 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 		$rootScope.name = user.fullname;
 		$rootScope.userId = user.username;
 		userService.set(user);
+		if(!(($scope.hasPermission('ADMIN_CARGO') || $scope.hasPermission('ADMIN_INV') || $scope.hasPermission('ADMIN_CASE')) && $location.path().includes("editUser"))){
+		
 		if($scope.hasPermission('VENDOR')){
 			$location.path('/caseHistory');
 		}
@@ -236,11 +253,14 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 			}
 		}
 		else if($scope.hasPermission('USER_CARGO')){
+			if(!$location.path().includes("editUser")){
 			$location.path('/consignment');
+			}
 		}
 		else{
 			$location.path('/product');
 		}
+	}
 	}
 	else{
 		$location.path('/login');
@@ -305,6 +325,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	this.addPerson = function(consignments){
 		$location.path('/addPerson')
 	}
+	this.adminConsole = function(consignments){
+		$location.path('/adminApp');
+	}
 	this.showPayment = function(consignments){
 		$location.path('/showPayment')
 	}
@@ -328,6 +351,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	}
 	this.ViewConsignmentHistory = function(){
 		$location.path('/consignmentHistory')
+	}
+	this.viewUserDetails = function(){
+		$location.path('/userDetail')
 	}
 	this.ViewManifestHistory = function(){
 		$location.path('/manifestHistory')

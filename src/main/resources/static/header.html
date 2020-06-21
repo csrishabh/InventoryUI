@@ -51,6 +51,8 @@
       	</a>
         <ul class="dropdown-menu">
           <li><a href="#" ng-click = "ctrl.openResetPassModel()">Reset Password</a></li>
+          <li><a href="#" ng-show = "ctrl.hasPermission('ADMIN_INV') || ctrl.hasPermission('ADMIN_CASE') || ctrl.hasPermission('ADMIN_CARGO') " ng-click = "ctrl.viewUserDetails()">User Management</a></li>
+          <!-- <li><a href="#" ng-show = "ctrl.hasPermission('ADMIN_INV') || ctrl.hasPermission('ADMIN_CASE') || ctrl.hasPermission('ADMIN_CARGO') " ng-click = "ctrl.adminConsole()">Admin Console</a></li> -->
         </ul>
        </li>
       	<!-- <li class="nav-item" ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li> -->

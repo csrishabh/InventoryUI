@@ -464,3 +464,13 @@ md-checkbox[disabled].delete .md-icon:after {
 	 background-color: #d59307 !important;
 }
 
+md-switch.md-checked:not([disabled]) .md-bar{
+	background-color: #d5930794 !important;
+}
+md-switch.md-checked:not([disabled]) .md-thumb{
+	background-color: #d59307 !important;
+}
+md-switch{
+	margin: 0px !important;
+}
+
