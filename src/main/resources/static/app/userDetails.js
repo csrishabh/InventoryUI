@@ -34,7 +34,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 				
 		if($scope.filter === undefined){
 			$scope.filter = {};	
-			$scope.filter['type'] ='true';
+			$scope.filter['type'] ='ALL';
 		}
 		
 		
