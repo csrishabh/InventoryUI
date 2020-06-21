@@ -1,0 +1,61 @@
+
+<!-- Modal -->
+<div id="consignmentDetailModel" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px;width:max-content;margin-left:-100px">
+    <form name="form" role="form">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title model-header">Consignment Detail</h4>
+       </div>
+	  <div class="row" style="background-color: #428bca;">
+	  	<div class="table-wrapper-scroll-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">BiltyNo</th>
+							<th scope="col">Booking Date</th>
+							<th scope="col">Destination</th>
+							<th scope="col">Consignor</th>
+							<th scope="col">Consignee</th>
+							<th scope="col">Total Parcel</th>
+							<th scope="col">Weight</th>
+							<th scope="col">Rate</th>
+							<th scope="col">Discount</th>
+							<th scope="col">Sub total</th>
+							<th scope="col">Other 1</th>
+							<th scope="col">Other 2</th>
+							<th scope="col">Grand total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="result in consignmentDetails">
+							<th scope="row">{{$index+1}}</th>
+							<td>{{result.biltyNo}}</td>					
+							<td>{{result.bookingDate}}</td>
+							<td>{{result.des}}</td>
+							<td>{{result.consignor[0]}}</td>
+							<td>{{result.consignee[0]}}</td> 
+							<td>{{result.totalParcel}}</td>
+							<td>{{result.weight}}</td>
+							<td>{{result.rate}}</td>
+							<td>{{result.discount}}</td>
+							<td>{{result.subTotal}}</td>
+							<td>{{result.other1}}</td>
+							<td>{{result.other2}}</td>
+							<td>{{result.grandTotal}}</td>
+							<td><a href="#"  ng-click = "deleteConsignmentFromManifest($index,consignmentId,result.biltyNo)"> <span class="glyphicon glyphicon-trash"></span></a></td>
+						</tr>
+					</tbody>
+				</table>
+	  	</div>
+	  </div>
+	  </form>
+      </div>
+      
+    </div>
+  </div>
+

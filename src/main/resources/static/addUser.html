@@ -1,0 +1,103 @@
+<div class= "container-fluid" ng-controller="userController as vm">
+		<div class="row">
+		<form name="form" ng-submit="saveUser(user)" role="form">
+		
+		<div class="col-md-8">
+			<div class="row">
+			
+			<div class="col-md-3">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">User ID</label>
+  			<input type="text" ng-disabled="isUserEdit" ng-model="user.username" required class="md-form-input" id="username" 
+  			name="username" pattern="^[A-Za-z0-9\-@_]*$" ng-pattern-restrict tabindex="1">
+  			 <div ng-messages="form.username.$error" ng-show="form.username.$dirty">
+      			<div ng-message="required">User ID is required</div>
+    		 </div>
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-3">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Name</label>
+  			<input type="text" ng-model="user.fullname" required class="md-form-input" id="fullname" name="fullname" tabindex="2">
+  			 <div ng-messages="form.fullname.$error" ng-show="form.fullname.$dirty">
+      			<div ng-message="required">Name is required</div>
+    		 </div>
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-3">
+			<md-input-container>
+          		<label>Roles</label>
+          			<md-select  multiple class="md-form-input" required ng-model="user.roles" tabindex="3" id="roles" name="roles">
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "ADMIN_CARGO">Cargo Admin</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "USER_CARGO">Cargo User</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "COMPANY_CARGO">Company</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNOR">Consignor</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNEE">Consignee</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "ADMIN_INV">Invertroy Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "USER_INV">Inventory User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+          			</md-select>
+          			<div ng-messages="form.roles.$error" ng-show="form.roles.$dirty">
+      				<div ng-message="required">Roles are required</div>
+    		 </div>
+        	</md-input-container>
+			</div>
+			
+			</div>
+		
+			<div class="row">
+			
+			<div class="col-md-3">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Address</label>
+  			<input type="text"  ng-model="user.address" md-maxlength="50" class="md-form-input" id="address" name="address" tabindex="4">
+			</md-input-container>
+			</div>
+			
+			<div class="col-md-3">
+			<md-input-container class="md-form-input">
+  			<label class="md-form-input">Mobile</label>
+  			<input type="text"  ng-model="user.mobileNo" md-maxlength="10" class="md-form-input" id="mobileNo" name="mobileNo" tabindex="5">
+			</md-input-container>	
+			</div>
+			
+			</div>
+			
+			
+			<div class="row" ng-show="hasPermission('ADMIN_CARGO')">
+			
+			<div class="col-md-3">
+				<md-input-container class="md-form-input">
+  				<label class="md-form-input">GST</label>
+  				<input type="text"  ng-model="user.gstNo" md-maxlength="50" class="md-form-input" id="gstNo" name="gstNo" tabindex="6">
+				</md-input-container>	
+			</div>
+			
+			</div>
+			
+			<div class="row">
+			<div class="col-md-6">
+			<div class="input-group">
+				<div class="form-actions">
+					<button type="submit" ng-show="!isUserEdit" class="btn btn-primary" ng-disabled="form.$invalid" tabindex="19">Submit</button>
+					<button type="button" ng-show="isUserEdit" ng-click = "updateUser(user)" class="btn btn-primary" ng-disabled="form.$invalid" tabindex="19">Update</button>
+				</div>
+			</div>
+			</div>
+			</div>
+		</div>
+		
+		</form>
+		</div>
+		
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>
+
+
+
+

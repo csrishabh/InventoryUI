@@ -328,6 +328,7 @@ md-input-container .md-input.md-popup-input{
 	border-color: #428bca;
 }
 md-input-container .md-input[disabled].md-popup-input{
+	color: black !important;
 	border-bottom-color: gray !important;
 	opacity: 1 !important;
 }
@@ -445,6 +446,12 @@ md-checkbox .md-icon {
 md-checkbox.md-checked .md-icon {
     background-color: #d59307;
 }
+md-checkbox[disabled] .md-icon:after {
+    border-color: #d59307 !important;
+}
+md-checkbox[disabled].delete .md-icon:after {
+    border-color: red !important;
+}
 
 /* noificationCount */
 
@@ -455,5 +462,15 @@ md-checkbox.md-checked .md-icon {
 
 .md-button.md-primary.md-fab{
 	 background-color: #d59307 !important;
+}
+
+md-switch.md-checked:not([disabled]) .md-bar{
+	background-color: #d5930794 !important;
+}
+md-switch.md-checked:not([disabled]) .md-thumb{
+	background-color: #d59307 !important;
+}
+md-switch{
+	margin: 0px !important;
 }
 

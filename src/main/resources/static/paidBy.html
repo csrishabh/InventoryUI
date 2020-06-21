@@ -1,0 +1,29 @@
+<!-- Modal -->
+<div id="paidByModal" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-sm" tabindex="-1">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <div class="modal-header">
+        <h4 class="modal-title model-header">Paid By</h4>
+      </div>
+  
+       <div align="center">
+    		
+    			<label class="radio-inline">
+     			 <input type="radio" name="paid_by"  value = "1" ng-model="consignment.paidBy" tabindex="-1">CONSIGNOR
+   		 		</label>
+    		
+    			<label class="radio-inline">
+     			 <input type="radio" name="paid_by"  value = "2" ng-model="consignment.paidBy" tabindex="-1">CONSIGNEE
+   		 		</label>
+    	</div>	
+    	
+      
+      <div class="modal-footer">
+      <button type="button" ng-click ="closePaidByModel()" class="btn btn-primary">OK</button>
+      </div>
+    </div>
+
+  </div>
+</div>

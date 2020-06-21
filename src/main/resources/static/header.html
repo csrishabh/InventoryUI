@@ -2,6 +2,7 @@
 <div ng-include="'/resetPassword.html'"></div>
 <div ng-include="'/downloadVendorReport.html'"></div>
 <div ng-include="'/saveCrownMapping.html'"></div>
+<div ng-include="'/saveUnitMapping.html'"></div>
   <nav class="navbar navbar-inverse">
   	<div class="container-fluid">
     <div class="navbar-header">
@@ -18,6 +19,7 @@
       	<li ng-class="{active:ctrl.isActive('/audit')}"  ng-show = "ctrl.hasPermission('ADMIN_INV')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.auditDetails()" tabindex="-1">Audit</a></li>
       	<li ng-class="{active:ctrl.isActive('/transction')}"  ng-show = "ctrl.hasPermission('USER_INV')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.transctionDetails()" tabindex="-1">Transaction</a></li>
       	<li ng-class="{active:ctrl.isActive('/case')}"  ng-show = "ctrl.hasPermission('USER_CASE')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.bookCase()" tabindex="-1">BookCase</a></li>
+      	<li ng-class="{active:ctrl.isActive('/consignment')}"  ng-show = "ctrl.hasPermission('USER_CARGO')"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse" ng-click = "ctrl.bookConsignment()" tabindex="-1">BookConsignment</a></li>
       	<li class="dropdown" ng-class="{active:ctrl.isActive('/caseHistory') || ctrl.isActive('/lateCases') || ctrl.isActive('/todayCases')}">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" ng-show = "ctrl.hasPermission('USER_CASE')">View
         <span class="caret"></span></a>
@@ -31,6 +33,15 @@
           <li ng-show = "ctrl.hasPermission('ADMIN_CASE')"><a href="#" ng-click = "ctrl.openCrownMappingModel()">Crown Mapping</a></li>
         </ul>
        </li>
+       <li class="dropdown" ng-class="{active:ctrl.isActive('/consignmentHistory')}">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" ng-show = "ctrl.hasPermission('USER_CARGO')">View
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#" ng-click = "ctrl.ViewConsignmentHistory()">Consignment History</a></li>
+           <li><a href="#" ng-click = "ctrl.ViewManifestHistory()">Manifest History</a></li>
+          <li ng-show = "ctrl.hasPermission('ADMIN_CARGO')"><a href="#" ng-click = "ctrl.openUnitMappingModel()">Unit Mapping</a></li>
+        </ul>
+       </li>
       </ul>
      
       <ul class="nav navbar-nav navbar-right">
@@ -40,6 +51,8 @@
       	</a>
         <ul class="dropdown-menu">
           <li><a href="#" ng-click = "ctrl.openResetPassModel()">Reset Password</a></li>
+          <li><a href="#" ng-show = "ctrl.hasPermission('ADMIN_INV') || ctrl.hasPermission('ADMIN_CASE') || ctrl.hasPermission('ADMIN_CARGO') " ng-click = "ctrl.viewUserDetails()">User Management</a></li>
+          <!-- <li><a href="#" ng-show = "ctrl.hasPermission('ADMIN_INV') || ctrl.hasPermission('ADMIN_CASE') || ctrl.hasPermission('ADMIN_CARGO') " ng-click = "ctrl.adminConsole()">Admin Console</a></li> -->
         </ul>
        </li>
       	<!-- <li class="nav-item" ng-show = "name"><a href="#"  data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-user"></span> {{name}}</a></li> -->

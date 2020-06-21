@@ -46,9 +46,39 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/case.html'
 	})
 	
+	.state('user',{
+		url: '/user',
+		templateUrl: UIUrl+'/addUser.html'
+	})
+	
+	.state('editUser/userId',{
+		url: '/editUser/:userId',
+		templateUrl: UIUrl+'/addUser.html'
+	})
+	
+	.state('consignment',{
+		url: '/consignment',
+		templateUrl: UIUrl+'/bookConsignment.html'
+	})
+	
 	.state('editcase',{
 		url: '/editcase/:caseId/:date',
 		templateUrl: UIUrl+'/case.html'
+	})
+	
+	.state('consignmentHistory',{
+		url: '/consignmentHistory',
+		templateUrl: UIUrl+'/consignmentHistory.html'
+	})
+	
+	.state('userDetail',{
+		url: '/userDetail',
+		templateUrl: UIUrl+'/userDetails.html'
+	})
+	
+	.state('manifestHistory',{
+		url: '/manifestHistory',
+		templateUrl: UIUrl+'/manifestHistory.html'
 	})
 	
 	.state('caseHistory',{
@@ -120,6 +150,31 @@ app.directive('nextOnEnter', function () {
     }
 });
 
+app.directive('aDisabled', function() {
+    return {
+        compile: function(tElement, tAttrs, transclude) {
+            //Disable ngClick
+            tAttrs["ngClick"] = "!("+tAttrs["aDisabled"]+") && ("+tAttrs["ngClick"]+")";
+
+            //Toggle "disabled" to class when aDisabled becomes true
+            return function (scope, iElement, iAttrs) {
+                scope.$watch(iAttrs["aDisabled"], function(newValue) {
+                    if (newValue !== undefined) {
+                        iElement.toggleClass("disabled", newValue);
+                    }
+                });
+
+                //Disable href on click
+                iElement.on("click", function(e) {
+                    if (scope.$eval(iAttrs["aDisabled"])) {
+                        e.preventDefault();
+                    }
+                });
+            };
+        }
+    };
+});
+
 app.directive('dlEnterKey', function () {
 	return function(scope, element, attrs) {
 
@@ -182,6 +237,8 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 		$rootScope.name = user.fullname;
 		$rootScope.userId = user.username;
 		userService.set(user);
+		if(!(($scope.hasPermission('ADMIN_CARGO') || $scope.hasPermission('ADMIN_INV') || $scope.hasPermission('ADMIN_CASE')) && $location.path().includes("editUser"))){
+		
 		if($scope.hasPermission('VENDOR')){
 			$location.path('/caseHistory');
 		}
@@ -195,9 +252,15 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 			$location.path('/caseHistory');
 			}
 		}
+		else if($scope.hasPermission('USER_CARGO')){
+			if(!$location.path().includes("editUser")){
+			$location.path('/consignment');
+			}
+		}
 		else{
 			$location.path('/product');
 		}
+	}
 	}
 	else{
 		$location.path('/login');
@@ -262,6 +325,9 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	this.addPerson = function(consignments){
 		$location.path('/addPerson')
 	}
+	this.adminConsole = function(consignments){
+		$location.path('/adminApp');
+	}
 	this.showPayment = function(consignments){
 		$location.path('/showPayment')
 	}
@@ -276,9 +342,21 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		AppService.clearCaseData();
 		$location.path('/case')
 	}
+	this.bookConsignment = function(){
+		$location.path('/consignment')
+	}
 	this.ViewCaseHistory = function(){
 		AppService.clearCaseFilter();
 		$location.path('/caseHistory')
+	}
+	this.ViewConsignmentHistory = function(){
+		$location.path('/consignmentHistory')
+	}
+	this.viewUserDetails = function(){
+		$location.path('/userDetail')
+	}
+	this.ViewManifestHistory = function(){
+		$location.path('/manifestHistory')
 	}
 	this.ViewLateCase = function(){
 		$location.path('/lateCases')
@@ -371,6 +449,10 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		$('#saveCrownMapping').modal('show');
 	}
 	
+	this.openUnitMappingModel = function(){
+		$('#saveUnitMapping').modal('show');
+	}
+	
 	this.updatePrice = function(vendorId,type){
 		if(vendorId != null && type != null && vendorId != undefined && type != undefined ){
 			
@@ -398,6 +480,32 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 		}
 	}
 	
+	this.updateUnitPrice = function(companyId,type){
+		if(companyId != null && type != null && companyId != undefined && type != undefined ){
+			
+			$http.get(weburl+"/unit/price/"+companyId+"/"+type).success(function(data){	
+				if(data.success){
+					$scope.currPrice = data.data;
+				}
+			});
+		}
+	}
+	
+	this.saveUnitMapping = function(companyId,type,price){
+		if(companyId != null && type != null && companyId != undefined && type != undefined ){
+			$http.post(weburl+"/unit/save/"+companyId+"/"+type,(price*100)).success(function(data){
+			if(data.success){
+				$scope.addAlert('success', data.msg[0]);
+				$scope.currPrice = price;
+			}
+			else{
+				$scope.addAlert('warning', data.msg[0]);
+			} 
+			}).error(function(data, status) {
+				$scope.addAlert('warning', 'Please Try Again !!!');
+			});
+		}
+	}
 });
 
 app.run(function($rootScope){

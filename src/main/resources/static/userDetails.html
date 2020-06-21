@@ -1,0 +1,257 @@
+<div class= "container-fluid" ng-controller="userDetailsController as vm">
+<div ng-include="'/consignmentDetailModel.html'"></div>
+	<md-sidenav md-component-id="left" class="md-sidenav-left">
+   		<md-toolbar class="md-theme-indigo">
+       		<h1 class="md-toolbar-tools">Filter User</h1>
+     	</md-toolbar>
+     	<md-content>
+      	<md-list class="md-dense" flex>
+      	
+      	<div ng-show="activeFilter==1">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By User Name
+        <a class="blueIcon pull-right" ng-click="resetFilter('username')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+	        
+	        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['username']" class = "md-popup-input" id="username" name="username" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+        
+        <md-divider ></md-divider>
+        </div>
+        
+        <div ng-show="activeFilter==2">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Name
+         <a class="blueIcon pull-right" ng-click="resetFilter('fullname')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['fullname']" class = "md-popup-input" id="fullname" name="fullname" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+	     <div ng-show="activeFilter==3">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Mobile
+         <a class="blueIcon pull-right" ng-click="resetFilter('mobileNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['mobileNo']" class = "md-popup-input" id="mobileNo" name="mobileNo" maxlength="10" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	   
+	    <div ng-show="activeFilter==4">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Type</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'true' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "true">Enabled</md-option>
+            					<md-option value = "false">Disabled</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	    
+	    <div ng-show="activeFilter==5">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Roles</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select multiple class="md-popup-input" ng-model="filter['roles']" ng-change = "applyFilter()">
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "ADMIN_CARGO">Cargo Admin</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "USER_CARGO">Cargo User</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "COMPANY_CARGO">Company</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNOR">Consignor</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNEE">Consignee</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "ADMIN_INV">Invertroy Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "USER_INV">Inventory User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	    
+	    
+	    
+	    <div ng-show="activeFilter!=1">
+        <md-subheader class="md-no-sticky">Search By User Name
+        <a class="blueIcon pull-right" ng-click="resetFilter('username')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+	        
+	        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['username']" class = "md-popup-input" id="username" name="username" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+        
+        <md-divider ></md-divider>
+        </div>
+        
+        <div ng-show="activeFilter!=2">
+        <md-subheader class="md-no-sticky">Search By Name
+         <a class="blueIcon pull-right" ng-click="resetFilter('fullname')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['fullname']" class = "md-popup-input" id="fullname" name="fullname" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+	     <div ng-show="activeFilter!=3">
+        <md-subheader class="md-no-sticky">Search By Mobile
+         <a class="blueIcon pull-right" ng-click="resetFilter('mobileNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['mobileNo']" class = "md-popup-input" id="mobileNo" name="mobileNo" maxlength="10" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	   
+	    <div ng-show="activeFilter!=4">
+	    <md-subheader class="md-no-sticky">Search By Type</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'true' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "true">Enabled</md-option>
+            					<md-option value = "false">Disabled</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	  <div ng-show="activeFilter!=5">
+	    <md-subheader class="md-no-sticky">Search By Roles</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select multiple class="md-popup-input" ng-model="filter['roles']" ng-change = "applyFilter()">
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "ADMIN_CARGO">Cargo Admin</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "USER_CARGO">Cargo User</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "COMPANY_CARGO">Company</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNOR">Consignor</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNEE">Consignee</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "ADMIN_INV">Invertroy Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "USER_INV">Inventory User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+        </md-list>
+        </md-content>
+  	</md-sidenav>
+  	
+		<div class="row">
+		<div class="table-wrapper-scroll-y text-nowrap" style="max-height: 600px;">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							
+							<th scope="col">User Name
+							<a href="#"  ng-click = "openFilterNav(1)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col">Name
+							<a href="#"  ng-click = "openFilterNav(2)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col">Mobile
+							<a href="#"  ng-click = "openFilterNav(3)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col">Roles
+							<a href="#"  ng-click = "openFilterNav(5)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col" >Address</th>
+							
+							<th scope="col">Status
+							<a href="#"  ng-click = "openFilterNav(4)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="result in searchResults">
+							<th scope="row">{{$index+1}}</th>
+							<td><a href="/#editUser/{{result.username}}" target="_blank" class = "underline">{{result.username}}</a></td>				
+							<td>{{result.fullname}}</td>
+							<td>{{result.mobileNo}}</td>
+							<td>
+							<md-input-container class=" md-form-input md-table-input">
+          						<md-select class="md-form-input" multiple ng-model="result.roles" disabled>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "ADMIN_CARGO">Cargo Admin</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "USER_CARGO">Cargo User</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "COMPANY_CARGO">Company</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNOR">Consignor</md-option>
+          						<md-option ng-show="hasPermission('ADMIN_CARGO')" value = "CONSIGNEE">Consignee</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "ADMIN_INV">Invertroy Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INV')" value = "USER_INV">Inventory User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "ADMIN_CASE">Lab Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
+            					</md-select>
+          				 </md-input-container>
+							</td>
+							<td>{{result.address}}</td>
+							<td> <md-switch ng-model="result.enabled" ng-change="updateUser(result)"></md-switch></td>
+							<!-- <td><a a-disabled="result.consignments==null || result.consignments.lenght==0" href="#" class = "underline" ng-click = "getConsignmentDetails(result.refId,result.consignments)">Show Details</a></td>
+							<td><a a-disabled="result.isDeleted"  href="#"  ng-click = "deleteManifest(result.refId)"> <span class="glyphicon glyphicon-trash"></span></a></td> -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="d-flex">
+			<ul class="list-inline">
+			<li class ="item">
+			<a a-disabled="currentPage === 0" ng-click="updatePageNo(-1)"><span class="glyphicon glyphicon-backward"></span></a>
+			</li>
+			<li class ="item">
+			<a a-disabled="searchResults.length < pageSize" ng-click="updatePageNo(1)"><span class="glyphicon glyphicon-forward"></span></a>
+			</li>
+			</ul>
+			</div>
+			
+		<md-fab-speed-dial md-direction="right">
+			<md-fab-trigger class="align-with-text">
+      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="addUser()">
+      			<md-tooltip>Add User</md-tooltip>
+       			<md-icon md-font-library="material-icons">add</md-icon>
+      			</md-button>
+      		</md-fab-trigger>	
+  		</md-fab-speed-dial>	
+				
+		</div>
+		<!-- <div class="row">
+		<button type="button"  ng-click="changestatus()" class="btn btn-primary pull-right" ng-disabled="selected.length === 0" >Proceed</button>
+		</div> -->
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>

@@ -31,6 +31,9 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 				});
 			$location.path('/caseHistory');
 			}
+			else if($scope.hasPermission('USER_CARGO')){
+				$location.path('/consignment');
+			}
 			else{
 				$location.path('/product');
 			}
