@@ -212,6 +212,11 @@ td.selectList{
   background-color: #d59307d4;
 }
 
+.tr-deleted{ 
+  background-color: black;
+  opacity: 50%;
+}
+
 .td-highlited{ 
   background-color: #d59307d4;
 }
@@ -315,8 +320,14 @@ md-select.md-form-input .md-select-icon{
 	color: white;
 }
 
+.md-select-menu-container{
+	 z-index:100000 !important; /* any number of choice > 1050*/
+}
 
-
+/* From mdc-datetime-picker */
+.md-dialog-container{
+ z-index:100000 !important; /* any number of choice > 1050*/	
+}
 
 /* PopUp input box */
 
@@ -411,6 +422,14 @@ md-autocomplete.filter-search md-autocomplete-wrap input{
 md-autocomplete.filter-search md-autocomplete-wrap input:focus{
 	color: black !important;
 	border-color: #428bca !important;
+}
+
+md-autocomplete.filter-search md-input-container label:not(.md-no-float):not(.md-container-ignore):after{
+	color: red !important;
+}
+
+md-autocomplete.filter-search md-input-container label:not(.md-no-float):not(.md-container-ignore){
+	color: #428bca;
 }
 
 .md-autocomplete-suggestions-container{  

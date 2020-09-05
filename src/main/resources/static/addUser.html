@@ -41,6 +41,9 @@
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "USER_CASE">Lab User</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "VENDOR">Vendor</md-option>
             					<md-option ng-show="hasPermission('ADMIN_CASE')" value = "DOCTOR">Doctor</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INVOICE')" value = "ADMIN_INVOICE">Invoice Admin</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INVOICE')" value = "USER_INVOICE">Invoice User</md-option>
+            					<md-option ng-show="hasPermission('ADMIN_INVOICE')" value = "ISSUER_INVOICE">Invoice Issuer</md-option>
           			</md-select>
           			<div ng-messages="form.roles.$error" ng-show="form.roles.$dirty">
       				<div ng-message="required">Roles are required</div>

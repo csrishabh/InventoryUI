@@ -86,6 +86,16 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
 	
+	.state('invoice',{
+		url: '/invoice',
+		templateUrl: UIUrl+'/invoiceDashboard.html'
+	})
+	
+	.state('challan',{
+		url: '/challan',
+		templateUrl: UIUrl+'/challanDashboard.html'
+	})
+	
 	.state('caseHistory/view',{
 		url: '/caseHistory/:view',
 		templateUrl: UIUrl+'/caseHistory.html'
@@ -105,6 +115,7 @@ app.config(function($stateProvider, $urlRouterProvider ,$httpProvider,$locationP
 		url: '/lateCases',
 		templateUrl: UIUrl+'/caseHistory.html'
 	})
+	
 	.state('todayCases',{
 		url: '/todayCases',
 		templateUrl: UIUrl+'/caseHistory.html'
@@ -230,38 +241,43 @@ app.controller('myctrl',['$location','$cookies','$rootScope','userService','$htt
 		 $cookies.put("backendUrl", response.url);
 	 });
 	 
-	if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
-		$http.defaults.headers.common.Authorization = $cookies.get("access_token");
-		weburl = $cookies.get("backendUrl");
-		var user = JSON.parse($cookies.get("user"));
-		$rootScope.name = user.fullname;
-		$rootScope.userId = user.username;
-		userService.set(user);
-		if(!(($scope.hasPermission('ADMIN_CARGO') || $scope.hasPermission('ADMIN_INV') || $scope.hasPermission('ADMIN_CASE')) && $location.path().includes("editUser"))){
-		
-		if($scope.hasPermission('VENDOR')){
-			$location.path('/caseHistory');
-		}
-		else if($scope.hasPermission('USER_CASE')){
+	 if($cookies.get("access_token") != undefined && $cookies.get("access_token")!= ""){
+			$http.defaults.headers.common.Authorization = $cookies.get("access_token");
+			weburl = $cookies.get("backendUrl");
+			var user = JSON.parse($cookies.get("user"));
+			$rootScope.name = user.fullname;
+			$rootScope.userId = user.username;
+			userService.set(user);
+			if(!(($scope.hasPermission('ADMIN_CARGO') || $scope.hasPermission('ADMIN_INV') || $scope.hasPermission('ADMIN_INVOICE') ||
+					$scope.hasPermission('ADMIN_CASE')) && $location.path().includes("editUser"))){
 			
-			AppService.getLateCaseCount().success(function(data){
-				$rootScope.lateCaseCount = data.data.count;
-			});
-			
-			if(!$location.path().includes("editcase")){
-			$location.path('/caseHistory');
+			if($scope.hasPermission('VENDOR')){
+				$location.path('/caseHistory');
+			}
+			else if($scope.hasPermission('USER_CASE')){
+				
+				AppService.getLateCaseCount().success(function(data){
+					$rootScope.lateCaseCount = data.data.count;
+				});
+				
+				if(!$location.path().includes("editcase")){
+				$location.path('/caseHistory');
+				}
+			}
+			else if($scope.hasPermission('USER_CARGO')){
+				if(!$location.path().includes("editUser")){
+				$location.path('/consignment');
+				}
+			}
+			else if($scope.hasPermission('USER_INVOICE')){
+				$location.path('/invoice');
+				
+			}
+			else{
+				$location.path('/product');
 			}
 		}
-		else if($scope.hasPermission('USER_CARGO')){
-			if(!$location.path().includes("editUser")){
-			$location.path('/consignment');
-			}
-		}
-		else{
-			$location.path('/product');
-		}
-	}
-	}
+		}	
 	else{
 		$location.path('/login');
 	}
@@ -351,6 +367,12 @@ app.controller('headerController', function($location, $http, $rootScope ,$cooki
 	}
 	this.ViewConsignmentHistory = function(){
 		$location.path('/consignmentHistory')
+	}
+	this.viewInvoiceDashboard = function(){
+		$location.path('/invoice')
+	}
+	this.viewChallanDashboard = function(){
+		$location.path('/challan')
 	}
 	this.viewUserDetails = function(){
 		$location.path('/userDetail')

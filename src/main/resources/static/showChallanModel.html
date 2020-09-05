@@ -1,0 +1,49 @@
+
+<!-- Modal -->
+<div id="challanModal" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px>
+    <form name="form" role="form">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title model-header">Challan List</h4>
+       </div>
+	  <div class="row" style="background-color: #428bca;">
+	  	<div class="table-wrapper-scroll-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Challan No</th>
+							<th scope="col">Create Date</th>
+							<th scope="col">Type</th>
+							<th scope="col">Value</th>
+							<th scope="col">Bank Name</th>
+							<th scope="col">Ref No</th>
+							<th scope="col">Create by</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="result in challanList">
+							<th scope="row">{{$index+1}}</th>
+							<td>{{result.refId}}</td>					
+							<td>{{result.createDate | date : "dd-MM-y"}}</td>
+							<td>{{result.type}}</td>
+							<td>{{result.amount}}</td>
+							<td>{{result.bankName}}</td>
+							<td>{{result.refNo}}</td>
+							<td>{{result.createdBy}}</td>
+							<td ng-show="hasPermission('ADMIN_INVOICE')"><a a-disabled="$index != challanList.length-1"  href="#"  ng-click = "cancelChallan(result.refId)"> <span class="glyphicon glyphicon-trash"></span></a></td> 
+						</tr>
+					</tbody>
+				</table>
+	  	</div>
+	  </div>
+	  </form>
+      </div>
+      
+    </div>
+  </div>
+

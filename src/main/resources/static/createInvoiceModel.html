@@ -1,0 +1,82 @@
+<!-- Modal -->
+<div id="createInvoiceModel" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" 
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+	
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <form name="form" ng-submit="createInvoice(issuer,amount)" role="form">
+      
+      <div class="modal-header">
+        <button type="button" ng-click="closeInvoiceModel()" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">Create Invoice</h4>
+       </div>
+
+	 <div class="row">	
+	       	
+	    <div class="col-md-3">
+	    <label class = "md-popup-input">Date</label>
+			<input type="date" class="form-control" id=createdDate ng-model="invoice.createdDate" tabindex="1" required >
+	    </div>  
+	              
+	 </div> 	  
+	 <div class="row">
+
+	 <div class="col-md-4">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Invoice No.</label>
+  		<input type="text" ng-model="invoice.refNo" required class = "md-popup-input" id="refNo" name="refNo"
+  		pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="2">
+		</md-input-container>
+	</div>
+		
+	 <div class="col-md-3">
+	    <md-autocomplete class = "filter-search" required
+					id="issuer"
+					name = "issuer"
+					md-input-name="issuer"
+          			md-no-cache="true"
+          			md-selected-item="issuer"
+          			md-search-text="issuerName"
+          			md-items="issuer in getUser(issuerName,'ISSUER_INVOICE')"
+          			md-item-text="issuer.fullname"
+          			md-min-length="1"
+          			md-floating-label="Issuer" tabindex="3">
+        		<md-item-template>
+          			<span d-highlight-text="issuerName" md-highlight-flags="^i">{{issuer.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	   </div>
+	   
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Amount</label>
+  		<input type="number" ng-model="amount" required class = "md-popup-input" id="amount" name="amount" tabindex="4"
+  		ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"  step="0.01" ng-pattern-restrict>
+		</md-input-container>
+		</div>
+	</div>	
+	
+	<div class="row">
+	<div class="col-md-5">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Note</label>
+  		<input type="text" ng-model="invoice.note" class = "md-popup-input" id="note" name="note"
+  		pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="5">
+		</md-input-container>
+	</div>
+	</div>
+    
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" tabindex="6" ng-disabled="form.$invalid">Add</button>
+	</div>
+	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

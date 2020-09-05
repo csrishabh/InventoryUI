@@ -1,0 +1,340 @@
+<div class= "container-fluid" ng-controller="invoiceDashboardController as vm">
+<div ng-include="'/createInvoiceModel.html'"></div>
+<div ng-include="'/invoiceHistoryModel.html'"></div> 
+<div ng-include="'/updateInvoiceModel.html'"></div>
+<div ng-include="'/addChallanModel.html'"></div>
+<div ng-include="'/showChallanModel.html'"></div>
+
+	<md-sidenav md-component-id="left" class="md-sidenav-left">
+   		<md-toolbar class="md-theme-indigo">
+       		<h1 class="md-toolbar-tools">Filter Invoice</h1>
+     	</md-toolbar>
+     	<md-content>
+      	<md-list class="md-dense" flex>
+      	  
+        <div ng-show="activeFilter==2">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307"> Create Date
+        <a class="blueIcon pull-right" ng-click="resetCreateDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader>
+	       	 <md-list-item class="md-1-line" ng-click="null">
+	       	 <label>From</label>
+	       	 <md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromCreateDate" name="fromCreateDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "minDate"
+                       max-date = "createDate2 ? createDate2 : today"
+                       ng-model="createDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('createdDate1',createDate1)">
+    		</md-input-container>
+    		<label>To</label>
+    		<md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toCreateDate" name ="toCreateDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "createDate1"
+                       max-date = "today"
+                       ng-disabled="createDate1 === null"
+                       ng-model="createDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('createdDate2',createDate2)">
+            </md-input-container>                 
+		    </md-list-item>    
+		<md-divider ></md-divider>
+		</div>
+		
+		
+        <div ng-show="activeFilter==3">
+        <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Invoice No
+         <a class="blueIcon pull-right" ng-click="resetFilter('refNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['refNo']" class = "md-popup-input" id="refNo" name="refNo" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+		<div ng-show="activeFilter==4">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Issuer
+	     <a class="blueIcon pull-right" ng-click="resetFilter('issuer')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "issuer"
+					md-input-name="issuer"
+          			md-no-cache="true"
+          			md-search-text="issuerName"
+          			md-selected-item="issuer"
+          			md-selected-item-change="onFilterChange('issuer',issuer.username)"
+          			md-items="issuer in getUser(issuerName,'ISSUER_INVOICE')"
+          			md-item-text="issuer.fullname"
+          			md-min-length="1"
+          			md-floating-label="Issuer">
+        		<md-item-template>
+          			<span d-highlight-text="issuerName" md-highlight-flags="^i">{{issuer.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter==5">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Created By
+	     <a class="blueIcon pull-right" ng-click="resetFilter('createdBy')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "createdBy"
+					md-input-name="createdBy"
+          			md-no-cache="true"
+          			md-search-text="createdByName"
+          			md-selected-item="createdBy"
+          			md-selected-item-change="onFilterChange('createdBy',createdBy.username)"
+          			md-items="createdBy in getUser(createdByName,'USER_INVOICE')"
+          			md-item-text="createdBy.fullname"
+          			md-min-length="1"
+          			md-floating-label="Created By">
+        		<md-item-template>
+          			<span d-highlight-text="createdByName" md-highlight-flags="^i">{{createdBy.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter==6">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Type</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'false' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "true">Cancelled</md-option>
+            					<md-option value = "false">Active</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter==7">
+	    <md-subheader class="md-no-sticky" style="background-color:#d59307">Search By Status</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'DUE' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "DUE">Due</md-option>
+            					<md-option value = "PAID">Paid</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	  
+	    
+        <div ng-show="activeFilter!=2">
+        <md-subheader class="md-no-sticky"> Create Date
+        <a class="blueIcon pull-right" ng-click="resetCreateDateFilter()"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader>
+	       	 <md-list-item class="md-1-line" ng-click="null">
+	       	 <label>From</label>
+	       	 <md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="fromCreateDate" name="fromCreateDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "minDate"
+                       max-date = "createDate2 ? createDate2 : today"
+                       ng-model="createDate1" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('createdDate1',createDate1)">
+    		</md-input-container>
+    		<label>To</label>
+    		<md-input-container class = "md-popup-input">
+       	    	<input mdc-datetime-picker date="true" time="false" type="text" id="toCreateDate" name ="toCreateDate"
+               		   click-outside-to-close="true"
+               		   auto-ok="true"
+                       format="DD-MM-YYYY"
+                       min-date = "createDate1"
+                       max-date = "today"
+                       ng-disabled="createDate1 === null"
+                       ng-model="createDate2" class="md-popup-input" tabindex="-1" ng-change= "onDateChange('createdDate2',createDate2)">
+            </md-input-container>                 
+		    </md-list-item>    
+		<md-divider ></md-divider>
+		</div>
+		
+		
+        <div ng-show="activeFilter!=3">
+        <md-subheader class="md-no-sticky">Search By Invoice No
+         <a class="blueIcon pull-right" ng-click="resetFilter('refNo')"><span class="glyphicon glyphicon-remove"></span></a>
+        </md-subheader>
+        <md-list-item class="md-1-line" ng-click="null">
+		        <md-input-container class = "md-popup-input">
+		  		<input type="text" ng-model="filter['refNo']" class = "md-popup-input" id="refNo" name="refNo" dl-enter-key=applyFilter()>
+				</md-input-container>
+	        </md-list-item>
+	    <md-divider ></md-divider>
+	    </div> 
+	    
+		<div ng-show="activeFilter!=4">
+	    <md-subheader class="md-no-sticky">Search By Issuer
+	     <a class="blueIcon pull-right" ng-click="resetFilter('issuer')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "issuer"
+					md-input-name="issuer"
+          			md-no-cache="true"
+          			md-search-text="issuerName"
+          			md-selected-item="issuer"
+          			md-selected-item-change="onFilterChange('issuer',issuer.username)"
+          			md-items="issuer in getUser(issuerName,'ISSUER_INVOICE')"
+          			md-item-text="issuer.fullname"
+          			md-min-length="1"
+          			md-floating-label="Issuer">
+        		<md-item-template>
+          			<span d-highlight-text="issuerName" md-highlight-flags="^i">{{issuer.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter!=5">
+	    <md-subheader class="md-no-sticky">Search By Created By
+	     <a class="blueIcon pull-right" ng-click="resetFilter('createdBy')"><span class="glyphicon glyphicon-remove"></span></a>
+	    </md-subheader> 
+	         <md-list-item class="md-1-line">
+		       <md-autocomplete class = "filter-search"
+					name = "createdBy"
+					md-input-name="createdBy"
+          			md-no-cache="true"
+          			md-search-text="createdByName"
+          			md-selected-item="createdBy"
+          			md-selected-item-change="onFilterChange('createdBy',createdBy.username)"
+          			md-items="createdBy in getUser(createdByName,'USER_INVOICE')"
+          			md-item-text="createdBy.fullname"
+          			md-min-length="1"
+          			md-floating-label="Created By">
+        		<md-item-template>
+          			<span d-highlight-text="createdByName" md-highlight-flags="^i">{{createdBy.fullname}}</span>
+        		</md-item-template>
+      		</md-autocomplete>
+	        </md-list-item>
+	            
+	    <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter!=6">
+	    <md-subheader class="md-no-sticky">Search By Type</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['type']" ng-change = "applyFilter()" ng-init=" filter['type'] = 'false' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "true">Cancelled</md-option>
+            					<md-option value = "false">Active</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	    <div ng-show="activeFilter!=7">
+	    <md-subheader class="md-no-sticky">Search By Status</md-subheader>
+	         
+	        <md-list-item class="md-1-line" ng-click="null"> 
+	        <md-input-container class="md-popup-input md-table-input">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'DUE' ">
+          						<md-option value = "ALL">All</md-option>
+            					<md-option value = "DUE">Due</md-option>
+            					<md-option value = "PAID">Paid</md-option>
+            </md-select>
+           </md-input-container> 
+           </md-list-item>
+	      <md-divider ></md-divider> 
+	    </div>
+	    
+	      
+        </md-list>
+        </md-content>
+  	</md-sidenav>
+  	
+		<div class="row">
+		<div class="table-wrapper-scroll-y text-nowrap" style="max-height: 500px;">
+				<table class="table">
+					<thead>
+						<tr>			
+							<th scope="col">Invoice No.
+							<a href="#"  ng-click = "openFilterNav(3)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+											
+							<th scope="col">Create Date
+							<a href="#"  ng-click = "openFilterNav(2)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							
+							<th scope="col" >Issuer
+							<a href="#"  ng-click = "openFilterNav(4)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+						
+							<th scope="col">Value</th>
+							<th scope="col">Total Paid</th>
+							<th scope="col">Remaining</th>
+							
+							<th scope="col">Created By
+							<a href="#"  ng-click = "openFilterNav(5)"> <span class="glyphicon glyphicon-filter"></span></a>
+							</th>
+							<th scope="col">Note</th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="result in searchResults" ng-class="{'tr-deleted': (result.isCancelled == true)}">			
+							<td><a href="#" class = "underline" a-disabled="result.isCancelled" ng-click = "getChallanList(result.refId)">{{result.refNo}} <md-tooltip>Show Challan</md-tooltip></a></td>
+							<td>{{result.createdDate | date : "dd-MM-y"}}</td>
+							<td>{{result.issuer[0]}}</td>
+							<td>{{result.finalValue}}</td>
+							<td>{{result.totalPaid}}</td>
+							<td>{{result.remainingAmt}}</td>
+							<td>{{result.createBy[0]}}</td>
+							<td>{{result.note}}</td>
+							<td><a href="#" ng-click = "openInvoiceUpdateModel(result)" a-disabled="result.isCancelled"><span class="glyphicon glyphicon-edit"></span> <md-tooltip>Edit Invoice</md-tooltip></a></td>
+							<td><a href="#" ng-click = "openAddChallanModel(result)" a-disabled="result.isCancelled || result.remainingAmt==0"><span class="glyphicon glyphicon-plus-sign"></span><md-tooltip>Add Challan</md-tooltip></a></td>
+							<td ng-show="hasPermission('ADMIN_INVOICE')"><a a-disabled="result.isCancelled || result.totalPaid > 0"  href="#"  ng-click = "cancelInvoice(result.refId)"> <span class="glyphicon glyphicon-trash"></span>
+							<md-tooltip>Delete Invoice</md-tooltip></a></td>
+							<td ng-show="hasPermission('ADMIN_INVOICE')"><a href="#" class = "underline" ng-click = "getInvoiceHistory(result.refId)">Show History</a></td> 
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="d-flex">
+			<ul class="list-inline">
+			<li class ="item">
+			<a a-disabled="currentPage === 0" ng-click="updatePageNo(-1)"><span class="glyphicon glyphicon-backward"></span></a>
+			</li>
+			<li class ="item">
+			<a a-disabled="searchResults.length < pageSize" ng-click="updatePageNo(1)"><span class="glyphicon glyphicon-forward"></span></a>
+			</li>
+			</ul>
+			</div>
+		</div>
+		<div class = row>
+		<md-fab-speed-dial md-direction="right">
+			<md-fab-trigger class="align-with-text">
+      			<md-button aria-label="menu" class="md-fab md-primary" ng-click="openCreateInvoiceModel()">
+      			<md-tooltip>Add Invoice</md-tooltip>
+       			<md-icon md-font-library="material-icons">add</md-icon>
+      			</md-button>
+      		</md-fab-trigger>	
+  			</md-fab-speed-dial>
+		</div>
+		<!-- <div class="row">
+		<button type="button"  ng-click="changestatus()" class="btn btn-primary pull-right" ng-disabled="selected.length === 0" >Proceed</button>
+		</div> -->
+		<div uib-alert ng-repeat="alert in alerts" type="{{alert.type}}"
+			close="closeAlert($index)" dismiss-on-timeout=2000 class="alert fade">{{alert.msg}}</div>
+</div>
