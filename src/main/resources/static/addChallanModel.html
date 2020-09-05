@@ -1,0 +1,89 @@
+<!-- Modal -->
+<div id="addChallanModel" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" 
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+		
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <form name="form" ng-submit="createChallan(amount)" role="form">
+      
+      <div class="modal-header">
+        <button type="button" ng-click="closeChallanModel()" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">Create Challan</h4>
+       </div>
+
+	 <div class="row">	
+	       	
+	     <div class="col-md-3">
+		  <md-input-container class = "md-popup-input">
+        	<label class="md-popup-input">Date</label>
+       	    <input mdc-datetime-picker date="true" time="false" type="text" id="createDate"
+               click-outside-to-close="true"
+               auto-ok="true"
+               format="DD-MM-YYYY"
+               max-date = "createDate2 ? createDate2 : today"
+               ng-model="challan.createDate" tabindex="1" 
+               required>
+    	  </md-input-container>
+		</div>
+		
+		<div class="col-md-5">
+	    <md-input-container class="md-popup-input" style="width:150px;">
+	    <label class = "md-popup-input" >Payment Type</label>
+	    <md-select class="md-popup-input"  ng-model="challan.type" required id="type" name="type" tabindex="2" ng-init="challan.type='CASH'">
+          						<md-option value = "CASH">Cash</md-option>
+          						<md-option value = "INTERNET_BANKING">Internet Banking</md-option>
+          						<md-option value = "CHEQUE">Cheque</md-option>
+         </md-select>
+  		</md-input-container>	
+	  `</div> 
+			            
+	 </div>
+		  
+	 <div class="row" ng-show="challan.type=='INTERNET_BANKING' || challan.type=='CHEQUE'">
+	 
+	  <div class="col-md-3" ng-show="challan.type=='INTERNET_BANKING' || challan.type=='CHEQUE'">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Bank Name</label>
+  		<input type="text" ng-model="challan.bankName" class = "md-popup-input" id="bankName" name="bankName" tabindex="3">
+		</md-input-container>
+	</div>
+	
+	 <div class="col-md-3" ng-show="challan.type=='INTERNET_BANKING' || challan.type=='CHEQUE'">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Ref. Number</label>
+  		<input type="text" ng-model="challan.refNo" class = "md-popup-input" id="refNo" name="refNo" tabindex="4">
+		</md-input-container>
+	</div>
+	   
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Amount</label>
+  		<input type="number" required class = "md-popup-input" id="amount" name="amount" tabindex="5"
+  		ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"  step="0.01" ng-model="amount" ng-pattern-restrict>
+		</md-input-container>
+		</div>
+	</div>	
+	
+	<div class="row">
+	<div class="col-md-5">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Note</label>
+  		<input type="text" ng-model="challan.note" class = "md-popup-input" id="note" name="note" tabindex="6">
+		</md-input-container>
+	</div>
+	</div>
+    
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" tabindex="7" ng-disabled="form.$invalid">Add</button>
+	</div>
+	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

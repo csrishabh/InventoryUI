@@ -34,6 +34,9 @@ app.controller('loginController', [ '$http' ,'$scope', '$filter' , '$window' ,'$
 			else if($scope.hasPermission('USER_CARGO')){
 				$location.path('/consignment');
 			}
+			else if($scope.hasPermission('USER_INVOICE')){
+				$location.path('/invoice');
+			}
 			else{
 				$location.path('/product');
 			}

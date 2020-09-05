@@ -1,0 +1,57 @@
+<!-- Modal -->
+<div id="updateInvoiceModel" class="modal fade bs-example-modal-lg" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" 
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+	
+    <!-- Modal content-->
+    <div class="modal-content" style="border-radius: 25px">
+      <form name="form" ng-submit="updateInvoice(currInvoice,newAmount)" role="form">
+      
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title model-header">Update Invoice</h4>
+       </div>
+
+	
+	 <div class="row">	
+	     
+	    <div class="col-md-4">
+			<md-input-container class = "md-popup-input">
+	  		<label class = "md-popup-input">Invoice No.</label>
+	  		<input type="text" ng-disabled="true" ng-model="currInvoice.refNo" class = "md-popup-input" id="refNo" name="refNo"
+	  		pattern="^[A-Za-z0-9\-]*$" ng-pattern-restrict tabindex="1">
+			</md-input-container>
+		</div>  
+	              
+	 </div> 
+
+	<div class="row">
+		<div class="col-md-3">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Current Amount</label>
+  		<input type="number" ng-disabled="true" ng-model="currInvoice.finalValue" class = "md-popup-input" id="amount" name="amount"
+  		ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"  step="0.01" ng-pattern-restrict>
+		</md-input-container>
+		</div>
+		
+		<div class="col-md-3">
+		<md-input-container class = "md-popup-input">
+  		<label class = "md-popup-input">Updated Amount</label>
+  		<input type="number" ng-model="newAmount" required class = "md-popup-input" id="newAmount" name="newAmount" tabindex="2"
+  		ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"  step="0.01" ng-pattern-restrict>
+		</md-input-container>
+		</div>
+		
+	</div>	
+	
+	
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" tabindex="3" ng-disabled="form.$invalid">Submit</button>
+	</div>
+	</form>
+      </div>
+    </div>
+
+  </div>
+</div>
+

@@ -27,11 +27,7 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 			$scope.setCurrentPage($scope.currentPage + pageNo);
 			$scope.getUserHistory();
 		}
-		
-		$scope.openConsignmentModel = function(){
-			$('#consignmentDetailModel').modal('show');
-		}
-				
+						
 		if($scope.filter === undefined){
 			$scope.filter = {};	
 			$scope.filter['type'] ='ALL';
