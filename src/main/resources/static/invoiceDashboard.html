@@ -294,7 +294,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="result in searchResults" ng-class="{'tr-deleted': (result.isCancelled == true)}">			
-							<td><a href="#" class = "underline" ng-click = "getChallanList(result.refId)">{{result.refNo}} <md-tooltip>Show Challan</md-tooltip></a></td>
+							<td><a href="#" class = "underline" a-disabled="result.isCancelled" ng-click = "getChallanList(result.refId)">{{result.refNo}} <md-tooltip>Show Challan</md-tooltip></a></td>
 							<td>{{result.createdDate | date : "dd-MM-y"}}</td>
 							<td>{{result.issuer[0]}}</td>
 							<td>{{result.finalValue}}</td>
