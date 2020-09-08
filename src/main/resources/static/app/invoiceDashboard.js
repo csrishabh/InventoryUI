@@ -13,8 +13,8 @@ app.controller('invoiceDashboardController', [
 		'$stateParams',
 function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userService, SpinnerService,$mdSidenav,AppService,$stateParams) {
 		$scope.searchResults = [];
-		$scope.createDate1 = new Date(new Date().setDate(new Date().getDate()-6));
-		$scope.createDate2 = new Date();
+		$scope.createDate1;
+		$scope.createDate2;
 		$scope.today = new Date();
 		$scope.minDate = new Date(2018,00,01);
 		$scope.aptMaxDate = new Date(2025,00,31);
@@ -205,10 +205,8 @@ function($http, $scope, $filter, $window, $location, $cookies,$rootScope, userSe
 		};
 		
 		if($scope.filter === undefined){
-			$scope.filter = {};	
-			$scope.filter['createdDate1'] = $filter('date')(new Date(new Date().setDate(new Date().getDate()-6)), 'dd-MM-yyyy');
-			$scope.filter['createdDate2'] = $filter('date')(new Date(), 'dd-MM-yyyy');
-			$scope.filter['status'] = 'DUE';
+			$scope.filter = {};
+			$scope.filter['status'] = 'ALL';
 			$scope.filter['type'] ='false';
 		}
 		

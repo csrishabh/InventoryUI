@@ -125,7 +125,7 @@
 	         
 	        <md-list-item class="md-1-line" ng-click="null"> 
 	        <md-input-container class="md-popup-input md-table-input">
-          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'DUE' ">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'ALL' ">
           						<md-option value = "ALL">All</md-option>
             					<md-option value = "DUE">Due</md-option>
             					<md-option value = "PAID">Paid</md-option>
@@ -249,7 +249,7 @@
 	         
 	        <md-list-item class="md-1-line" ng-click="null"> 
 	        <md-input-container class="md-popup-input md-table-input">
-          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'DUE' ">
+          						<md-select class="md-popup-input" ng-model="filter['status']" ng-change = "applyFilter()" ng-init=" filter['status'] = 'ALL' ">
           						<md-option value = "ALL">All</md-option>
             					<md-option value = "DUE">Due</md-option>
             					<md-option value = "PAID">Paid</md-option>
@@ -293,7 +293,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="result in searchResults" ng-class="{'tr-deleted': (result.isCancelled == true)}">			
+						<tr ng-repeat="result in searchResults" ng-class="{'tr-deleted': (result.isCancelled == true),'tr-highlited': (result.remainingAmt==0)}">			
 							<td><a href="#" class = "underline" a-disabled="result.isCancelled" ng-click = "getChallanList(result.refId)">{{result.refNo}} <md-tooltip>Show Challan</md-tooltip></a></td>
 							<td>{{result.createdDate | date : "dd-MM-y"}}</td>
 							<td>{{result.issuer[0]}}</td>

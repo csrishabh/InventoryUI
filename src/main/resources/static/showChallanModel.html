@@ -23,6 +23,7 @@
 							<th scope="col">Bank Name</th>
 							<th scope="col">Ref No</th>
 							<th scope="col">Create by</th>
+							<th scope="col">Note</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -35,6 +36,7 @@
 							<td>{{result.bankName}}</td>
 							<td>{{result.refNo}}</td>
 							<td>{{result.createdBy}}</td>
+							<td>{{result.note}}</td>
 							<td ng-show="hasPermission('ADMIN_INVOICE')"><a a-disabled="$index != challanList.length-1"  href="#"  ng-click = "cancelChallan(result.refId)"> <span class="glyphicon glyphicon-trash"></span></a></td> 
 						</tr>
 					</tbody>
