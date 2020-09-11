@@ -9,7 +9,7 @@
 			<md-input-container class="md-form-input">
   			<label class="md-form-input">User ID</label>
   			<input type="text" ng-disabled="isUserEdit" ng-model="user.username" required class="md-form-input" id="username" 
-  			name="username" pattern="^[A-Za-z0-9\-@_]*$" ng-pattern-restrict tabindex="1">
+  			name="username" pattern="^[A-Za-z0-9\-@_.]*$" ng-pattern-restrict tabindex="1">
   			 <div ng-messages="form.username.$error" ng-show="form.username.$dirty">
       			<div ng-message="required">User ID is required</div>
     		 </div>
