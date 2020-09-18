@@ -2,6 +2,7 @@ app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$inter
 	function($http , $scope ,$filter,$q,$interval,userService,SpinnerService,FileSaver,$stateParams){
 	
 	$scope.products = {};
+	$scope.product = [];
 	
     $scope.getCurrentInventory = function (searchTxt){
     var modal = SpinnerService.startSpinner();
@@ -26,6 +27,56 @@ app.controller('inventoryController', [ '$http' ,'$scope','$filter','$q','$inter
 			return roles.indexOf(permission) != -1;
 		}
 		return false;
+	}
+    
+    $scope.openUpdateProductModel = function(prd){
+		$scope.product = JSON.parse(JSON.stringify(prd));
+		$('#addNewProductModal').modal('show');
+	}
+    
+    $scope.updateProduct = function(product){
+		
+		if( product.name == undefined || product.name == ""){
+			$scope.addAlert('warning', 'Please enter name first');
+		}
+		else if(product.unit == undefined || product.unit == ""){
+			$scope.addAlert('warning', 'Please select unit first');
+		}
+		else if(product.alert == undefined || product.alert <= 0){
+			$scope.addAlert('warning', 'Please Enter alert Quantity');
+		}
+		else{
+			$http.post(weburl+"/update/product",product).success(function(data,status){
+				$scope.addAlert('success', data.msg[0]);
+				$scope.product = {};
+				$('#addNewProductModal').modal('hide');
+			},function myError(response) {
+				$scope.addAlert('warning', data.msg[0]);
+		    });	
+		}
+	}
+    
+    
+    $scope.updateProductStatus = function(product){
+		
+		if( product.name == undefined || product.name == ""){
+			$scope.addAlert('warning', 'Please enter name first');
+		}
+		else if(product.unit == undefined || product.unit == ""){
+			$scope.addAlert('warning', 'Please select unit first');
+		}
+		else if(product.alert == undefined || product.alert <= 0){
+			$scope.addAlert('warning', 'Please Enter alert Quantity');
+		}
+		else{
+			$http.post(weburl+"/update/product/status",product).success(function(data,status){
+				$scope.addAlert('success', data.msg[0]);
+				$scope.product = {};
+				$('#addNewProductModal').modal('hide');
+			},function myError(response) {
+				$scope.addAlert('warning', data.msg[0]);
+		    });	
+		}
 	}
     
     $scope.downloadReport = function(){

@@ -72,7 +72,7 @@ app.controller('transctionController', [ '$http' ,'$scope','$filter','$q','$inte
 	var url = weburl+"/transction"+$scope.getFilterString();
 	var modal = SpinnerService.startSpinner();
     $http.get(url).success(function(data){	
-    	$scope.transctions = data;
+    	$scope.transctions = data.data;
     	SpinnerService.endSpinner(modal);
 	}).error(function(response,status){
 		SpinnerService.endSpinner(modal);

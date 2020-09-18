@@ -17,34 +17,31 @@
 	  	<div class="col-md-4">
 	  		<md-input-container class = "md-popup-input">
   				<label class = "md-popup-input">Product Name</label>
-  				<input type="text" ng-model="product.name" required md-maxlength="50" class = "md-popup-input" id="name" name="name" pattern="^[A-Za-z0-9\- ]*$" ng-pattern-restrict>
+  				<input type="text" ng-model="product.name" required md-maxlength="50" class = "md-popup-input" id="name" name="name" pattern="^[A-Za-z0-9\- ]*$" tabindex="1" ng-pattern-restrict>
   				<div ng-messages="form.name.$error" ng-show="form.name.$dirty && form.name.$error.required">
       			<div ng-message="required">Product Name is required</div>
     		</div>
 		 </md-input-container>	
 		 </div>
 		 
-		 <div class="form-group col-md-1">
-	 	   <label>Unit</label>
-	 	 </div>	
-	 	
-		 <div class="col-md-3">
-	  		<md-input-container class = "md-popup-input">
-  				<select class="form-control" id="unit" ng-model="product.unit" required  name="unit" ng-init="product.unit = 'PIECES'">
-    			<option value = "KILOGRAM">Kg</option>
-    			<option value = "LITER">Lt</option>
-    			<option value = "PIECES">Pc</option>
-  			</select>
-  			<div ng-messages="form.unit.$error" ng-show="form.unit.$dirty && form.unit.$error.required">
+	 	<div class="col-md-3">
+	    <md-input-container class="md-popup-input" style="width:150px;">
+	    <label class = "md-popup-input" >Unit</label>
+	    <md-select class="md-popup-input"  ng-disabled = "product.id != null" ng-model="product.unit" required id="unit" name="unit" tabindex="2" ng-init="product.unit = 'PIECES'">
+          						<md-option value = "KILOGRAM">Kg</md-option>
+          						<md-option value = "LITER">Lt</md-option>
+          						<md-option value = "PIECES">Pc</md-option>
+         </md-select>
+         <div ng-messages="form.unit.$error" ng-show="form.unit.$dirty && form.unit.$error.required">
       			<div ng-message="required">Unit is required</div>
     	</div>	
-		 </md-input-container>	
-		 </div>
-		 
+  		</md-input-container>	
+	  `	</div> 
+	  
 		 <div class="col-md-4">
 	  		<md-input-container class = "md-popup-input" ng-show="product.unit!='PIECES'">
   				<label class = "md-popup-input">Notify Me</label>
-  				<input type="number" ng-model="product.alert" required class = "md-popup-input" id="alert" name="alert" ng-init="product.alert=0" ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001">
+  				<input type="number" ng-model="product.alert" required class = "md-popup-input" id="alert" name="alert" ng-init="product.alert=0" tabindex="3" ng-pattern="/^[0-9]+(\.[0-9]{1,3})?$/" step="0.001">
   				<div ng-messages="form.alert.$error" ng-show="form.alert.$dirty && form.alert.$error.required">
       			<div ng-message="required">Notify Me is required</div>
     		</div>
@@ -52,7 +49,7 @@
 		 
 		 <md-input-container class = "md-popup-input" ng-show="product.unit=='PIECES'">
   				<label class = "md-popup-input">Notify Me</label>
-  				<input type="number"  ng-model="product.alert" required class = "md-popup-input" id="alert" name="alert" ng-init="product.alert=0">
+  				<input type="number"  ng-model="product.alert" required class = "md-popup-input" id="alert" name="alert" ng-init="product.alert=0" tabindex="3">
   				<div ng-messages="form.alert.$error" ng-show="form.alert.$dirty && form.alert.$error.required">
       			<div ng-message="required">Notify Me is required</div>
     		</div>
@@ -62,8 +59,8 @@
 		</div>	
 		
       <div class="modal-footer">
-        <button ng-show= "product.id == null"type="button" class="btn btn-primary" ng-click="saveProduct(product,false)" ng-disabled="form.$invalid">Submit</button>
-        <button ng-show= "product.id != null"type="button" class="btn btn-primary" ng-click="saveProduct(product,true)" ng-disabled="form.$invalid">Update</button>
+        <button ng-show= "product.id == null"type="button" class="btn btn-primary" ng-click="saveProduct(product)" ng-disabled="form.$invalid" tabindex="4">Submit</button>
+        <button ng-show= "product.id != null"type="button" class="btn btn-primary" ng-click="updateProduct(product)" ng-disabled="form.$invalid" tabindex="4">Update</button>
 	   	</div>
 	   	</form>
       </div>

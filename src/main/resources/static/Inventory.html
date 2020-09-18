@@ -1,5 +1,5 @@
-<div class= "container-fluid" ng-controller="inventoryController as icontroller"
-		class="container-fluid">
+<div class= "container-fluid" ng-controller="inventoryController as icontroller">
+<div ng-include="'addNewProduct.html'"></div>
 
 		<div class="row">
 		<label><h4> Current Inventory Status</h4></label> <a ng-click="downloadReport()" align="left"><span class="glyphicon glyphicon-cloud-download"></span></a> 
@@ -21,10 +21,11 @@
 					<tbody>
 						<tr ng-repeat="p in products" ng-class="{'tr-highlited': (p.qtyAbl < p.alert || p.qtyAbl == '0')}">
 							<th scope="row">{{$index+1}}</th>
-							<td>{{p.name | uppercase}}</td>
+							<td><a href="#" class = "underline" ng-click = "openUpdateProductModel(p)">{{p.name | uppercase}} <md-tooltip>Update Product</md-tooltip></a></td>
 							<td>{{p.qtyAbl | number:3}} {{p.unit | capitalize}}</td>
 							<td ng-show= "hasPermission('ADMIN_INV')">{{p.lastPrice+"/"}} {{p.unit | capitalize}}</td>
 							<td>{{p.alert}} {{p.unit | capitalize}}</td>
+							<td> <md-switch ng-model="p.enabled" ng-change="updateProductStatus(p)"></md-switch></td>
 						</tr>
 					</tbody>
 				</table>

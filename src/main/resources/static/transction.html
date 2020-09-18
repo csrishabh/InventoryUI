@@ -113,13 +113,12 @@
 						<tr ng-repeat="t in transctions">
 							<th scope="row">{{$index+1}}</th>
 							<td>{{t.date | date : 'dd/MM/yyyy'}}</td>
-							<td>{{t.productName | uppercase}}</td>
-							<td>{{t.quantityBack/1000}}</td>
+							<td>{{t.prdName | uppercase}}</td>
+							<td>{{t.qty}}-{{t.prdUnit}} </td>
 							<td>{{t.type}}</td>
 							<td ng-show= "hasPermission('ADMIN_INV')">{{t.addBy}}</td>
-							<td>
-								<button type="button" class="btn btn-primary" ng-click="showRemarkPopUp(t)">Revert</button>
-							</td>
+							<td ng-show="hasPermission('ADMIN_INV')"><a  href="#"  ng-click = "showRemarkPopUp(t)"> <span class="glyphicon glyphicon-trash"></span>
+							<md-tooltip>Revert Transaction</md-tooltip></a></td>
 						</tr>
 					</tbody>
 				</table>
