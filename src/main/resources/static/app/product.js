@@ -118,7 +118,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 		return false;
 	}
 
-	$scope.saveProduct = function(product , isupdate){
+	$scope.saveProduct = function(product){
 		
 		if( product.name == undefined || product.name == ""){
 			$scope.addAlert('warning', 'Please enter name first');
