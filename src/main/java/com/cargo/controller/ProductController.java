@@ -48,6 +48,7 @@ public class ProductController {
 		item.setName(item.getName().toUpperCase());	
 		item.setAlertBack((long)(item.getAlert()*Config.QTY_FORMATTER));
 		item.setEnabled(true);
+		item.setLastPriceBack((long) (item.getLastPrice() * Config.PRICE_FORMATTER));
 		item = repo.save(item);
 		return new ResponseEntity<Product>(item, HttpStatus.CREATED);
 		}
@@ -68,6 +69,7 @@ public class ProductController {
 		Product p = repo.findById(item.getId()).get();
 		p.setName(item.getName().toUpperCase());
 		p.setAlertBack((long)(item.getAlert()*Config.QTY_FORMATTER));
+		p.setLastPriceBack((long) (item.getLastPrice() * Config.PRICE_FORMATTER));
 		repo.save(p);
 		response.setSuccess(true);
 		response.setMsg(Arrays.asList(StringConstant.PRODUCT_UPDATED_SUCCESS));

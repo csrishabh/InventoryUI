@@ -6,6 +6,7 @@ app.controller('productController', [ '$http' ,'$scope', '$filter' , '$window','
 	$scope.transctions = [];
 	$scope.products = [];
 	$scope.product = {};
+	$scope.today = new Date();
 	$scope.date = new Date();
 	$scope.showTransction = false;
 	$scope.pager = {};
